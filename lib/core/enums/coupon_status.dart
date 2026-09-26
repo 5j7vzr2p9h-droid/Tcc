@@ -1,0 +1,4 @@
+enum CouponStatus {
+  active,
+  expired
+}

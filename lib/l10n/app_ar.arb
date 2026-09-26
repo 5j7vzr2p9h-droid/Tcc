@@ -1,0 +1,424 @@
+{
+  "@@locale": "ar",
+  "loginSubtitle": "مرحباً بك! سجل الدخول للمتابعة",
+  "phoneNumber": "رقم الهاتف",
+  "invalidPhoneNumber": "رقم الهاتف غير صالح",
+  "login": "تسجيل الدخول",
+  "or": "أو",
+  "dontHaveAccount": "ليس لديك حساب؟",
+  "createAccount": "إنشاء حساب",
+  "authFailed": "فشل {method}. يرجى التحقق من بياناتك والمحاولة مرة أخرى.",
+  "@authFailed": {
+    "placeholders": {
+      "method": {
+        "type": "String"
+      }
+    }
+  }, 
+  "createAccountSubtitle": "سجّل بياناتك لإنشاء حساب جديد",
+  "name": "الاسم",
+  "nameIsRequired": "الاسم مطلوب",
+  "phoneIsRequired": "رقم الهاتف مطلوب",
+  "addressIsRequired": "العنوان مطلوب",
+  "enterFullName": "أدخل اسمك الكامل",
+  "enterPhoneNumber": "أدخل رقم هاتفك",
+  "address": "العنوان",
+  "enterAddress": "أدخل عنوانك",
+  "alreadyHaveAccount": "لديك حساب بالفعل؟",
+  "termsAgreementPrefix": "بإنشاء حساب، أنت توافق على",
+  "termsAndConditions": "الشروط والأحكام",
+  "privacyPolicy": "سياسة الخصوصية",
+  "verifyPhoneNumber": "تأكيد رقم الموبايل",
+  "enterVerificationCode": "أدخل رمز التحقق المرسل إلى",
+  "changeNumber": "تغيير الرقم",
+  "didntReceiveCode": "لم تستلم الرمز؟",
+  "resendCode": "إعادة إرسال الرمز",
+  "resendCodeIn": "إعادة إرسال الرمز خلال",
+  "confirm": "تأكيد",
+  "tryAgain": "حاول مرة أخرى",
+  "otpErrorTitle": "فشل تأكيد رقم الموبايل",
+  "otpErrorMessage": "الرمز الذي أدخلته غير صحيح.\nيرجى المحاولة مرة أخرى.",
+  "searchFoodDrinks": "ابحث عن طعام، مشروبات، ...",
+  "burgers": "برجر",
+  "strips": "ستربس",
+  "pizza": "بيتزا",
+  "meals": "وجبات",
+  "drinks": "مشروبات",
+  "sides": "جانبيات",
+  "chooseFavoriteBurger": "اختر برجر المفضل لديك",
+  "popularItem": "الأكثر طلباً",
+  "viewAll": "عرض الكل",
+  "viewCart": "عرض السلة",
+  "itemCount": "{count} منتج",
+  "home": "الرئيسية",
+  "orders": "الطلبات",
+  "profile": "الملف الشخصي",
+  "cart": "السلة",
+  "search": "البحث",
+  "classicBurger": "كلاسيك برجر",
+  "classicBurgerDescription": "قطعة لحم بقري، جبنة شيدر، طماطم، خس، صوص خاص",
+  "classicBurgerEnglishDescription": "قطعة لحم بقري، جبنة شيدر، طماطم، خس، صوص خاص",
+  "spicyBurger": "برجر حار",
+  "spicyBurgerDescription": "دجاج مقرمش، هالبينو، جبنة، صوص حار",
+  "doubleSmash": "دبل سماش",
+  "edit": "تعديل",
+  "profileName": "محمد أحمد",
+  "editProfile": "تعديل الملف الشخصي",
+  "addresses": "العناوين",
+  "favorites": "المفضلة",
+  "paymentMethods": "طرق الدفع",
+  "couponsOffers": "الكوبونات والعروض",
+  "support": "الدعم والمساعدة",
+  "shareApp": "مشاركة التطبيق",
+  "settings": "الإعدادات",
+  "logout": "تسجيل الخروج",
+  "version": "الإصدار",
+  "noInternetTitle": "لا يوجد اتصال بالإنترنت",
+  "noInternetMessage": "يبدو أنك غير متصل بالإنترنت.\nيرجى التحقق من اتصالك والمحاولة مرة أخرى.",
+  "retry": "إعادة المحاولة",
+  "myOrders": "طلباتي",
+  "currentOrders": "الطلبات الحالية",
+  "previousOrders": "الطلبات السابقة",
+  "all": "الكل",
+  "filter": "تصفية",
+  "orderNumber": "رقم الطلب",
+  "completed": "مكتمل",
+  "preparing": "قيد التجهيز",
+  "delivered": "تم توصيله",
+  "orderReceived": "تم استلام الطلب",
+  "deliveryTo": "التوصيل إلى",
+  "showDetails": "عرض التفاصيل",
+  "reorder": "إعادة الطلب",
+  "trackOrder": "تتبع الطلب",
+  "total": "المجموع",
+  "noNewOrdersTitle": "لا توجد طلبات حديثة",
+  "noNewOrdersMessage": "عندما تقوم بطلب، سيظهر هنا.",
+  "checkout": "الدفع",
+  "delivery": "التوصيل",
+  "payment": "الدفع",
+  "choosePaymentMethod": "اختر طريقة الدفع",
+  "cashOnDelivery": "الدفع نقداً (عند الاستلام)",
+  "cashOnDeliveryDescription": "ادفع نقداً عند استلام الطلب",
+  "visaMastercard": "فيزا / ماستركارد",
+  "cardPaymentDescription": "ادفع بأمان باستخدام بطاقتك الائتمانية أو الخصم المباشر",
+  "instapay": "انستا باي",
+  "instapayDescription": "ادفع بسهولة وفوراً باستخدام حسابك في انستا باي",
+  "productsSubtotal": "إجمالي المنتجات",
+  "deliveryFee": "رسوم التوصيل",
+  "discount": "خصم",
+  "grandTotal": "الإجمالي",
+  "confirmOrder": "تأكيد الطلب",
+  "securePaymentInfo": "معلومات الدفع الخاصة بك آمنة ومشفرة",
+  "continueToPayment": "الاستمرار إلى الدفع",
+  "resumePayment": "متابعة الدفع",
+  "deliveryTitle": "التوصيل",
+  "chooseMethod": "اختر الطريقة",
+  "homeDelivery": "توصيل للمنزل",
+  "branchPickup": "استلام فرع",
+  "chooseTime": "اختر الوقت:",
+  "pickupFrom": "استلام من:",
+  "pickupTime": "وقت الاستلام",
+  "pickupLocation": "مكان الاستلام",
+  "chooseAddress": "اختر العنوان:",
+  "changeAddress": "تغيير العنوان",
+  "addNewAddress": "إضافة عنوان جديد",
+  "confirmLocation": "تأكيد الموقع",
+  "selectYourLocation": "اختر موقعك",
+  "searchPlaceAddress": "ابحث عن مكان أو عنوان",
+  "regionName": "اسم المنطقة",
+  "searchOrChooseRegion": "اختر أو ابحث عن منطقتك",
+  "streetName": "اسم الشارع",
+  "enterStreetName": "أدخل اسم الشارع",
+  "landmark": "علامة مميزة",
+  "landmarkExample": "مثال: أمام بنك مصر، بجوار مدرسة...",
+  "buildingNumber": "رقم المنزل / المبنى",
+  "buildingNumberExample": "مثال: ١٢٣",
+  "floor": "الدور",
+  "floorExample": "مثال: ٣",
+  "apartmentNumber": "رقم الشقة",
+  "apartmentExample": "مثال: ٧",
+  "additionalNotes": "ملاحظات إضافية",
+  "additionalNotesHint": "اكتب أي تفاصيل تساعدنا في الوصول إليك...",
+  "setAsDefaultAddress": "تعيين كعنوان أساسي",
+  "defaultAddressDescription": "سيتم استخدام هذا العنوان في كل طلب.",
+  "confirmAddress": "تأكيد العنوان",
+  "productOptionsDescription": "حلوى مقلية أو مخبوزة مصنوعة من عجينة حلوة، وغالباً ما تُغطى بالسكر أو الشوكولاتة.",
+  "chooseOptions": "اختر من الخيارات:",
+  "required": "مطلوب",
+  "chooseOne": "اختر 1",
+  "paidAdditions": "إضافات مدفوعة",
+  "freeAdditions": "إضافات مجانية",
+  "optional": "اختياري",
+  "mandatory": "إجباري",
+  "powderedSugar": "سكر بودرة",
+  "whiteChocolate": "شوكولاتة بيضاء",
+  "pistachio": "فستق مجروش",
+  "chooseQuantityToAdd": "اختر الكمية المطلوبة لإضافة المنتج",
+  "addToOrder": "إضافة للطلب",
+  "cartView": "عرض السلة",
+  "notifications": "الإشعارات",
+  "updates": "التحديثات",
+  "offers": "العروض",
+  "notificationOrders": "الطلبات",
+  "today": "اليوم",
+  "yesterday": "أمس",
+  "orderConfirmedNotification": "تم تأكيد طلبك",
+  "orderConfirmedMessage": "تم تأكيد طلبك رقم #{orderNumber} وجاري تحضيره.",
+  "orderOnTheWayNotification": "طلبك في الطريق",
+  "orderOnTheWayMessage": "طلبك رقم #{orderNumber} في الطريق إليك وسيصلك خلال {minutes} دقيقة.",
+  "specialOfferNotification": "عرض خاص 🎉",
+  "specialOfferMessage": "خصم {discount}% على جميع الطلبات من اليوم وحتى نهاية الأسبوع!",
+  "orderDeliveredNotification": "تم تسليم طلبك",
+  "orderDeliveredMessage": "تم تسليم طلبك رقم #{orderNumber} بنجاح.",
+  "appUpdateNotification": "تحديث التطبيق",
+  "appUpdateMessage": "تم تحديث التطبيق إلى أحدث إصدار لتحسين تجربتك.",
+  "welcomeNotification": "أهلاً بك في تطبيقنا! 👋",
+  "welcomeMessage": "ابدأ التسوق الآن واكتشف أفضل العروض.",
+  "noNotificationsTitle": "لا يوجد إشعارات",
+  "noNotificationsMessage": "ستظهر هنا إشعاراتك الجديدة عند وصولها.",
+  "@itemCount": {
+    "description": "Number of items shown in the cart bar",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@orderConfirmedMessage": {
+    "placeholders": {
+      "orderNumber": {
+        "type": "String"
+      }
+    }
+  },
+  "@orderOnTheWayMessage": {
+    "placeholders": {
+      "orderNumber": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "@specialOfferMessage": {
+    "placeholders": {
+      "discount": {
+        "type": "int"
+      }
+    }
+  },
+  "@orderDeliveredMessage": {
+    "placeholders": {
+      "orderNumber": {
+        "type": "String"
+      }
+    }
+  },
+  "pound": "ج.م",
+  "canceled": "ملغي",
+  "timeAgo": "منذ {time}",
+  "@timeAgo": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "minute": "دقيقة",
+  "twoMinutes": "دقيقتين",
+  "minutes": "دقائق",
+  "hour": "ساعة",
+  "twoHours": "ساعتين",
+  "hours": "ساعات",
+  "now": "الآن",
+  "myAccount": "حسابي",
+  "region": "المنطقة",
+  "street": "الشارع",
+  "details": "تفاصيل",
+  "apartment": "الشقة",
+  "orderNotes": "ملاحظات الطلب",
+  "orderNotesHint": "اكتب ملاحظاتك هنا...",
+  "orderNotesDescription": "يمكنك كتابة أي تعليمات خاصة بطلبك (مثل: بدون سكر، كمية صوص إضافية...)",
+  "product": "منتج",
+  "egypt": "مصر",
+  "saudiArabia": "السعودية",
+  "emirates": "الإمارات",
+  "kuwait": "الكويت",
+  "register": "إنشاء الحساب",
+  "otpErrorSnackbarMessage": "فشل التحقق، يُرجى التأكد من الرمز والمحاولة مرة أخرى",
+  "selectedLocation": "الموقع المحدد",
+  "detailedAddress": "العنوان بالتفصيل",
+  "regionIsRequired": "يُرجى اختيار المنطقة",
+  "detailedAddressRequired": "يرجى كتابة العنوان بالتفصيل",
+  "couponsSubtitle": "استخدم الكوبونات واستمتع بأفضل العروض",
+  "couponsTab": "كوبونات",
+  "offersTab": "عروض",
+  "enterCouponCode": "لديك كود كوبون؟ أدخله هنا",
+  "apply": "تطبيق",
+  "availableCoupons": "الكوبونات المتاحة",
+  "expiredCoupons": "كوبونات منتهية",
+  "couponActive": "نشط",
+  "couponExpired": "منتهية",
+  "remainingUses": "الاستخدامات المتبقية",
+  "couponUsesCount": "{remaining} من {total}",
+  "@couponUsesCount": {
+    "placeholders": {
+      "remaining": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "unlimited": "غير محدود",
+  "couponMinimumOrder": "الحد الأدنى للطلب {amount} جنيه",
+  "@couponMinimumOrder": {
+    "placeholders": {
+      "amount": {
+        "type": "int"
+      }
+    }
+  },
+  "couponExpiresOn": "ينتهي في {date}",
+  "@couponExpiresOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "couponExpiredOn": "انتهت في {date}",
+  "@couponExpiredOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "copyCode": "نسخ الكود",
+  "codeCopied": "تم نسخ الكود",
+  "freeShipping": "شحن مجاني",
+  "couponsInfoTitle": "تطبيق الكوبونات قبل الدفع",
+  "couponsInfoMessage": "لا يمكن دمج أكثر من كوبون في الطلب الواحد",
+  "offerValidUntil": "ساري حتى {date}",
+  "@offerValidUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "orderNow": "اطلب الآن",
+  "noOffersTitle": "لا توجد عروض حالياً",
+  "noOffersMessage": "تابعنا باستمرار، ستظهر هنا العروض الجديدة فور توفرها.",
+  "restaurants": "المطاعم",
+  "foods": "الأطعمة",
+  "favoriteRestaurantsSubtitle": "المطاعم التي أضفتها إلى المفضلة",
+  "addNewRestaurant": "إضافة مطعم جديد",
+  "deliveryStartsFrom": "التوصيل يبدأ من {amount} جنيه",
+  "@deliveryStartsFrom": {
+    "placeholders": {
+      "amount": {
+        "type": "int"
+      }
+    }
+  },
+  "delete": "حذف",
+  "noFavoritesTitle": "لا توجد عناصر مفضلة بعد",
+  "noFavoritesMessage": "يمكنك إضافة الأطعمة والمطاعم المفضلة لديك للوصول إليها بسرعة",
+  "account": "الحساب",
+  "application": "التطبيق",
+  "supportAndHelp": "الدعم والمساعدة",
+  "accountInformation": "معلومات الحساب",
+  "accountInformationSubtitle": "الاسم، رقم الهاتف، البريد الإلكتروني",
+  "notificationsSubtitle": "إدارة تفضيلات الإشعارات",
+  "enableNotifications": "تفعيل الإشعارات",
+  "enableNotificationsSubtitle": "استقبل تحديثات عن طلباتك والعروض",
+  "language": "اللغة",
+  "arabic": "العربية",
+  "locationSettings": "الموقع",
+  "locationSettingsSubtitle": "إدارة الوصول للموقع",
+  "appearance": "المظهر",
+  "appearanceSubtitle": "تغيير سمة التطبيق",
+  "lightAppearance": "المظهر الفاتح",
+  "darkAppearance": "المظهر الداكن",
+  "helpCenter": "مركز المساعدة",
+  "helpCenterSubtitle": "الأسئلة الشائعة والدعم",
+  "termsAndConditionsSubtitle": "سياسة الاستخدام وشروط الخدمة",
+  "aboutApp": "نبذة عن التطبيق",
+  "savedAddresses": "العناوين المحفوظة",
+  "defaultLabel": "الافتراضي",
+  "setAsDefault": "تعيين كافتراضي",
+  "addressesSecured": "جميع العناوين آمنة ومشفرة",
+  "savedPaymentMethods": "طرق الدفع المحفوظة",
+  "addNewPaymentMethod": "إضافة طريقة دفع جديدة",
+  "paymentMethodsSecured": "جميع معلومات الدفع آمنة ومشفرة",
+  "lastUpdated": "آخر تحديث: {date}",
+  "@lastUpdated": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "termsIntro": "مرحباً بك في تطبيقنا. باستخدامك للتطبيق، فإنك توافق على الالتزام بهذه الشروط والأحكام. يرجى قراءتها بعناية قبل استخدام الخدمة.",
+  "termsAcceptanceTitle": "قبول الشروط",
+  "termsAcceptanceBody": "باستخدامك لهذا التطبيق، فإنك توافق على هذه الشروط والأحكام وجميع السياسات والإرشادات المعمول بها. إذا كنت لا توافق على أي جزء من هذه الشروط، يُرجى عدم استخدام التطبيق.",
+  "termsServiceUsageTitle": "استخدام الخدمة",
+  "termsServiceUsageBody": "يجب عليك استخدام التطبيق للأغراض القانونية فقط وبما يتوافق مع هذه الشروط والأحكام. أنت توافق على عدم استخدام التطبيق بأي طريقة قد تؤثر على أدائه أو تتسبب في ضرر للتطبيق أو للمستخدمين الآخرين.",
+  "termsUserAccountTitle": "حساب المستخدم",
+  "termsUserAccountBody": "قد تحتاج إلى إنشاء حساب لاستخدام بعض ميزات التطبيق. أنت مسؤول عن الحفاظ على سرية معلومات حسابك وعن جميع الأنشطة التي تتم باستخدام حسابك.",
+  "termsOrdersAndPaymentTitle": "الطلبات والدفع",
+  "termsOrdersAndPaymentBody": "جميع الطلبات تخضع للتوفر والأسعار قابلة للتغيير دون إشعار مسبق. يجب دفع جميع المبالغ المستحقة قبل تأكيد الطلب.",
+  "termsCancellationTitle": "إلغاء الطلب واسترداد الأموال",
+  "termsCancellationBody": "يمكنك إلغاء الطلب قبل بدء التجهيز. بعد بدء التجهيز، لا يمكن إلغاء الطلب أو استرداد المبلغ المدفوع إلا وفقاً لسياسة الاسترداد الخاصة بنا.",
+  "termsChangesTitle": "التعديلات على الشروط",
+  "termsChangesBody": "نحتفظ بالحق في تعديل هذه الشروط والأحكام في أي وقت. سيتم إشعارك بأي تغييرات من خلال التطبيق. استمرارك في استخدام التطبيق بعد التعديل يعني موافقتك على الشروط الجديدة.",
+  "termsContactTitle": "التواصل معنا",
+  "termsContactBody": "إذا كان لديك أي أسئلة أو استفسارات حول هذه الشروط والأحكام، يمكنك التواصل معنا من خلال صفحة الدعم في التطبيق.",
+  "agreeToTermsPrefix": "لقد قرأت وأوافق على",
+  "agree": "موافق",
+  "privacyHeroTitle": "خصوصيتك تهمنا",
+  "privacyHeroMessage": "نحن نلتزم بحماية بياناتك الشخصية واستخدامها بشكل آمن ومسؤول",
+  "privacyIntro": "توضح هذه السياسة كيف نقوم بجمع واستخدام وحماية بياناتك الشخصية عند استخدامك لتطبيقنا وخدماتنا.",
+  "privacyCollectedDataTitle": "المعلومات التي نجمعها",
+  "privacyCollectedDataBody": "نقوم بجمع المعلومات التي تقدمها لنا مباشرة مثل الاسم، رقم الهاتف، العنوان، بالإضافة إلى معلومات الطلبات والدفع عند استخدام التطبيق.",
+  "privacyDataUsageTitle": "كيف نستخدم معلوماتك",
+  "privacyDataUsageBody": "نستخدم معلوماتك لتقديم وتحسين خدماتنا، معالجة الطلبات والدفع، التواصل معك، وتقديم الدعم الفني والاقتراحات المناسبة لك.",
+  "privacyDataSharingTitle": "مشاركة المعلومات",
+  "privacyDataSharingBody": "لا نقوم ببيع أو تأجير بياناتك الشخصية لأي جهة خارجية. قد نشارك بياناتك مع مزودي الخدمة فقط لتنفيذ الطلبات والدفع.",
+  "privacyDataProtectionTitle": "حماية البيانات",
+  "privacyDataProtectionBody": "نطبق معايير أمنية صارمة لحماية بياناتك من الوصول غير المصرح به أو التعديل أو الإفشاء أو التدمير.",
+  "privacyYourRightsTitle": "حقوقك",
+  "privacyYourRightsBody": "لديك الحق في الوصول إلى بياناتك الشخصية أو تعديلها أو حذفها في أي وقت من خلال إعدادات الحساب أو عبر التواصل معنا.",
+  "privacyChangesTitle": "التعديلات على السياسة",
+  "privacyChangesBody": "قد نقوم بتحديث سياسة الخصوصية من وقت لآخر. سيتم إشعارك بأي تغييرات مهمة من خلال التطبيق.",
+  "supportHeroTitle": "كيف يمكننا مساعدتك؟",
+  "supportHeroMessage": "اختر الموضوع الذي تحتاج المساعدة فيه",
+  "orderIssue": "مشكلة في الطلب",
+  "followOrder": "متابعة الطلب",
+  "lateOrder": "الطلب متأخر",
+  "wrongOrMissingItem": "منتج ناقص أو خاطئ",
+  "paymentIssue": "مشكلة في الدفع",
+  "paymentNotConfirmed": "الدفع لم يتم تأكيده",
+  "refund": "استرداد المبلغ",
+  "editAccountData": "تعديل بيانات الحساب",
+  "loginIssue": "مشكلة في تسجيل الدخول",
+  "contactUs": "تواصل معنا",
+  "contactUsMessage": "لم تجد ما تبحث عنه؟ نحن هنا لمساعدتك",
+  "chatWithSupport": "تحدث مع الدعم",
+  "supportHours": "متاح يومياً من 10 صباحاً حتى 12 منتصف الليل",
+  "processingYourOrder": "جاري معالجة طلبك",
+  "enterInstaPayUsername": "أدخل يوزر انستاباي الخاص بك بدون @instapay",
+  "requiredField": "الحقل مطلوب",
+  "invalidUserName": "اسم المستخدم غير صالح",
+  "confirmPayment": "تأكيد الدفع",
+  "yourCurrentBalance": "رصيدك الحالي",
+  "enterWalletNumber": "أدخل رقم المحفظة التي سترسل منها",
+  "sendMoneyToNumber": "أرسل الحساب إلى هذا الرقم",
+  "vodafoneCash": "ڤودافون كاش",
+  "unknownError": "خطأ غير متوقع",
+  "notificationSettings": "إعدادات الإشعارات"
+}

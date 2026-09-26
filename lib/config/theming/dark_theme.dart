@@ -1,0 +1,92 @@
+// import 'package:flutter/material.dart';
+
+// import 'app_colors.dart';
+
+// final ThemeData darkTheme = ThemeData(
+//   extensions: const <ThemeExtension<dynamic>>[
+//     AppColors(
+//       optional: Colors.green,
+//       mandatory: Colors.redAccent,
+//       placeHolderBackground: Color.fromARGB(255, 213, 213, 213),
+//       placeHolderForeground: Color.fromARGB(255, 163, 163, 163)
+//     )
+//   ],
+
+//   scaffoldBackgroundColor: Colors.grey.shade200,
+//   colorScheme: ColorScheme.dark(
+//     brightness: .light,
+//     primary: Colors.deepOrangeAccent,
+//     onPrimary: Colors.white,
+//     surface: Colors.white,
+//     onSurface: Colors.black,
+//     secondary: Colors.white,
+//     onSecondary: Colors.deepOrangeAccent,
+//     error: Colors.red,
+//     errorContainer: Colors.red.shade100,
+//     onError: Colors.white,
+//     outline: Colors.grey.shade300
+//   ),
+
+//   checkboxTheme: const CheckboxThemeData(
+//     side: BorderSide(
+//       color: Colors.grey
+//     )
+//   ),
+
+//   radioTheme: const RadioThemeData(
+//     side: BorderSide(
+//       color: Colors.grey
+//     ),
+//   ),
+
+//   inputDecorationTheme: InputDecorationThemeData(
+//     isDense: true,
+//     prefixIconColor: Colors.grey,
+//     suffixIconColor: Colors.grey,
+//     hintStyle: const TextStyle(
+//       color: Colors.grey
+//     ),
+//     filled: true,
+//     border: OutlineInputBorder(
+//       borderRadius: const .all(.circular(8.0)),
+//       borderSide: BorderSide(color: Colors.grey.shade300)
+//     ),
+//     enabledBorder: OutlineInputBorder(
+//       borderRadius: const .all(.circular(8.0)),
+//       borderSide: BorderSide(color: Colors.grey.shade300)
+//     ),
+//     errorBorder: const OutlineInputBorder(
+//       borderRadius: .all(.circular(8.0)),
+//       borderSide: BorderSide(color: Colors.red)
+//     )
+//   ),
+
+//   elevatedButtonTheme: ElevatedButtonThemeData(
+//     style: ElevatedButton.styleFrom(
+//       backgroundColor: Colors.deepOrangeAccent,
+//       foregroundColor: Colors.white,
+//       textStyle: TextStyles.font16Weight700,
+//       minimumSize: const .fromHeight(48.0),
+//       shape: const RoundedRectangleBorder(
+//         borderRadius: .all(.circular(12.0))
+//       )
+//     )
+//   ),
+
+//   outlinedButtonTheme: OutlinedButtonThemeData(
+//     style: OutlinedButton.styleFrom(
+//       foregroundColor: Colors.deepOrangeAccent,
+//       textStyle: TextStyles.font14Weight700,
+//       side: const BorderSide(color: Colors.deepOrangeAccent),
+//       shape: const RoundedRectangleBorder(
+//         borderRadius: .all(.circular(12.0))
+//       )
+//     )
+//   ),
+  
+//   textButtonTheme: TextButtonThemeData(
+//     style: TextButton.styleFrom(
+//       textStyle: TextStyles.font14Weight700
+//     )
+//   )
+// );

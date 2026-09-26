@@ -1,0 +1,424 @@
+{
+  "@@locale": "en",
+  "loginSubtitle": "Welcome back! Sign in to continue",
+  "phoneNumber": "Phone number",
+  "invalidPhoneNumber": "Invalid phone number",
+  "login": "Login",
+  "or": "OR",
+  "dontHaveAccount": "Don't have an account?",
+  "createAccount": "Create account",
+  "authFailed": "{method} failed. Please check your details and try again.",
+  "@authFailed": {
+    "placeholders": {
+      "method": {
+        "type": "String"
+      }
+    }
+  },
+  "createAccountSubtitle": "Enter your details to create a new account",
+  "name": "Name",
+  "nameIsRequired": "Name is required",
+  "phoneIsRequired": "Phone number is required",
+  "addressIsRequired": "Address is required",
+  "enterFullName": "Enter your full name",
+  "enterPhoneNumber": "Enter your phone number",
+  "address": "Address",
+  "enterAddress": "Enter your address",
+  "alreadyHaveAccount": "Already have an account?",
+  "termsAgreementPrefix": "By creating an account, you agree to the",
+  "termsAndConditions": "Terms & Conditions",
+  "privacyPolicy": "Privacy Policy",
+  "verifyPhoneNumber": "Verify Mobile Number",
+  "enterVerificationCode": "Enter the verification code sent to",
+  "changeNumber": "Change number",
+  "didntReceiveCode": "Didn't receive the code?",
+  "resendCode": "Resend code",
+  "resendCodeIn": "Resend code in",
+  "confirm": "Confirm",
+  "tryAgain": "Try Again",
+  "otpErrorTitle": "Mobile Number Verification Failed",
+  "otpErrorMessage": "The code you entered is incorrect.\nPlease try again.",
+  "searchFoodDrinks": "Search for food, drinks...",
+  "burgers": "Burgers",
+  "strips": "Strips",
+  "pizza": "Pizza",
+  "meals": "Meals",
+  "drinks": "Drinks",
+  "sides": "Sides",
+  "chooseFavoriteBurger": "Choose your favorite burger",
+  "popularItem": "Popular Item",
+  "viewAll": "View All",
+  "viewCart": "View cart",
+  "itemCount": "{count} item",
+  "@itemCount": {
+    "description": "Number of items shown in the cart bar",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "home": "Home",
+  "orders": "Orders",
+  "profile": "Profile",
+  "cart": "Cart",
+  "search": "Search",
+  "classicBurger": "Classic Burger",
+  "classicBurgerDescription": "Beef patty, cheddar cheese, tomato, lettuce, special sauce",
+  "classicBurgerEnglishDescription": "Beef patty, cheddar cheese, tomato, lettuce, special sauce",
+  "spicyBurger": "Spicy Burger",
+  "spicyBurgerDescription": "Crispy chicken, jalapeños, cheese, spicy sauce",
+  "doubleSmash": "Double Smash",
+  "edit": "Edit",
+  "profileName": "Mohamed Ahmed",
+  "editProfile": "Edit Profile",
+  "addresses": "Addresses",
+  "favorites": "Favorites",
+  "paymentMethods": "Payment methods",
+  "couponsOffers": "Coupons & offers",
+  "support": "Support & help",
+  "shareApp": "Share app",
+  "settings": "Settings",
+  "logout": "Log out",
+  "noInternetTitle": "No Internet Connection",
+  "noInternetMessage": "It looks like you're offline.\nPlease check your connection and try again.",
+  "retry": "Retry",
+  "myOrders": "My Orders",
+  "currentOrders": "Current Orders",
+  "previousOrders": "Previous Orders",
+  "all": "All",
+  "filter": "Filter",
+  "orderNumber": "Order number",
+  "completed": "Completed",
+  "preparing": "Preparing",
+  "delivered": "Delivered",
+  "orderReceived": "Order received",
+  "deliveryTo": "Delivery to",
+  "showDetails": "View details",
+  "reorder": "Reorder",
+  "trackOrder": "Track order",
+  "total": "Total",
+  "noNewOrdersTitle": "No Recent Orders",
+  "noNewOrdersMessage": "When you place an order, it will appear here.",
+  "checkout": "Payment",
+  "delivery": "Delivery",
+  "payment": "Payment",
+  "choosePaymentMethod": "Choose a payment method",
+  "cashOnDelivery": "Cash on Delivery",
+  "cashOnDeliveryDescription": "Pay in cash when you receive your order",
+  "visaMastercard": "Visa / Mastercard",
+  "cardPaymentDescription": "Pay securely using your credit or debit card",
+  "instapay": "InstaPay",
+  "instapayDescription": "Pay easily and instantly using your InstaPay account",
+  "productsSubtotal": "Products total",
+  "deliveryFee": "Delivery fee",
+  "discount": "Discount",
+  "grandTotal": "Total",
+  "confirmOrder": "Confirm order",
+  "securePaymentInfo": "Your payment information is secure and encrypted",
+  "continueToPayment": "Continue to Payment",
+  "resumePayment": "Continue to Payment",
+  "deliveryTitle": "Delivery",
+  "chooseMethod": "Choose method",
+  "homeDelivery": "Home delivery",
+  "branchPickup": "Branch pickup",
+  "chooseTime": "Choose time:",
+  "pickupFrom": "Pickup from:",
+  "pickupTime": "Pickup time",
+  "pickupLocation": "Pickup location",
+  "chooseAddress": "Choose address:",
+  "changeAddress": "Change address",
+  "addNewAddress": "Add new address",
+  "confirmLocation": "Confirm location",
+  "selectYourLocation": "Select your location",
+  "searchPlaceAddress": "Search for a place or address",
+  "confirmAddress": "Confirm Address",
+  "regionName": "Region name",
+  "searchOrChooseRegion": "Choose or search for your region",
+  "streetName": "Street name",
+  "enterStreetName": "Enter street name",
+  "landmark": "Landmark",
+  "landmarkExample": "Example: In front of Banque Misr, next to a school...",
+  "buildingNumber": "House / building number",
+  "buildingNumberExample": "Example: 123",
+  "floor": "Floor",
+  "floorExample": "Example: 3",
+  "apartmentNumber": "Apartment number",
+  "apartmentExample": "Example: 7",
+  "additionalNotes": "Additional notes",
+  "additionalNotesHint": "Write any details that will help us reach you...",
+  "setAsDefaultAddress": "Set as default address",
+  "defaultAddressDescription": "This address will be used for every order.",
+  "productOptionsDescription": "A fried or baked sweet made from sweet dough, usually covered with sugar or chocolate.",
+  "chooseOptions": "Choose from the options:",
+  "required": "Required",
+  "chooseOne": "Choose 1",
+  "paidAdditions": "Paid Additions",
+  "freeAdditions": "Free Additions",
+  "optional": "optional",
+  "mandatory": "mandatory",
+  "powderedSugar": "Powdered sugar",
+  "whiteChocolate": "White chocolate",
+  "pistachio": "Crushed pistachio",
+  "chooseQuantityToAdd": "Choose the quantity to add the product",
+  "addToOrder": "Add to order",
+  "cartView": "View cart",
+  "notifications": "Notifications",
+  "updates": "Updates",
+  "offers": "Offers",
+  "notificationOrders": "Orders",
+  "today": "Today",
+  "yesterday": "Yesterday",
+  "orderConfirmedNotification": "Your order is confirmed",
+  "orderConfirmedMessage": "Your order #{orderNumber} has been confirmed and is being prepared.",
+  "orderOnTheWayNotification": "Your order is on the way",
+  "orderOnTheWayMessage": "Your order #{orderNumber} is on the way and will arrive within {minutes} minutes.",
+  "specialOfferNotification": "Special Offer 🎉",
+  "specialOfferMessage": "{discount}% off all orders from today until the end of the week!",
+  "orderDeliveredNotification": "Your order has been delivered",
+  "orderDeliveredMessage": "Your order #{orderNumber} was delivered successfully.",
+  "appUpdateNotification": "App Update",
+  "appUpdateMessage": "The app has been updated to the latest version to improve your experience.",
+  "welcomeNotification": "Welcome to our app! 👋",
+  "welcomeMessage": "Start shopping now and discover the best offers.",
+  "noNotificationsTitle": "No Notifications",
+  "noNotificationsMessage": "Your new notifications will appear here.",
+  "@orderConfirmedMessage": {
+    "placeholders": {
+      "orderNumber": {
+        "type": "String"
+      }
+    }
+  },
+  "@orderOnTheWayMessage": {
+    "placeholders": {
+      "orderNumber": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "@specialOfferMessage": {
+    "placeholders": {
+      "discount": {
+        "type": "int"
+      }
+    }
+  },
+  "@orderDeliveredMessage": {
+    "placeholders": {
+      "orderNumber": {
+        "type": "String"
+      }
+    }
+  },
+  "pound": "EGP",
+  "canceled": "Canceled",
+  "timeAgo": "{time} ago",
+  "@timeAgo": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "minute": "A minute",
+  "twoMinutes": "Two minutes",
+  "minutes": "minutes",
+  "hour": "An hour",
+  "twoHours": "Two hours",
+  "hours": "hours",
+  "now": "Now",
+  "myAccount": "My Account",
+  "version": "Version",
+  "region": "Region",
+  "street": "Street",
+  "details": "Details",
+  "apartment": "Apartment",
+  "orderNotes": "Order notes",
+  "orderNotesHint": "Write your notes here...",
+  "orderNotesDescription": "You can write any special instructions for your order (e.g., no sugar, extra sauce...)",
+  "product": "product",
+  "egypt": "Egypt",
+  "saudiArabia": "Saudi Arabia",
+  "emirates": "UAE",
+  "kuwait": "Kuwait",
+  "register": "Register",
+  "otpErrorSnackbarMessage": "Verification failed. Please check the code and try again.",
+  "selectedLocation": "Selected Location",
+  "detailedAddress": "Detailed Address",
+  "regionIsRequired": "Please choose a region",
+  "detailedAddressRequired": "Please enter your detailed address",
+  "couponsSubtitle": "Use your coupons and enjoy the best offers",
+  "couponsTab": "Coupons",
+  "offersTab": "Offers",
+  "enterCouponCode": "Have a coupon code? Enter it here",
+  "apply": "Apply",
+  "availableCoupons": "Available coupons",
+  "expiredCoupons": "Expired coupons",
+  "couponActive": "Active",
+  "couponExpired": "Expired",
+  "remainingUses": "Remaining uses",
+  "couponUsesCount": "{remaining} of {total}",
+  "@couponUsesCount": {
+    "placeholders": {
+      "remaining": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "unlimited": "Unlimited",
+  "couponMinimumOrder": "Minimum order {amount} EGP",
+  "@couponMinimumOrder": {
+    "placeholders": {
+      "amount": {
+        "type": "int"
+      }
+    }
+  },
+  "couponExpiresOn": "Expires on {date}",
+  "@couponExpiresOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "couponExpiredOn": "Expired on {date}",
+  "@couponExpiredOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "copyCode": "Copy code",
+  "codeCopied": "Code copied",
+  "freeShipping": "Free shipping",
+  "couponsInfoTitle": "Apply coupons before payment",
+  "couponsInfoMessage": "You cannot combine more than one coupon in a single order",
+  "offerValidUntil": "Valid until {date}",
+  "@offerValidUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "orderNow": "Order now",
+  "noOffersTitle": "No offers right now",
+  "noOffersMessage": "Stay tuned, new offers will show up here as soon as they are available.",
+  "restaurants": "Restaurants",
+  "foods": "Foods",
+  "favoriteRestaurantsSubtitle": "The restaurants you added to your favorites",
+  "addNewRestaurant": "Add new restaurant",
+  "deliveryStartsFrom": "Delivery starts from {amount} EGP",
+  "@deliveryStartsFrom": {
+    "placeholders": {
+      "amount": {
+        "type": "int"
+      }
+    }
+  },
+  "delete": "Delete",
+  "noFavoritesTitle": "No favorites yet",
+  "noFavoritesMessage": "You can add your favorite foods and restaurants to reach them quickly",
+  "account": "Account",
+  "application": "App",
+  "supportAndHelp": "Support & help",
+  "accountInformation": "Account information",
+  "accountInformationSubtitle": "Name, phone number, email",
+  "notificationsSubtitle": "Manage notification preferences",
+  "enableNotifications": "Enable notifications",
+  "enableNotificationsSubtitle": "Receive updates about your orders and offers",
+  "language": "Language",
+  "arabic": "Arabic",
+  "locationSettings": "Location",
+  "locationSettingsSubtitle": "Manage location access",
+  "appearance": "Appearance",
+  "appearanceSubtitle": "Change the app theme",
+  "lightAppearance": "Light appearance",
+  "darkAppearance": "Dark appearance",
+  "helpCenter": "Help center",
+  "helpCenterSubtitle": "FAQ and support",
+  "termsAndConditionsSubtitle": "Usage policy and terms of service",
+  "aboutApp": "About the app",
+  "savedAddresses": "Saved addresses",
+  "defaultLabel": "Default",
+  "setAsDefault": "Set as default",
+  "addressesSecured": "All addresses are safe and encrypted",
+  "savedPaymentMethods": "Saved payment methods",
+  "addNewPaymentMethod": "Add new payment method",
+  "paymentMethodsSecured": "All payment information is safe and encrypted",
+  "lastUpdated": "Last updated: {date}",
+  "@lastUpdated": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "termsIntro": "Welcome to our app. By using the app, you agree to be bound by these terms and conditions. Please read them carefully before using the service.",
+  "termsAcceptanceTitle": "Acceptance of terms",
+  "termsAcceptanceBody": "By using this app, you agree to these terms and conditions and to all applicable policies and guidelines. If you do not agree to any part of these terms, please do not use the app.",
+  "termsServiceUsageTitle": "Use of the service",
+  "termsServiceUsageBody": "You must use the app for lawful purposes only and in a way that complies with these terms and conditions. You agree not to use the app in any way that could affect its performance or cause harm to the app or to other users.",
+  "termsUserAccountTitle": "User account",
+  "termsUserAccountBody": "You may need to create an account to use some of the app features. You are responsible for keeping your account information confidential and for all activity that happens through your account.",
+  "termsOrdersAndPaymentTitle": "Orders and payment",
+  "termsOrdersAndPaymentBody": "All orders are subject to availability and prices may change without prior notice. All due amounts must be paid before the order is confirmed.",
+  "termsCancellationTitle": "Order cancellation and refunds",
+  "termsCancellationBody": "You can cancel your order before preparation starts. Once preparation has started, the order cannot be cancelled and the paid amount cannot be refunded except in accordance with our refund policy.",
+  "termsChangesTitle": "Changes to the terms",
+  "termsChangesBody": "We reserve the right to modify these terms and conditions at any time. You will be notified of any changes through the app. Continuing to use the app after a change means you accept the new terms.",
+  "termsContactTitle": "Contact us",
+  "termsContactBody": "If you have any questions or enquiries about these terms and conditions, you can contact us through the support page in the app.",
+  "agreeToTermsPrefix": "I have read and agree to the",
+  "agree": "Agree",
+  "privacyHeroTitle": "Your privacy matters to us",
+  "privacyHeroMessage": "We are committed to protecting your personal data and using it safely and responsibly",
+  "privacyIntro": "This policy explains how we collect, use and protect your personal data when you use our app and services.",
+  "privacyCollectedDataTitle": "Information we collect",
+  "privacyCollectedDataBody": "We collect the information you give us directly, such as your name, phone number and address, in addition to order and payment information when you use the app.",
+  "privacyDataUsageTitle": "How we use your information",
+  "privacyDataUsageBody": "We use your information to provide and improve our services, process orders and payments, communicate with you, and provide technical support and suitable recommendations.",
+  "privacyDataSharingTitle": "Sharing information",
+  "privacyDataSharingBody": "We do not sell or rent your personal data to any third party. We may share your data with service providers only to fulfil orders and payments.",
+  "privacyDataProtectionTitle": "Data protection",
+  "privacyDataProtectionBody": "We apply strict security standards to protect your data from unauthorised access, modification, disclosure or destruction.",
+  "privacyYourRightsTitle": "Your rights",
+  "privacyYourRightsBody": "You have the right to access, modify or delete your personal data at any time through your account settings or by contacting us.",
+  "privacyChangesTitle": "Changes to the policy",
+  "privacyChangesBody": "We may update this privacy policy from time to time. You will be notified of any important changes through the app.",
+  "supportHeroTitle": "How can we help you?",
+  "supportHeroMessage": "Choose the topic you need help with",
+  "orderIssue": "Order issue",
+  "followOrder": "Follow the order",
+  "lateOrder": "Order is late",
+  "wrongOrMissingItem": "Missing or wrong item",
+  "paymentIssue": "Payment issue",
+  "paymentNotConfirmed": "Payment was not confirmed",
+  "refund": "Refund",
+  "editAccountData": "Edit account data",
+  "loginIssue": "Login issue",
+  "contactUs": "Contact us",
+  "contactUsMessage": "Did not find what you are looking for? We are here to help",
+  "chatWithSupport": "Chat with support",
+  "supportHours": "Available daily from 10 AM to 12 midnight",
+  "processingYourOrder": "Processing your order",
+  "enterInstaPayUsername": "Enter your InstaPay username without @instapay",
+  "requiredField": "Required field",
+  "invalidUserName": "Invalid username",
+  "confirmPayment": "Confirm Payment",
+  "yourCurrentBalance": "Your current balance",
+  "enterWalletNumber": "Enter the wallet number you will send from",
+  "sendMoneyToNumber": "Send the money to this number",
+  "vodafoneCash": "Vodafone Cash",
+  "unknownError": "Uknown Error",
+  "notificationSettings": "Notification Settings"
+}

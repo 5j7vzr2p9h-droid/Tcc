@@ -1,0 +1,3 @@
+#include "Generated.xcconfig"
+// Secrets from the git-ignored `.env` at the Flutter project root (MAPS_API_KEY, ...).
+#include "../../.env"
