@@ -6,8 +6,9 @@ import '../../../../core/errors/failures.dart';
 import '../../../../core/extensions/context_l10n.dart';
 import '../../../../core/utils/app_icons.dart';
 import '../../../../core/widgets/default_circular_indicator.dart';
+import '../../../../core/widgets/failure_place_holder.dart';
 import '../../../../core/widgets/search_text_field.dart';
-import '../../../../test_page.dart';
+import '../../../../splash_page.dart';
 import '../../domain/entities/category_entity.dart';
 import '../viewmodels/home_viewmodel/home_cubit.dart';
 import '../viewmodels/home_viewmodel/home_state.dart';
@@ -41,9 +42,11 @@ class _HomeTabState extends State<HomeTab> with SingleTickerProviderStateMixin{
     builder: (BuildContext context, HomeState state)
     => switch(state){
       HomeLoadingState() => const  Center(child: DefaultCircularIndicator()),
-      HomeGetFailureState(:final Failure failure) => FailurePlaceHolder(
-        failure: failure,
-        onRetry: context.read<HomeCubit>().init
+      HomeGetFailureState(:final Failure failure) => Center(
+        child: FailurePlaceHolder(
+          failure: failure,
+          onRetry: context.read<HomeCubit>().init
+        ),
       ),
       HomeGetSuccessState(:final List<CategoryEntity> categories) => CustomScrollView(
         slivers: <Widget>[

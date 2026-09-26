@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -17,11 +16,7 @@ import '../widgets/otp_field.dart';
 import '../widgets/otp_resend_timer.dart';
 import '../widgets/otp_target_note.dart';
 
-final class const OtpVerificationPage({
-  super.key,
-  required final String _phoneNumber,
-  required final String _logoUrl
-}) extends StatefulWidget {
+final class const OtpVerificationPage(final String _phoneNumber, {super.key}) extends StatefulWidget {
 
   @override
   State<OtpVerificationPage> createState() => _OtpVerificationPageState();
@@ -60,6 +55,10 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
               Navigator.pushReplacementNamed(context, Routes.main);
             else if(state is VerifyPhoneFailureState)
               SnackBarMessage.showErrorMessage(context, state.failure.mapFailureToMessage(context));
+            else if(state is ResendOtpSuccessState)
+              SnackBarMessage.showSuccessMessage(context, state.message);
+            else if(state is ResendOtpFailureState)
+              SnackBarMessage.showErrorMessage(context, state.failure.mapFailureToMessage(context));
           },
           builder: (BuildContext context, VerifyPhoneState state)
           => ListView(
@@ -76,8 +75,11 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
                       )
                     )
                   ):
-                  CachedNetworkImage(
-                    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/5/53/Wikimedia-logo.png?utm_source=ar.wikipedia.org&utm_campaign=index&utm_content=original",
+                  const Center(
+                    child: Image(
+                      image: AssetImage(AssetsManager.logo),
+                      width: 200.0,
+                    ),
                   ),
                 const SizedBox(height: 60.0),
                 Text(
@@ -110,7 +112,9 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
                   onCompleted: (){},
                 ),
                 const SizedBox(height: 40.0),
-                OtpResendTimer(onResend: (){}),
+                OtpResendTimer(
+                  onResend: () => context.read<VerifyPhoneCubit>().resendOtp(widget._phoneNumber)
+                ),
                 const SizedBox(height: 60.0),
                 ElevatedButton(
                   onPressed: state is VerifyPhoneLoadingState

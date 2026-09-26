@@ -15,7 +15,5 @@ abstract final class Routes{
     termsAndConditions = "terms_and_conditions",
     privacyPolicy = "privacy_policy",
     support = "support",
-
-
-    TEST = "test";
+    splash = "splash";
 }

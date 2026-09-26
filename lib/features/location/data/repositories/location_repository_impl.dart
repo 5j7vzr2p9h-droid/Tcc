@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
-import 'package:electronic_menu/features/delivery/domain/entities/suggested_place_entity.dart';
+import 'package:electronic_menu/features/location/data/models/region_model.dart';
+import 'package:electronic_menu/features/location/domain/entities/suggested_place_entity.dart';
 import 'package:electronic_menu/features/location/domain/entities/branch_entity.dart';
 
 import '../../../../core/cache/prefs.dart';
@@ -7,6 +8,7 @@ import '../../../../core/constants/cache_keys.dart';
 import '../../../../core/errors/exceptions.dart';
 import '../../../../core/errors/failures.dart';
 import '../../../../core/location/location_service.dart';
+import '../../../../core/network/network_info.dart';
 import '../../domain/repositories/location_repository.dart';
 import '../datasources/places_remote_datasource.dart';
 
@@ -14,11 +16,13 @@ final class LocationRepositoryImpl implements LocationRepository{
   final Prefs _prefs;
   final LocationService _locationService;
   final PlacesRemoteDatasource _placesRemoteDatasource;
+  final NetworkInfo _networkInfo;
 
   const LocationRepositoryImpl({
     required this._prefs,
     required this._locationService,
-    required this._placesRemoteDatasource
+    required this._placesRemoteDatasource,
+    required this._networkInfo
   });
 
   @override
@@ -47,12 +51,14 @@ final class LocationRepositoryImpl implements LocationRepository{
       return await (await getDeviceLocation()).fold(
         (Failure failure) => Left(failure),
         (List<double> coordinates) async{
-          final List<SuggestedPlaceEntity> models = await _placesRemoteDatasource.searchPlace(
-            query: query,
-            lat: coordinates[0],
-            lng: coordinates[1],
-          );
-          return Right(models);
+          if(await _networkInfo.isDeviceConnected){
+            final List<SuggestedPlaceEntity> models = await _placesRemoteDatasource.searchPlace(
+              query: query,
+              lat: coordinates[0],
+              lng: coordinates[1],
+            );
+            return Right(models);
+          } else return const Left(OfflineFailure());
         }
       );
     } on ServerException catch (e) {
@@ -66,30 +72,50 @@ final class LocationRepositoryImpl implements LocationRepository{
 
   @override
   Future<Either<Failure, List<double>>> getPlaceCoordinates(String placeId) async{
-    try {
-      final List<double> coordinates = await _placesRemoteDatasource.getPlaceCoordinates(placeId);
-      return Right(coordinates);
-    } on ServerException catch (e) {
-      return Left(ServerFailure(e.message));
-    } on OfflineException {
-      return const Left(OfflineFailure());
-    } on UnknownException {
-      return const Left(UnknownFailure());
-    }
+    if(await _networkInfo.isDeviceConnected)
+      try {
+        final List<double> coordinates = await _placesRemoteDatasource.getPlaceCoordinates(placeId);
+        return Right(coordinates);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(e.message));
+      } on OfflineException {
+        return const Left(OfflineFailure());
+      } on UnknownException {
+        return const Left(UnknownFailure());
+      }
+    else return const Left(OfflineFailure());
   }
 
   @override
   Future<Either<Failure, BranchEntity>> getBranch({required double lat, required double lng}) async{
-    try {
-      final BranchEntity branch = await _placesRemoteDatasource.getBranch(lat: lat, lng: lng);
-      _prefs.setInt(key: CacheKeys.branchId, value: branch.id);
-      return Right(branch);
-    } on ServerException catch (e) {
-      return Left(ServerFailure(e.message));
-    } on OfflineException {
-      return const Left(OfflineFailure());
-    } on UnknownException {
-      return const Left(UnknownFailure());
-    }
+    if(await _networkInfo.isDeviceConnected)
+      try {
+        final BranchEntity branch = await _placesRemoteDatasource.getBranch(lat: lat, lng: lng);
+        _prefs.setInt(key: CacheKeys.branchId, value: branch.id);
+        return Right(branch);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(e.message));
+      } on OfflineException {
+        return const Left(OfflineFailure());
+      } on UnknownException {
+        return const Left(UnknownFailure());
+      }
+    else return const Left(OfflineFailure());
+  }
+
+  @override
+  Future<Either<Failure, List<RegionModel>>> getRegions() async{
+    if(await _networkInfo.isDeviceConnected) {
+       try{
+        final List<RegionModel> regions = await _placesRemoteDatasource.getRegions();
+        return Right(regions);
+      }on ServerException catch (e) {
+        return Left(ServerFailure(e.message));
+      } on OfflineException {
+        return const Left(OfflineFailure());
+      } on UnknownException {
+        return const Left(UnknownFailure());
+      }
+    }else return const Left(OfflineFailure());
   }
 }

@@ -55,7 +55,7 @@ final class LegalRepositoryImpl implements LegalRepository{
           return const Left(UnknownFailure());
         }
       }
+      else return const Left(OfflineFailure());
     }
-    return const Left(OfflineFailure());
   }
 }

@@ -66,5 +66,28 @@ final class AuthRepositoryImpl implements AuthRepository{
   }
 
   @override
-  void logout() => _remoteDatasource.logout();
+  Future<Either<Failure, Unit>> logout() async{
+    try{
+      await _remoteDatasource.logout();
+      return const Right(unit);
+    }on UnknownException{
+      return const Left(UnknownFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> resendOtp(String phone) async{
+    if(await _networkInfo.isDeviceConnected)
+      try{
+        final String message = await _remoteDatasource.resendOtp(phone);
+        return Right(message);
+      }on ServerException catch(e){
+        return Left(ServerFailure(e.message));
+      }on OfflineException{
+        return const Left(OfflineFailure());
+      }on UnknownException{
+        return const Left(UnknownFailure());
+      }
+    else return const Left(OfflineFailure());
+  }
 }

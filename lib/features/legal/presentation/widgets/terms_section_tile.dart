@@ -14,8 +14,8 @@ final class TermsSectionTile extends StatelessWidget {
   });
 
   @override
-  ExpansionTile build(BuildContext context)
-  => ExpansionTile(
+  ExpansionTile build(BuildContext context) {
+    return ExpansionTile(
     shape: const Border(),
     collapsedShape: const Border(),
     controlAffinity: .leading,
@@ -31,8 +31,10 @@ final class TermsSectionTile extends StatelessWidget {
     children: <Text>[
       Text(
         _section.body,
-        style: TextStyles.font14Weight400.copyWith(color: Colors.grey)
+        style: TextStyles.font14Weight400.copyWith(color: Colors.grey),
+        textAlign: .start,
       )
     ],
   );
+  }
 }

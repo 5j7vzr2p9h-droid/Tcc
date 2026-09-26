@@ -11,7 +11,7 @@ final class const LegalListModel({
   factory LegalListModel.fromJson(dynamic json)
   => LegalListModel(
     lastUpdated: DateTime.parse(json["lastUpdated"]),
-    legalSections: (json["data"] as List).map<LegalSectionModel>(LegalSectionModel.fromJson).toList()
+    legalSections: (json["sections"] as List).map<LegalSectionModel>(LegalSectionModel.fromJson).toList()
   );
 }
 

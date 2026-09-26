@@ -23,7 +23,9 @@ final class LegalRemoteDatasourceImpl implements LegalRemoteDatasource{
 
   Future<LegalListModel> _getLegalList(String endpoint) async{
     try{
+      print("===========================REquesting");
       final Response response = await _dio.get(endpoint);
+      print(response.data);
       return LegalListModel.fromJson(response.data);
     }on DioException catch(exception){
       ApiErrorHandler.handle(exception);

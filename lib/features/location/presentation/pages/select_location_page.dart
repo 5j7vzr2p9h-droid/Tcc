@@ -14,11 +14,12 @@ import '../../../../core/widgets/default_circular_indicator.dart';
 import '../../../delivery/presentation/widgets/address_dropdown_field.dart';
 import '../../../delivery/presentation/widgets/address_text_field.dart';
 import '../../../delivery/presentation/widgets/primary_address_switch.dart';
+import '../widgets/address_details_form.dart';
 import '../widgets/default_map.dart';
 import '../../../../core/widgets/search_text_field.dart';
-import '../../../delivery/domain/entities/suggested_place_entity.dart';
-import '../../viewmodels/select_location_viewmodel/select_location_cubit.dart';
-import '../../viewmodels/select_location_viewmodel/select_location_state.dart';
+import '../../domain/entities/suggested_place_entity.dart';
+import '../viewmodels/select_location_viewmodel/select_location_cubit.dart';
+import '../viewmodels/select_location_viewmodel/select_location_state.dart';
 
 final class const SelectLocationPage(final bool _isInitial, {super.key}) extends StatefulWidget {
 
@@ -29,10 +30,8 @@ final class const SelectLocationPage(final bool _isInitial, {super.key}) extends
 final class _SelectLocationPageState extends State<SelectLocationPage> {
 
   final ValueNotifier<LatLng> _mapPositionController = ValueNotifier(const LatLng(0.0, 0.0));
-  final TextEditingController _notesController = TextEditingController(), _searchController = TextEditingController();
-  final ValueNotifier<bool> _isPrimaryController = ValueNotifier<bool>(true),
-    _resultsContainerShowController = ValueNotifier<bool>(false);
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _searchController = TextEditingController();
+  final ValueNotifier<bool> _resultsContainerShowController = ValueNotifier<bool>(false);
   final Debouncer _debouncer = Debouncer(delay: const Duration(milliseconds: 500));
 
   @override
@@ -81,11 +80,22 @@ final class _SelectLocationPageState extends State<SelectLocationPage> {
           SnackBarMessage.showErrorMessage(context, state.failure.mapFailureToMessage(context));
         }
         else if(state is ConfirmLocationSuccessState)
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            Routes.login,
-            (Route<dynamic> predicate) => false
-          );
+          if(widget._isInitial)
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              Routes.login,
+              (Route<dynamic> predicate) => false
+            );
+          else{
+            Navigator.pop(context);
+            Scaffold.of(context).showBottomSheet(
+              (BuildContext context) => AddressDetailsForm(),
+               shape: const RoundedRectangleBorder(
+                borderRadius: .vertical(top: .circular(16.0))
+              ),
+            );
+          }
+          
       },
       builder: (BuildContext context, SelectLocationState state) => switch(state){
         SelectLocationInitialState() => const SizedBox.shrink(),
@@ -191,51 +201,10 @@ final class _SelectLocationPageState extends State<SelectLocationPage> {
     bottomNavigationBar: BottomAppBar(
       child: Builder(
         builder: (BuildContext context) => ElevatedButton(
-          onPressed: () => widget._isInitial
-            ? context.read<SelectLocationCubit>().confirmLocation(
-              lat: _mapPositionController.value.latitude,
-              lng: _mapPositionController.value.longitude
-            )
-            : showBottomSheet(
-              context: context,
-              shape: const RoundedRectangleBorder(
-                borderRadius: .vertical(top: .circular(16.0))
-              ),
-              builder: (BuildContext context) => Padding(
-                padding: const .all(pageContentPadding),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisSize: .min,
-                    crossAxisAlignment: .stretch,
-                    spacing: 16.0,
-                    children: <Widget>[
-                      AddressDropdownField(
-                        (String? value){
-
-                        }
-                      ),
-                      AddressTextField(
-                        textController: _notesController,
-                        linesNumber: 3,
-                        label: context.l10n.detailedAddress,
-                        hint: context.l10n.additionalNotesHint,
-                        icon: Icons.edit_note,
-                      ),
-                      PrimaryAddressSwitch(controller: _isPrimaryController),
-                      ElevatedButton(
-                        onPressed: () {
-                          if(_formKey.currentState!.validate()){
-
-                          }
-                        },
-                        child: Text(context.l10n.confirmAddress)
-                      )
-                    ],
-                  ),
-                )
-              )
-            ),
+          onPressed: () => context.read<SelectLocationCubit>().confirmLocation(
+            lat: _mapPositionController.value.latitude,
+            lng: _mapPositionController.value.longitude
+          ),
           child: Text(context.l10n.confirmLocation)
         ),
       ),

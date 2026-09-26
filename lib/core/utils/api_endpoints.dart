@@ -1,14 +1,15 @@
 abstract interface class ApiEndpoints {
   static const String googlePlacesBaseUrl = "https://places.googleapis.com/v1/places",
-  baseUrl = "http://192.168.1.10:5259/api/emenu/v1/",
-  categories = "catalog/categories",
-  item = "catalog/products",
-  login = "auth/login",
-  register = "auth/register",
-  resendOtp = "auth/resend-otp",
-  verifyOtp = "auth/verify-otp",
-  logout = "auth/logout",
-  privacyPolicy = "legal/privacy",
-  termsAndConditions = "legal/terms",
-  locationResolve = "location/resolve";
+  baseUrl = "http://192.168.1.10:5259/api/",
+  categories = "emenu/v1/catalog/categories",
+  item = "emenu/v1/catalog/products",
+  login = "emenu/v1/auth/login",
+  register = "emenu/v1/auth/register",
+  resendOtp = "emenu/v1/auth/resend-otp",
+  verifyOtp = "emenu/v1/auth/verify-otp",
+  logout = "emenu/v1/auth/logout",
+  privacyPolicy = "emenu/v1/legal/privacy",
+  termsAndConditions = "emenu/v1/legal/terms",
+  locationResolve = "emenu/v1/location/resolve",
+  availableAddresses = "CustomerAddress";
 }

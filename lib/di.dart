@@ -20,6 +20,7 @@ import 'features/auth/domain/repositories/auth_repository.dart';
 import 'features/auth/domain/usecase/login_usecase.dart';
 import 'features/auth/domain/usecase/logout_usecase.dart';
 import 'features/auth/domain/usecase/register_usecase.dart';
+import 'features/auth/domain/usecase/resend_otp_usecase.dart';
 import 'features/auth/domain/usecase/verify_phone_usecase.dart';
 import 'features/auth/presentation/viewmodels/login_viewmodel/login_cubit.dart';
 import 'features/auth/presentation/viewmodels/register_viewmodel/register_cubit.dart';
@@ -40,8 +41,10 @@ import 'features/delivery/domain/usecases/get_address_name_usecase.dart';
 import 'features/location/domain/usecases/get_branch_usecase.dart';
 import 'features/location/domain/usecases/get_device_location_usecase.dart';
 import 'features/location/domain/usecases/get_place_coordinates_usecase.dart';
+import 'features/location/domain/usecases/get_regions_usecase.dart';
 import 'features/location/domain/usecases/search_places_usecase.dart';
-import 'features/location/viewmodels/select_location_viewmodel/select_location_cubit.dart';
+import 'features/location/presentation/viewmodels/address_details_viewmodel/address_details_cubit.dart';
+import 'features/location/presentation/viewmodels/select_location_viewmodel/select_location_cubit.dart';
 import 'features/profile/presentation/viewmodel/profile_cubit.dart';
 import 'features/root/data/datasources/categories_local_datasource.dart';
 import 'features/root/data/datasources/categories_remote_datasource.dart';
@@ -65,6 +68,10 @@ Future<void> setupDependencyInjection() async{
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   const FlutterSecureStorage secureStorage = FlutterSecureStorage();
   final String? token = await secureStorage.read(key: "token");
+
+  final Box<CategoryModel> categoriesBox = await Hive.openBox<CategoryModel>("categories");
+  final Box<ItemModel> itemsBox = await Hive.openBox<ItemModel>("items");
+  final Box<LegalListModel> legalBox = await Hive.openBox<LegalListModel>("legal");
 
   getIt.registerSingleton<Prefs>(PrefsImpl(prefs));
   getIt.registerSingleton(
@@ -118,7 +125,10 @@ Future<void> setupDependencyInjection() async{
   getIt.registerLazySingleton<AuthRemoteDatasource>(
     () => AuthRemoteDatasourceImpl(
       dio: getIt<Dio>(),
-      secureStorage: getIt<FlutterSecureStorage>()
+      secureStorage: getIt<FlutterSecureStorage>(),
+      itemsBox: itemsBox,
+      categoriesBox: categoriesBox,
+      legalBox: legalBox
     )
   );
   getIt.registerLazySingleton<CategoriesRemoteDatasource>(
@@ -133,19 +143,17 @@ Future<void> setupDependencyInjection() async{
   ));
   getIt.registerLazySingleton<LegalRemoteDatasource>(() => LegalRemoteDatasourceImpl(getIt<Dio>()));
 
-  final Box<CategoryModel> categoriesBox = await Hive.openBox<CategoryModel>("categories");
   getIt.registerLazySingleton<CategoriesLocalDatasource>(() => CategoriesLocalDatasourceImpl(categoriesBox));
 
-  final Box<ItemModel> itemsBox = await Hive.openBox<ItemModel>("items");
   getIt.registerLazySingleton<ItemsLocalDatasource>(() => ItemsLocalDatasourceImpl(itemsBox));
 
-  final Box<LegalListModel> legalBox = await Hive.openBox<LegalListModel>("legal");
   getIt.registerLazySingleton<LegalLocalDatasource>(() => LegalLocalDatasourceImpl(legalBox));
 
   getIt.registerLazySingleton<LocationRepository>(() => LocationRepositoryImpl(
     prefs: getIt<Prefs>(),
     locationService: getIt<LocationService>(),
-    placesRemoteDatasource: getIt<PlacesRemoteDatasource>()  
+    placesRemoteDatasource: getIt<PlacesRemoteDatasource>(),
+    networkInfo: getIt<NetworkInfo>()
   ));
   getIt.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(
@@ -183,10 +191,12 @@ Future<void> setupDependencyInjection() async{
   getIt.registerLazySingleton<LogoutUsecase>(() => LogoutUsecase(getIt<AuthRepository>()));
   getIt.registerLazySingleton<RegisterUsecase>(() => RegisterUsecase(getIt<AuthRepository>()));
   getIt.registerLazySingleton<VerifyPhoneUsecase>(() => VerifyPhoneUsecase(getIt<AuthRepository>()));
+  getIt.registerLazySingleton<ResendOtpUsecase>(() => ResendOtpUsecase(getIt<AuthRepository>()));
   getIt.registerLazySingleton<GetCategoryProductsUsecase>(() => GetCategoryProductsUsecase(getIt<ItemsRepository>()));
   getIt.registerLazySingleton<GetBranchUsecase>(() => GetBranchUsecase(getIt<LocationRepository>()));
   getIt.registerLazySingleton<GetPrivacyPolicyUsecase>(() => GetPrivacyPolicyUsecase(getIt<LegalRepository>()));
   getIt.registerLazySingleton<GetTermsUsecase>(() => GetTermsUsecase(getIt<LegalRepository>()));
+  getIt.registerLazySingleton<GetRegionsUsecase>(() => GetRegionsUsecase(getIt<LocationRepository>()));
 
   getIt.registerFactory<ProfileCubit>(() => ProfileCubit(getIt<LogoutUsecase>()));
   getIt.registerFactory<RegisterCubit>(() => RegisterCubit(getIt<RegisterUsecase>()));
@@ -198,8 +208,12 @@ Future<void> setupDependencyInjection() async{
     getBranchUsecase: getIt<GetBranchUsecase>()
   ));
   getIt.registerFactory<HomeCubit>(() => HomeCubit(getIt<CategoriesRepository>()));
-  getIt.registerFactory<VerifyPhoneCubit>(() => VerifyPhoneCubit(getIt<VerifyPhoneUsecase>()));
+  getIt.registerFactory<VerifyPhoneCubit>(() => VerifyPhoneCubit(
+    verifyPhoneUsecase: getIt<VerifyPhoneUsecase>(),
+    resendOtpUsecase: getIt<ResendOtpUsecase>()
+  ));
   getIt.registerFactory<CategoryProductsCubit>(() => CategoryProductsCubit(getIt<GetCategoryProductsUsecase>()));
   getIt.registerFactory<PrivacyPolicyCubit>(() => PrivacyPolicyCubit(getIt<GetPrivacyPolicyUsecase>()));
   getIt.registerFactory<TermsCubit>(() => TermsCubit(getIt<GetTermsUsecase>()));
+  getIt.registerFactory<AddressDetailsCubit>(() => AddressDetailsCubit(getIt<GetRegionsUsecase>()));
 }

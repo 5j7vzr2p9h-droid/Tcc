@@ -4,6 +4,7 @@ import '../../../../core/errors/exceptions.dart';
 import '../../../../core/utils/api_endpoints.dart';
 import '../../../../core/utils/api_error_handler.dart';
 import '../models/branch_model.dart';
+import '../models/region_model.dart';
 import '../models/suggested_place_model.dart';
 
 abstract interface class PlacesRemoteDatasource {
@@ -16,6 +17,8 @@ abstract interface class PlacesRemoteDatasource {
   Future<List<double>> getPlaceCoordinates(String placeId);
 
   Future<BranchModel> getBranch({required double lat, required double lng});
+
+  Future<List<RegionModel>> getRegions();
 }
 
 final class PlacesRemoteDatasourceImpl implements PlacesRemoteDatasource{
@@ -91,6 +94,22 @@ final class PlacesRemoteDatasourceImpl implements PlacesRemoteDatasource{
         }
       );
       return BranchModel.fromJson(response.data);
+    }on DioException catch(exception){
+      ApiErrorHandler.handle(exception);
+    }catch(e){
+      throw const UnknownException();
+    }
+  }
+
+  @override
+  Future<List<RegionModel>> getRegions() async{
+    try{
+      final Response response = await _eMenuDio.get(
+        ApiEndpoints.availableAddresses
+      );
+      final List<RegionModel> regions = (response.data["data"] as List)
+        .map<RegionModel>((json) => RegionModel.fromJson(json)).toList();
+      return regions;
     }on DioException catch(exception){
       ApiErrorHandler.handle(exception);
     }catch(e){

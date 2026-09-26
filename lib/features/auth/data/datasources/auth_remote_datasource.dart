@@ -2,12 +2,17 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:electronic_menu/core/errors/exceptions.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 import '../../../../core/utils/api_endpoints.dart';
 import '../../../../core/utils/api_error_handler.dart';
+import '../../../legal/data/models/legal_list_model.dart';
+import '../../../root/data/models/category_model.dart';
+import '../../../root/data/models/item_model.dart';
 
 abstract interface class AuthRemoteDatasource{
   Future<Unit> login({required String phone});
+  Future<String> resendOtp(String phone);
   Future<String> register({
     required String name,
     required String phone,
@@ -17,17 +22,16 @@ abstract interface class AuthRemoteDatasource{
     required String phone,
     required String code
   });
-  void logout();
+  Future<void> logout();
 }
 
-final class AuthRemoteDatasourceImpl implements AuthRemoteDatasource{
-  final Dio _dio;
-  final FlutterSecureStorage _secureStorage;
-
-  const AuthRemoteDatasourceImpl({
-    required this._dio,
-    required this._secureStorage
-  });
+final class const AuthRemoteDatasourceImpl({
+  required final Dio _dio,
+  required final FlutterSecureStorage _secureStorage,
+  required final Box<ItemModel> _itemsBox,
+  required final Box<CategoryModel> _categoriesBox,
+  required final Box<LegalListModel> _legalBox,
+}) implements AuthRemoteDatasource{
 
   @override
   Future<Unit> login({required String phone}) async{
@@ -82,11 +86,35 @@ final class AuthRemoteDatasourceImpl implements AuthRemoteDatasource{
   }
 
   @override
-  void logout(){
+  Future<void> logout() async{
     _dio.post(
       ApiEndpoints.logout,
     // ignore: body_might_complete_normally_catch_error
     ).catchError((e){});
-    _secureStorage.delete(key: "token");
+    try{
+      await Future.wait<void>([
+        _legalBox.clear(),
+        _itemsBox.clear(),
+        _categoriesBox.clear(),
+      ]);
+      _secureStorage.delete(key: "token");
+    }catch(e){
+      throw const UnknownException();
+    }
+  }
+
+  @override
+  Future<String> resendOtp(String phone) async{
+    try{
+      final Response response = await _dio.post(
+        ApiEndpoints.resendOtp,
+        data: <String, String>{"phone": phone},
+      );
+      return response.data["message"];
+    }on DioException catch(e){
+      ApiErrorHandler.handle(e);
+    }catch(e){
+      throw const UnknownException();
+    }
   }
 }

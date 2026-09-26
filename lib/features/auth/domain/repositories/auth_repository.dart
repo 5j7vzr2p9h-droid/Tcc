@@ -15,5 +15,6 @@ abstract interface class AuthRepository {
     required String phone,
     required String code
   });
-  void logout();
+  Future<Either<Failure, String>> resendOtp(String phone);
+  Future<Either<Failure, Unit>> logout();
 }

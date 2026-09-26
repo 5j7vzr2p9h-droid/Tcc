@@ -1,7 +1,8 @@
 import 'package:dartz/dartz.dart';
 
 import '../../../../core/errors/failures.dart';
-import '../../../delivery/domain/entities/suggested_place_entity.dart';
+import '../../data/models/region_model.dart';
+import '../entities/suggested_place_entity.dart';
 import '../entities/branch_entity.dart';
 
 abstract interface class LocationRepository {
@@ -15,4 +16,7 @@ abstract interface class LocationRepository {
     required double lat,
     required double lng
   });
+
+  Future<Either<Failure, List<RegionModel>>> getRegions();
+
 }

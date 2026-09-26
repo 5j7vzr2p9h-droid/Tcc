@@ -5,10 +5,13 @@ import '../../../../config/routing/routes.dart';
 import '../../../../core/constants/numerical_values.dart';
 import '../../../../core/errors/failures.dart';
 import '../../../../core/extensions/context_l10n.dart';
+import '../../../../core/extensions/failure_message.dart';
+import '../../../../core/utils/snack_bar_message.dart';
 import '../../../../core/utils/text_styles.dart';
 import '../../../../core/widgets/default_circular_indicator.dart';
+import '../../../../core/widgets/failure_place_holder.dart';
 import '../../../../di.dart';
-import '../../../../test_page.dart';
+import '../../../../splash_page.dart';
 import '../viewmodel/profile_cubit.dart';
 import '../viewmodel/profile_state.dart';
 import 'profile_header.dart';
@@ -26,7 +29,11 @@ final class ProfileTab extends StatelessWidget {
     appBar: AppBar(title: Text(context.l10n.myAccount)),
     body: BlocProvider<ProfileCubit>(
       create: (BuildContext _) => getIt<ProfileCubit>()..init(),
-      child: BlocBuilder<ProfileCubit, ProfileState>(
+      child: BlocConsumer<ProfileCubit, ProfileState>(
+        listener: (BuildContext context, ProfileState state){
+          if(state is LogoutFailureState)
+            SnackBarMessage.showErrorMessage(context, state.failure.mapFailureToMessage(context));
+        },
         builder: (BuildContext context, ProfileState state)
         => switch(state){
           ProfileInitialState() => const SizedBox.shrink(),
@@ -42,7 +49,7 @@ final class ProfileTab extends StatelessWidget {
               },
             ),
           ),
-          ProfileGetSuccessState() => ListView(
+          ProfileGetSuccessState() || LogoutFailureState() => ListView(
             padding: const .only(
               top: pageContentPadding,
               left: pageContentPadding,
@@ -119,7 +126,7 @@ final class ProfileTab extends StatelessWidget {
                     icon: Icons.logout,
                     title: context.l10n.logout,
                     color: Theme.of(context).colorScheme.error,
-                    onTap: (){},
+                    onTap: () => context.read<ProfileCubit>().logout(),
                   )
                 ],
               ),

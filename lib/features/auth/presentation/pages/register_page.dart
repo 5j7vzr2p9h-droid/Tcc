@@ -17,10 +17,7 @@ import '../widgets/auth_redirection.dart';
 import '../widgets/auth_terms_note.dart';
 import '../widgets/auth_text_field.dart';
 
-final class const RegisterPage({
-  super.key,
-  required final String _logoUrl
-}) extends StatefulWidget {
+final class const RegisterPage({super.key}) extends StatefulWidget {
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();

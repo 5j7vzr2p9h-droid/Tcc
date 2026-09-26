@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 
 import '../../../../core/errors/failures.dart';
-import '../../../delivery/domain/entities/suggested_place_entity.dart';
+import '../entities/suggested_place_entity.dart';
 import '../repositories/location_repository.dart';
 
 final class SearchPlacesUsecase {

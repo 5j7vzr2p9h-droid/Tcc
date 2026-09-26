@@ -1,5 +1,9 @@
 abstract final class AssetsManager {
-  static const String visa = "assets/images/visa.svg",
+  static const String logo = "assets/images/logo.png",
+    animatedLogo = "assets/lotties/animated_logo.json",
+    animatedLogo2 = "assets/lotties/animated_logo2.lottie",
+    animatedLogo3 = "assets/lotties/animated_logo3.lottie",
+    visa = "assets/images/visa.svg",
     vodafone = "assets/images/vodafone.svg",
     instapay = "assets/images/instapay.svg",
     money = "assets/images/money.svg",

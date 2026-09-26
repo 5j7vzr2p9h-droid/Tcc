@@ -16,12 +16,12 @@ final ThemeData lightTheme = ThemeData(
   scaffoldBackgroundColor: Colors.grey.shade200,
   colorScheme: ColorScheme(
     brightness: .light,
-    primary: Colors.deepOrangeAccent,
+    primary: Colors.green,
     onPrimary: Colors.white,
     surface: Colors.white,
     onSurface: Colors.black,
     secondary: Colors.white,
-    onSecondary: Colors.deepOrangeAccent,
+    onSecondary: Colors.green,
     error: Colors.red,
     errorContainer: Colors.red.shade100,
     onError: Colors.white,
@@ -64,7 +64,7 @@ final ThemeData lightTheme = ThemeData(
 
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
-      backgroundColor: Colors.deepOrangeAccent,
+      backgroundColor: Colors.green,
       foregroundColor: Colors.white,
       textStyle: TextStyles.font16Weight700,
       minimumSize: const .fromHeight(48.0),
@@ -76,9 +76,9 @@ final ThemeData lightTheme = ThemeData(
 
   outlinedButtonTheme: OutlinedButtonThemeData(
     style: OutlinedButton.styleFrom(
-      foregroundColor: Colors.deepOrangeAccent,
+      foregroundColor: Colors.green,
       textStyle: TextStyles.font14Weight700,
-      side: const BorderSide(color: Colors.deepOrangeAccent),
+      side: const BorderSide(color: Color(0xFF83c73e)),
       shape: const RoundedRectangleBorder(
         borderRadius: .all(.circular(12.0))
       )

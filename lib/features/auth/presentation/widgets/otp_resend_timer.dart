@@ -2,25 +2,23 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../../../../core/extensions/context_l10n.dart';
 import '../../../../core/utils/text_styles.dart';
 
-final class OtpResendTimer extends StatefulWidget {
-  final Duration _duration;
-  final VoidCallback _onResend;
-
-  const new({
-    super.key,
-    this._duration = const Duration(seconds: 45),
-    required this._onResend
-  });
+final class const OtpResendTimer({
+  super.key,
+  required final VoidCallback _onResend
+}) extends StatefulWidget {
 
   @override
   State<OtpResendTimer> createState() => _OtpResendTimerState();
 }
 
 class _OtpResendTimerState extends State<OtpResendTimer> {
+  static const Duration _timeToResend = Duration(seconds: 45);
+
   Timer? _timer;
-  int _remainingSeconds = 0;
+  final ValueNotifier<int> _remainingSecondsController = ValueNotifier<int>(45);
 
   @override
   void initState(){
@@ -31,6 +29,7 @@ class _OtpResendTimerState extends State<OtpResendTimer> {
   @override
   void dispose(){
     _timer?.cancel();
+    _remainingSecondsController.dispose();
     super.dispose();
   }
 
@@ -40,61 +39,58 @@ class _OtpResendTimerState extends State<OtpResendTimer> {
     spacing: 4.0,
     children: <Widget>[
       Text(
-        "لم تستلم الرمز؟",
+        context.l10n.didntReceiveCode,
         style: TextStyles.font14Weight400.copyWith(color: Colors.grey)
       ),
-      _remainingSeconds > 0?
-        _countdown(context):
-        _resendAction(context)
+      ValueListenableBuilder<int>(
+        valueListenable: _remainingSecondsController,
+        builder: (BuildContext context, int remainingSeconds, Widget? _)
+        => remainingSeconds > 0
+          ? Text.rich(
+              TextSpan(
+                style: TextStyles.font14Weight400.copyWith(color: Colors.grey),
+                children: <InlineSpan>[
+                  TextSpan(text: context.l10n.resendCodeIn),
+                  TextSpan(
+                    text: _formattedRemaining,
+                    style: TextStyles.font14Weight700.copyWith(
+                      color: Theme.of(context).colorScheme.primary
+                    ),
+                  )
+                ],
+              ),
+              textAlign: .center,
+            )
+          : GestureDetector(
+            onTap: (){
+              widget._onResend();
+              _restart();
+            },
+            child: Text(
+              context.l10n.resendCode,
+              style: TextStyles.font14Weight700.copyWith(
+                color: Theme.of(context).colorScheme.primary
+              )
+            ),
+          )
+      )
     ],
   );
 
-  Text _countdown(BuildContext context)
-  => Text.rich(
-    TextSpan(
-      style: TextStyles.font14Weight400.copyWith(color: Colors.grey),
-      children: <InlineSpan>[
-        const TextSpan(text: "إعادة إرسال الرمز خلال "),
-        TextSpan(
-          text: _formattedRemaining,
-          style: TextStyles.font14Weight700.copyWith(
-            color: Theme.of(context).colorScheme.primary
-          )
-        )
-      ],
-    ),
-    textAlign: .center,
-    textDirection: .rtl,
-  );
-
-  GestureDetector _resendAction(BuildContext context)
-  => GestureDetector(
-    onTap: (){
-      setState(_restart);
-      widget._onResend();
-    },
-    child: Text(
-      "إعادة إرسال الرمز",
-      style: TextStyles.font14Weight700.copyWith(
-        color: Theme.of(context).colorScheme.primary
-      )
-    ),
-  );
-
   String get _formattedRemaining{
-    final Duration remaining = Duration(seconds: _remainingSeconds);
+    final Duration remaining = Duration(seconds: _remainingSecondsController.value);
     return "${remaining.inMinutes.toString().padLeft(2, "0")}"
       ":${(remaining.inSeconds % 60).toString().padLeft(2, "0")}";
   }
 
   void _restart(){
-    _remainingSeconds = widget._duration.inSeconds;
+    _remainingSecondsController.value = _timeToResend.inSeconds;
     _timer?.cancel();
     _timer = Timer.periodic(
       const Duration(seconds: 1),
       (Timer timer){
-        setState(() => _remainingSeconds--);
-        if(_remainingSeconds <= 0) timer.cancel();
+         _remainingSecondsController.value--;
+        if(_remainingSecondsController.value <= 0) timer.cancel();
       }
     );
   }

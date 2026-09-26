@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../core/utils/assets_manager.dart';
 import '../../../../core/utils/text_styles.dart';
 
 final class AuthHeader extends StatelessWidget {
@@ -20,13 +21,9 @@ final class AuthHeader extends StatelessWidget {
     mainAxisAlignment: .center,
     spacing: 16.0,
     children: <Widget>[
-      CachedNetworkImage(
-        imageUrl: "https://www.pngall.com/wp-content/uploads/8/Restaurant-Logo-PNG-Image-HD.png",
-        height: _logoSize,
-        width: _logoSize,
-        fit: .contain,
-        errorWidget: (BuildContext context, String url, Object error)
-        => const SizedBox.shrink(),
+      const Image(
+        image:AssetImage(AssetsManager.logo),
+        width: 120.0,
       ),
       Flexible(
         child: Column(

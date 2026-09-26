@@ -23,3 +23,7 @@ final class VerifyPhoneFailureState extends VerifyPhoneState{
 final class VerifyPhoneSuccessState extends VerifyPhoneState{
   const VerifyPhoneSuccessState();
 }
+
+final class const ResendOtpSuccessState(final String message) extends VerifyPhoneState;
+
+final class const ResendOtpFailureState(final Failure failure) extends VerifyPhoneState;

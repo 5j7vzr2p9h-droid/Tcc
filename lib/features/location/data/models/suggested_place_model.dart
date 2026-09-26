@@ -1,7 +1,9 @@
-import '../../../delivery/domain/entities/suggested_place_entity.dart';
+import '../../domain/entities/suggested_place_entity.dart';
 
-final class SuggestedPlaceModel extends SuggestedPlaceEntity{
-  new({required super.placeId, required super.placeTitle});
+final class const SuggestedPlaceModel({
+  required super.placeId,
+  required super.placeTitle
+}) extends SuggestedPlaceEntity{
 
   factory SuggestedPlaceModel.fromJson(dynamic json)
   => SuggestedPlaceModel(

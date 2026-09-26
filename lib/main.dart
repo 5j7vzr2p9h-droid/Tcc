@@ -61,7 +61,7 @@ final class const MyApp({super.key}) extends StatelessWidget {
           Locale(AppLocales.ar),
           Locale(AppLocales.en)
         ],
-        initialRoute: Routes.login
+        initialRoute: Routes.payment
       )
     )
   );

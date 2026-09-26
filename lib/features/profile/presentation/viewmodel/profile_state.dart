@@ -12,3 +12,7 @@ final class const ProfileGetSuccessState(
 final class const ProfileGetFailureState(
   final Failure failure
 ) extends ProfileState;
+
+final class const LogoutFailureState(
+  final Failure failure
+) extends ProfileState;

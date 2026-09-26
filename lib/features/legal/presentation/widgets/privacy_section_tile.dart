@@ -15,7 +15,7 @@ final class PrivacySectionTile extends StatelessWidget {
   });
 
   @override
-  Padding build(BuildContext context)
+  Padding build(BuildContext context) 
   => Padding(
     padding: const .all(16.0),
     child: Row(
