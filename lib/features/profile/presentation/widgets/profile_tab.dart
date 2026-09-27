@@ -8,10 +8,8 @@ import '../../../../core/extensions/context_l10n.dart';
 import '../../../../core/extensions/failure_message.dart';
 import '../../../../core/utils/snack_bar_message.dart';
 import '../../../../core/utils/text_styles.dart';
-import '../../../../core/widgets/default_circular_indicator.dart';
 import '../../../../core/widgets/failure_place_holder.dart';
 import '../../../../di.dart';
-import '../../../../splash_page.dart';
 import '../viewmodel/profile_cubit.dart';
 import '../viewmodel/profile_state.dart';
 import 'profile_header.dart';
@@ -38,7 +36,7 @@ final class ProfileTab extends StatelessWidget {
         => switch(state){
           ProfileInitialState() => const SizedBox.shrink(),
           ProfileLoadingState() => const Center(
-            child: DefaultCircularIndicator(),
+            child: CircularProgressIndicator(),
           ),
           ProfileGetFailureState(:final Failure failure) => Center(
             child: FailurePlaceHolder(

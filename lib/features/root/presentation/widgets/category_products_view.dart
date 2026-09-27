@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/numerical_values.dart';
 import '../../../../core/errors/failures.dart';
 import '../../../../core/extensions/failure_message.dart';
-import '../../../../core/widgets/default_circular_indicator.dart';
 import '../../../../di.dart';
 import '../../domain/entities/category_entity.dart';
 import '../../domain/entities/item_entity.dart';
@@ -68,7 +67,7 @@ final class _CategoryProductsViewState extends State<CategoryProductsView> with 
               ),
               CategoryProductsLoadingState() => const SliverFillRemaining(
                 hasScrollBody: false,
-                child: Center(child: DefaultCircularIndicator())
+                child: Center(child: CircularProgressIndicator())
               ),
               _ => const SliverPadding(padding: .zero)
             }

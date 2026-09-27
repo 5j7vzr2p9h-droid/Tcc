@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../widgets/default_circular_indicator.dart';
 import 'text_styles.dart';
 
 abstract final class AppDialog {
@@ -14,7 +13,7 @@ abstract final class AppDialog {
       content: Column(
         mainAxisSize: .min,
         children: <Widget>[
-          const DefaultCircularIndicator(),
+          const CircularProgressIndicator(),
           if(message != null)
             Text(
               message,

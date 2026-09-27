@@ -6,7 +6,6 @@ import '../../../../core/constants/numerical_values.dart';
 import '../../../../core/errors/failures.dart';
 import '../../../../core/extensions/context_l10n.dart';
 import '../../../../core/utils/text_styles.dart';
-import '../../../../core/widgets/default_circular_indicator.dart';
 import '../../../../core/widgets/failure_place_holder.dart';
 import '../../../../core/widgets/icon_label.dart';
 import '../../../../di.dart';
@@ -35,7 +34,7 @@ final class PrivacyPolicyPage extends StatelessWidget {
         builder: (BuildContext context, PrivacyPolicyState state)
         => switch(state){
           PrivacyPolicyInitialState() => const SizedBox.shrink(),
-          PrivacyPolicyLoadingState() => const Center(child: DefaultCircularIndicator()),
+          PrivacyPolicyLoadingState() => const Center(child: CircularProgressIndicator()),
           PrivacyPolicyGetFailureState(:final Failure failure) => Center(
             child: FailurePlaceHolder(
               failure: failure,

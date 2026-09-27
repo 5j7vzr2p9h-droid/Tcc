@@ -10,10 +10,6 @@ import '../../../../core/utils/app_dialog.dart';
 import '../../../../core/utils/debouncer.dart';
 import '../../../../core/utils/snack_bar_message.dart';
 import '../../../../core/utils/text_styles.dart';
-import '../../../../core/widgets/default_circular_indicator.dart';
-import '../../../delivery/presentation/widgets/address_dropdown_field.dart';
-import '../../../delivery/presentation/widgets/address_text_field.dart';
-import '../../../delivery/presentation/widgets/primary_address_switch.dart';
 import '../widgets/address_details_form.dart';
 import '../widgets/default_map.dart';
 import '../../../../core/widgets/search_text_field.dart';
@@ -99,7 +95,7 @@ final class _SelectLocationPageState extends State<SelectLocationPage> {
       },
       builder: (BuildContext context, SelectLocationState state) => switch(state){
         SelectLocationInitialState() => const SizedBox.shrink(),
-        SelectLocationLoadingState() => const Center(child: DefaultCircularIndicator()),
+        SelectLocationLoadingState() => const Center(child: CircularProgressIndicator()),
         SelectLocationInitializationFailureState() => const SizedBox.shrink(),
         SelectLocationGetDeviceLocationSuccessState(:final List<double> myLocationCoordinates) ||
         SearchPlaceSuccessState(:final List<double> myLocationCoordinates) ||
@@ -188,7 +184,7 @@ final class _SelectLocationPageState extends State<SelectLocationPage> {
                           title: Text(state.suggestedPlaces[i].placeTitle, style: TextStyles.font14Weight400),
                           onTap: () => _selectPlace(context, state.suggestedPlaces[i]),
                         ),
-                      ): const Center(child: DefaultCircularIndicator()),
+                      ): const Center(child: CircularProgressIndicator()),
                     )
                   ),
                 ),

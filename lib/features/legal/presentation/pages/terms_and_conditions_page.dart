@@ -6,11 +6,9 @@ import '../../../../core/constants/numerical_values.dart';
 import '../../../../core/errors/failures.dart';
 import '../../../../core/extensions/context_l10n.dart';
 import '../../../../core/utils/text_styles.dart';
-import '../../../../core/widgets/default_circular_indicator.dart';
 import '../../../../core/widgets/failure_place_holder.dart';
 import '../../../../core/widgets/icon_label.dart';
 import '../../../../di.dart';
-import '../../../../splash_page.dart';
 import '../../domain/entities/legal_list_entity.dart';
 import '../viewmodels/terms_viewmodel/terms_cubit.dart';
 import '../viewmodels/terms_viewmodel/terms_state.dart';
@@ -31,7 +29,7 @@ final class const TermsAndConditionsPage({super.key}) extends StatelessWidget {
         builder: (BuildContext context, TermsState state)
         => switch(state){
           TermsInitialState() => const SizedBox.shrink(),
-          TermsLoadingState() => const Center(child: DefaultCircularIndicator()),
+          TermsLoadingState() => const Center(child: CircularProgressIndicator()),
           TermsGetFailureState(:final Failure failure) => Center(
             child: FailurePlaceHolder(
               failure: failure,
