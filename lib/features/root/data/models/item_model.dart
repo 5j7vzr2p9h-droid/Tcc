@@ -11,6 +11,7 @@ final class ItemModel extends ItemEntity{
     required super.description,
     required super.isFeatured,
     required super.hasSizes,
+    required super.isFavorite,
     required super.price,
     required super.obligatoryAddons,
     required super.optionalAddons,
@@ -27,6 +28,7 @@ final class ItemModel extends ItemEntity{
     description: json["description"] ?? "",
     isFeatured: json["isFeatured"] ?? false,
     hasSizes: json["hasSizes"] ?? false,
+    isFavorite: json["isFavorite"] ?? false,
     price: (json["price"] as num).toDouble(),
     obligatoryAddons: (json["configuration"]?["addons"] as List?)
       ?.map<AddonModel>((e) => AddonModel.fromJson(e)).toList() ?? const <AddonModel>[],
@@ -87,7 +89,9 @@ final class ItemTypeAdapter extends TypeAdapter<ItemModel>{
     obligatoryAddons: reader.readList().cast<AddonModel>().toList(),
     optionalAddons: reader.readList().cast<AddonModel>().toList(),
     sizes: reader.readList().cast<MenuSizeModel>().toList(),
-    addonNote: reader.read() as String?
+    addonNote: reader.read() as String?,
+    // Guarded so items cached before this field existed still load.
+    isFavorite: reader.availableBytes > 0 && reader.readBool()
   );
 
   @override
@@ -107,6 +111,7 @@ final class ItemTypeAdapter extends TypeAdapter<ItemModel>{
     writer.writeList(obj.optionalAddons);
     writer.writeList(obj.sizes);
     writer.write(obj.addonNote);
+    writer.writeBool(obj.isFavorite);
   }
 }
 

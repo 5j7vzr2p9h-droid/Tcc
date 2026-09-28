@@ -1,50 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/constants/numerical_values.dart';
+import '../../../../core/errors/failures.dart';
+import '../../../../core/extensions/context_l10n.dart';
+import '../../../../core/utils/app_icons.dart';
+import '../../../../core/widgets/empty_data_placeholder.dart';
+import '../../../../core/widgets/failure_place_holder.dart';
+import '../../../../di.dart';
 import '../../domain/entities/order_entity.dart';
-import 'order_card.dart';
+import '../viewmodels/current_orders_view/current_orders_cubit.dart';
+import '../viewmodels/current_orders_view/current_orders_state.dart';
+import 'orders_list.dart';
 
-final class CurrentOrdersTab extends StatelessWidget {
-  const new({super.key});
-
-  static final List<OrderEntity> _orders = <OrderEntity>[
-    OrderEntity(
-      number: "12548",
-      address: "شارع النزهة، القاهرة",
-      image: "https://cdn.pixabay.com/photo/2016/03/05/19/02/hamburger-1238246_1280.jpg",
-      date: DateTime(2024, 5, 22, 18, 35),
-      total: 135.0,
-      status: .preparing
-    ),
-    OrderEntity(
-      number: "12512",
-      address: "شارع النزهة، القاهرة",
-      image: "https://cdn.pixabay.com/photo/2016/03/05/19/02/hamburger-1238246_1280.jpg",
-      date: DateTime(2024, 5, 21, 13, 20),
-      total: 120.0,
-      status: .delivered
-    ),
-    OrderEntity(
-      number: "12475",
-      address: "شارع النزهة، القاهرة",
-      image: "https://cdn.pixabay.com/photo/2016/03/05/19/02/hamburger-1238246_1280.jpg",
-      date: DateTime(2024, 5, 20, 19, 45),
-      total: 110.0,
-      status: .received
-    ),
-  ];
+final class const CurrentOrdersTab({super.key}) extends StatelessWidget {
 
   @override
-  ListView build(BuildContext context)
-  => ListView.separated(
-    padding: const .all(pageContentPadding),
-    physics: const BouncingScrollPhysics(),
-    itemCount: _orders.length,
-    separatorBuilder: (BuildContext _, int _) => const SizedBox(height: defaultItemsSeparator),
-    itemBuilder: (BuildContext context, int i) => OrderCard(
-      order: _orders[i],
-      onDetailsPressed: (){},
-      onActionPressed: (){},
+  BlocProvider<CurrentOrdersCubit> build(BuildContext context)
+  => BlocProvider<CurrentOrdersCubit>(
+    create: (BuildContext context) => getIt<CurrentOrdersCubit>()..init(),
+    child: BlocBuilder<CurrentOrdersCubit, CurrentOrdersState>(
+      builder: (BuildContext context, CurrentOrdersState state)
+      => switch(state){
+        CurrentOrdersInitialState() => const SizedBox.shrink(),
+        CurrentOrdersLoadingState() => const Center(
+          child: CircularProgressIndicator(),
+        ),
+        CurrentOrdersGetFailureState(:final Failure failure) => Center(
+          child: FailurePlaceHolder(
+            failure: failure,
+            onRetry: context.read<CurrentOrdersCubit>().init,
+          ),
+        ),
+        CurrentOrdersGetSuccessState(:final List<OrderEntity> orders) 
+        => orders.isEmpty
+          ? Center(
+            child: EmptyDataPlaceholder(
+              iconData: AppIcons.no_bag,
+              title: context.l10n.noNewOrdersTitle,
+              description: context.l10n.noNewOrdersMessage,
+            ),
+          )
+          : OrdersList(orders)
+      }
     ),
   );
 }

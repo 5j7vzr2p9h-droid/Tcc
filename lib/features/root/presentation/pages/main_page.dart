@@ -7,6 +7,7 @@ import '../../../notifications/presentation/pages/notifications_page.dart';
 import '../../../orders/presentation/pages/my_orders_page.dart';
 import '../../../profile/presentation/widgets/profile_tab.dart';
 import '../viewmodels/home_viewmodel/home_cubit.dart';
+import '../viewmodels/search_viewmodel/search_cubit.dart';
 import '../widgets/home_tab.dart';
 
 final class HomePage extends StatefulWidget {
@@ -29,8 +30,15 @@ final class _HomePageState extends State<HomePage> {
         ValueListenableBuilder(
           valueListenable: _currentPageIndex,
           builder: (BuildContext context, int i, Widget? child) => switch(i){
-            0 => BlocProvider<HomeCubit>(
-              create: (BuildContext context) => getIt<HomeCubit>()..init(),
+            0 => MultiBlocProvider(
+              providers: [
+                BlocProvider<HomeCubit>(
+                  create: (BuildContext context) => getIt<HomeCubit>()..init()
+                ),
+                BlocProvider<SearchCubit>(
+                  create: (BuildContext context) => getIt<SearchCubit>()
+                ),
+              ],
               child: const HomeTab()
             ),
             1 => const MyOrdersTab(),

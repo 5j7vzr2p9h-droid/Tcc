@@ -9,6 +9,7 @@ import '../../../../di.dart';
 import '../../../delivery/presentation/widgets/address_dropdown_field.dart';
 import '../../../delivery/presentation/widgets/address_text_field.dart';
 import '../../../delivery/presentation/widgets/primary_address_switch.dart';
+import '../../domain/entities/region_entity.dart';
 import '../viewmodels/address_details_viewmodel/address_details_cubit.dart';
 import '../viewmodels/address_details_viewmodel/address_details_state.dart';
 
@@ -24,6 +25,7 @@ final class AddressDetailsForm extends StatefulWidget {
 final class _AddressDetailsFormState extends State<AddressDetailsForm> {
   final TextEditingController _notesController = TextEditingController();
   final ValueNotifier<bool> _isPrimaryController = ValueNotifier<bool>(true);
+  final ValueNotifier<int?> _choosedRegionController = ValueNotifier<int?>(null);
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -53,7 +55,7 @@ final class _AddressDetailsFormState extends State<AddressDetailsForm> {
         => switch(state){
           AddressDetailsInitialState() || AddressDetailsFailureState() => const SizedBox.shrink(),
           AddressDetailsLoadingState() => const Center(child: CircularProgressIndicator()),
-          AddressDetailsSuccessState() => Form(
+          AddressDetailsSuccessState(:final List<RegionEntity> regions) => Form(
             key: _formKey,
             child: Column(
               mainAxisSize: .min,
@@ -61,9 +63,8 @@ final class _AddressDetailsFormState extends State<AddressDetailsForm> {
               spacing: 16.0,
               children: <Widget>[
                 AddressDropdownField(
-                  (String? value){
-          
-                  }
+                  regionController: _choosedRegionController,
+                  regions: regions,
                 ),
                 AddressTextField(
                   textController: _notesController,

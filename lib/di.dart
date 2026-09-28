@@ -25,6 +25,13 @@ import 'features/auth/domain/usecase/verify_phone_usecase.dart';
 import 'features/auth/presentation/viewmodels/login_viewmodel/login_cubit.dart';
 import 'features/auth/presentation/viewmodels/register_viewmodel/register_cubit.dart';
 import 'features/auth/presentation/viewmodels/verify_phone_viewmodel/verify_phone_cubit.dart';
+import 'features/favorites/data/datasources/favorites_remote_datasource.dart';
+import 'features/favorites/data/repositories/favorites_repository_impl.dart';
+import 'features/favorites/domain/repositories/favorites_repository.dart';
+import 'features/favorites/domain/usecases/get_favorites_usecase.dart';
+import 'features/favorites/domain/usecases/toggle_favorite_usecase.dart';
+import 'features/favorites/presentation/viewmodel/favorite_toggle_viewmodel/favorite_toggle_cubit.dart';
+import 'features/favorites/presentation/viewmodel/favorites_viewmodel/favorites_cubit.dart';
 import 'features/legal/data/datasources/legal_local_datasource.dart';
 import 'features/legal/data/datasources/legal_remote_datasource.dart';
 import 'features/legal/data/models/legal_list_model.dart';
@@ -45,6 +52,13 @@ import 'features/location/domain/usecases/get_regions_usecase.dart';
 import 'features/location/domain/usecases/search_places_usecase.dart';
 import 'features/location/presentation/viewmodels/address_details_viewmodel/address_details_cubit.dart';
 import 'features/location/presentation/viewmodels/select_location_viewmodel/select_location_cubit.dart';
+import 'features/orders/data/datasources/orders_remote_datasource.dart';
+import 'features/orders/data/repositories/orders_repository_impl.dart';
+import 'features/orders/domain/repositories/orders_repository.dart';
+import 'features/orders/domain/usecases/get_current_orders_usecase.dart';
+import 'features/orders/domain/usecases/get_previous_orders_usecase.dart';
+import 'features/orders/presentation/viewmodels/current_orders_view/current_orders_cubit.dart';
+import 'features/orders/presentation/viewmodels/previous_orders_viewmodel/previous_orders_cubit.dart';
 import 'features/profile/presentation/viewmodel/profile_cubit.dart';
 import 'features/root/data/datasources/categories_local_datasource.dart';
 import 'features/root/data/datasources/categories_remote_datasource.dart';
@@ -57,8 +71,11 @@ import 'features/root/data/repositories/items_repository_impl.dart';
 import 'features/root/domain/repositories/categories_repository.dart';
 import 'features/root/domain/repositories/items_repository.dart';
 import 'features/root/domain/usecases/get_category_products_usecase.dart';
+import 'features/root/domain/usecases/get_popular_products_usecase.dart';
+import 'features/root/domain/usecases/search_products_usecase.dart';
 import 'features/root/presentation/viewmodels/category_items_viewmodel/category_items_cubit.dart';
 import 'features/root/presentation/viewmodels/home_viewmodel/home_cubit.dart';
+import 'features/root/presentation/viewmodels/search_viewmodel/search_cubit.dart';
 import 'language_controller.dart';
 import 'theme_controller.dart';
 
@@ -70,7 +87,8 @@ Future<void> setupDependencyInjection() async{
   final String? token = await secureStorage.read(key: "token");
 
   final Box<CategoryModel> categoriesBox = await Hive.openBox<CategoryModel>("categories");
-  final Box<ItemModel> itemsBox = await Hive.openBox<ItemModel>("items");
+  final Box<ItemModel> categoriesItemsBox = await Hive.openBox<ItemModel>("categories_items");
+  final Box<ItemModel> popularItemsBox = await Hive.openBox<ItemModel>("popular_items");
   final Box<LegalListModel> legalBox = await Hive.openBox<LegalListModel>("legal");
 
   getIt.registerSingleton<Prefs>(PrefsImpl(prefs));
@@ -86,19 +104,44 @@ Future<void> setupDependencyInjection() async{
   );
   getIt.registerLazySingleton<FlutterSecureStorage>(() => secureStorage);
   getIt.registerLazySingleton<Geocoding>(() => Geocoding());
-  getIt.registerLazySingleton<Dio>(() => Dio(
-    BaseOptions(
-      baseUrl: ApiEndpoints.baseUrl,
-      receiveDataWhenStatusError: true,
-      connectTimeout: const Duration(seconds: 30),
-      sendTimeout: const Duration(seconds: 30),
-      receiveTimeout: const Duration(seconds: 30),
-      headers: <String, dynamic>{
-        "token": ?token,
-        "Accept-Language": getIt<LanguageController>().value
+  getIt.registerLazySingleton<Dio>(
+    () => Dio(
+      BaseOptions(
+        baseUrl: ApiEndpoints.baseUrl,
+        receiveDataWhenStatusError: true,
+        connectTimeout: const Duration(seconds: 30),
+        sendTimeout: const Duration(seconds: 30),
+        receiveTimeout: const Duration(seconds: 30),
+        headers: <String, dynamic>{
+          "Authorization": ?(token is String? "Bearer $token": null),
+          "Accept-Language": getIt<LanguageController>().value
+        }
+      )
+    )..interceptors.add(InterceptorsWrapper(
+      onRequest: (RequestOptions options, RequestInterceptorHandler handler){
+        print("=== REQUEST ===");
+        print("headers: ${options.headers}");
+        print("queryParams: ${options.queryParameters}");
+        print("method: ${options.method}");
+        print("uri: ${options.uri}");
+        print("===============");
+        handler.next(options);
+      },
+      onResponse: (Response response, ResponseInterceptorHandler handler){
+        print("=== RESPONSE ===");
+        print("data: ${response.data}");
+        print("================");
+        handler.next(response);
+      },
+      onError: (DioException exception, ErrorInterceptorHandler handler){
+        print("=== ERROR ===");
+        print(exception.type);
+        print(exception.message);
+        print("============");
+        handler.next(exception);
       }
-    )
-  ));
+    ))
+  );
   getIt.registerLazySingleton<Dio>(
     () => Dio(
       BaseOptions(
@@ -126,7 +169,8 @@ Future<void> setupDependencyInjection() async{
     () => AuthRemoteDatasourceImpl(
       dio: getIt<Dio>(),
       secureStorage: getIt<FlutterSecureStorage>(),
-      itemsBox: itemsBox,
+      categoriesItemsBox: categoriesItemsBox,
+      popularItemsBox: popularItemsBox,
       categoriesBox: categoriesBox,
       legalBox: legalBox
     )
@@ -145,9 +189,16 @@ Future<void> setupDependencyInjection() async{
 
   getIt.registerLazySingleton<CategoriesLocalDatasource>(() => CategoriesLocalDatasourceImpl(categoriesBox));
 
-  getIt.registerLazySingleton<ItemsLocalDatasource>(() => ItemsLocalDatasourceImpl(itemsBox));
+  getIt.registerLazySingleton<ItemsLocalDatasource>(() => ItemsLocalDatasourceImpl(
+    categoriesItemsBox: categoriesItemsBox,
+    popularItemsBox: popularItemsBox
+  ));
 
   getIt.registerLazySingleton<LegalLocalDatasource>(() => LegalLocalDatasourceImpl(legalBox));
+
+  getIt.registerLazySingleton<OrdersRemoteDatasource>(() => OrdersRemoteDatasourceImpl(getIt<Dio>()));
+
+  getIt.registerLazySingleton<FavoritesRemoteDatasource>(() => FavoritesRemoteDatasourceImpl(getIt<Dio>()));
 
   getIt.registerLazySingleton<LocationRepository>(() => LocationRepositoryImpl(
     prefs: getIt<Prefs>(),
@@ -182,6 +233,15 @@ Future<void> setupDependencyInjection() async{
     remoteDatasource: getIt<LegalRemoteDatasource>(),
     localDatasource: getIt<LegalLocalDatasource>()
   ));
+  getIt.registerLazySingleton<OrdersRepository>(() => OrdersRepositoryImpl(
+    networkInfo: getIt<NetworkInfo>(),
+    remoteDatasource: getIt<OrdersRemoteDatasource>()
+  ));
+  getIt.registerLazySingleton<FavoritesRepository>(() => FavoritesRepositoryImpl(
+    prefs: getIt<Prefs>(),
+    networkInfo: getIt<NetworkInfo>(),
+    remoteDatasource: getIt<FavoritesRemoteDatasource>()
+  ));
 
   getIt.registerLazySingleton<GetAddressNameUsecase>(() => GetAddressNameUsecase(getIt<LocationRepository>()));
   getIt.registerLazySingleton<GetDeviceLocationUsecase>(() => GetDeviceLocationUsecase(getIt<LocationRepository>()));
@@ -197,6 +257,12 @@ Future<void> setupDependencyInjection() async{
   getIt.registerLazySingleton<GetPrivacyPolicyUsecase>(() => GetPrivacyPolicyUsecase(getIt<LegalRepository>()));
   getIt.registerLazySingleton<GetTermsUsecase>(() => GetTermsUsecase(getIt<LegalRepository>()));
   getIt.registerLazySingleton<GetRegionsUsecase>(() => GetRegionsUsecase(getIt<LocationRepository>()));
+  getIt.registerLazySingleton<GetPopularProductsUsecase>(() => GetPopularProductsUsecase(getIt<ItemsRepository>()));
+  getIt.registerLazySingleton<SearchProductsUsecase>(() => SearchProductsUsecase(getIt<ItemsRepository>()));
+  getIt.registerLazySingleton<GetCurrentOrdersUsecase>(() => GetCurrentOrdersUsecase(getIt<OrdersRepository>()));
+  getIt.registerLazySingleton<GetPreviousOrdersUsecase>(() => GetPreviousOrdersUsecase(getIt<OrdersRepository>()));
+  getIt.registerLazySingleton<GetFavoritesUsecase>(() => GetFavoritesUsecase(getIt<FavoritesRepository>()));
+  getIt.registerLazySingleton<ToggleFavoriteUsecase>(() => ToggleFavoriteUsecase(getIt<FavoritesRepository>()));
 
   getIt.registerFactory<ProfileCubit>(() => ProfileCubit(getIt<LogoutUsecase>()));
   getIt.registerFactory<RegisterCubit>(() => RegisterCubit(getIt<RegisterUsecase>()));
@@ -207,7 +273,10 @@ Future<void> setupDependencyInjection() async{
     getPlaceCoordinatesUsecase: getIt<GetPlaceCoordinatesUsecase>(),
     getBranchUsecase: getIt<GetBranchUsecase>()
   ));
-  getIt.registerFactory<HomeCubit>(() => HomeCubit(getIt<CategoriesRepository>()));
+  getIt.registerFactory<HomeCubit>(() => HomeCubit(
+    categoriesRepository: getIt<CategoriesRepository>(),
+    getPopularProductsUsecase: getIt<GetPopularProductsUsecase>(),
+  ));
   getIt.registerFactory<VerifyPhoneCubit>(() => VerifyPhoneCubit(
     verifyPhoneUsecase: getIt<VerifyPhoneUsecase>(),
     resendOtpUsecase: getIt<ResendOtpUsecase>()
@@ -216,4 +285,15 @@ Future<void> setupDependencyInjection() async{
   getIt.registerFactory<PrivacyPolicyCubit>(() => PrivacyPolicyCubit(getIt<GetPrivacyPolicyUsecase>()));
   getIt.registerFactory<TermsCubit>(() => TermsCubit(getIt<GetTermsUsecase>()));
   getIt.registerFactory<AddressDetailsCubit>(() => AddressDetailsCubit(getIt<GetRegionsUsecase>()));
+  getIt.registerFactory<SearchCubit>(() => SearchCubit(getIt<SearchProductsUsecase>()));
+  getIt.registerFactory<CurrentOrdersCubit>(() => CurrentOrdersCubit(getIt<GetCurrentOrdersUsecase>()));
+  getIt.registerFactory<PreviousOrdersCubit>(() => PreviousOrdersCubit(getIt<GetPreviousOrdersUsecase>()));
+  getIt.registerFactory<FavoritesCubit>(() => FavoritesCubit(getIt<GetFavoritesUsecase>()));
+  getIt.registerFactoryParam<FavoriteToggleCubit, int, bool>(
+    (int productId, bool isFavorite) => FavoriteToggleCubit(
+      toggleFavoriteUsecase: getIt<ToggleFavoriteUsecase>(),
+      productId: productId,
+      isFavorite: isFavorite
+    )
+  );
 }

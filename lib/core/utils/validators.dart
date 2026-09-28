@@ -15,8 +15,8 @@ abstract final class Validators {
     return null;
   };
 
-  static FormFieldValidator<String> getRegionDropdownValidator(BuildContext context)
-  => (String? value){
+  static FormFieldValidator<int> getRegionDropdownValidator(BuildContext context)
+  => (int? value){
     if(value == null)
       return context.l10n.regionIsRequired;
     return null;

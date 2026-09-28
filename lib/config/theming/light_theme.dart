@@ -96,5 +96,5 @@ final ThemeData lightTheme = ThemeData(
       color: Colors.black
     ),
     subtitleTextStyle: TextStyles.font12Weight400.copyWith(color: Colors.grey)
-  )
+  ),
 );

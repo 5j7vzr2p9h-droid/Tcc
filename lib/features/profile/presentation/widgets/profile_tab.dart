@@ -24,18 +24,23 @@ final class ProfileTab extends StatelessWidget {
   @override
   Scaffold build(BuildContext context)
   => Scaffold(
-    appBar: AppBar(title: Text(context.l10n.myAccount)),
+    appBar: AppBar(
+      automaticallyImplyLeading: false,
+      title: Text(context.l10n.myAccount)
+    ),
     body: BlocProvider<ProfileCubit>(
       create: (BuildContext _) => getIt<ProfileCubit>()..init(),
       child: BlocConsumer<ProfileCubit, ProfileState>(
         listener: (BuildContext context, ProfileState state){
           if(state is LogoutFailureState)
             SnackBarMessage.showErrorMessage(context, state.failure.mapFailureToMessage(context));
+          else if(state is LogoutSuccessState)
+            Navigator.pushReplacementNamed(context, Routes.selectLocation);
         },
         builder: (BuildContext context, ProfileState state)
         => switch(state){
           ProfileInitialState() => const SizedBox.shrink(),
-          ProfileLoadingState() => const Center(
+          ProfileLoadingState() || LogoutSuccessState() => const Center(
             child: CircularProgressIndicator(),
           ),
           ProfileGetFailureState(:final Failure failure) => Center(

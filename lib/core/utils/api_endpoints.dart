@@ -11,5 +11,8 @@ abstract interface class ApiEndpoints {
   privacyPolicy = "emenu/v1/legal/privacy",
   termsAndConditions = "emenu/v1/legal/terms",
   locationResolve = "emenu/v1/location/resolve",
-  availableAddresses = "CustomerAddress";
+  availableAddresses = "CustomerAddress",
+  currentOrders = "emenu/v1/orders/current",
+  previousOrders = "emenu/v1/orders/previous",
+  favroites = "emenu/v1/favorites";
 }

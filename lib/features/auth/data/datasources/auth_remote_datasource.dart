@@ -28,7 +28,8 @@ abstract interface class AuthRemoteDatasource{
 final class const AuthRemoteDatasourceImpl({
   required final Dio _dio,
   required final FlutterSecureStorage _secureStorage,
-  required final Box<ItemModel> _itemsBox,
+  required final Box<ItemModel> _categoriesItemsBox,
+  required final Box<ItemModel> _popularItemsBox,
   required final Box<CategoryModel> _categoriesBox,
   required final Box<LegalListModel> _legalBox,
 }) implements AuthRemoteDatasource{
@@ -76,7 +77,7 @@ final class const AuthRemoteDatasourceImpl({
       );
       final String token = response.data["token"];
       _secureStorage.write(key: "token", value: token);
-      // _dio.options.headers["token"]
+      _dio.options.headers["Authorization"] = "Bearer $token";
       return token;
     }on DioException catch(e){
       ApiErrorHandler.handle(e);
@@ -87,14 +88,20 @@ final class const AuthRemoteDatasourceImpl({
 
   @override
   Future<void> logout() async{
+  
     _dio.post(
       ApiEndpoints.logout,
     // ignore: body_might_complete_normally_catch_error
-    ).catchError((e){});
+    ).catchError((e){
+      return Response(requestOptions: RequestOptions(
+        path: ApiEndpoints.logout
+      ));
+    });
     try{
       await Future.wait<void>([
         _legalBox.clear(),
-        _itemsBox.clear(),
+        _categoriesItemsBox.clear(),
+        _popularItemsBox.clear(),
         _categoriesBox.clear(),
       ]);
       _secureStorage.delete(key: "token");

@@ -6,14 +6,14 @@ final class SearchTextField extends StatelessWidget {
   final String _hintText;
   final TextEditingController _controller;
   final InputBorder? _inputBorder;
-  final Widget _suffixIcon;
+  final Widget? _suffixIcon;
   final ValueChanged<String>? _onChanged;
 
   const new({
     super.key,
     required this._controller,
     required this._hintText,
-    required this._suffixIcon,
+    this._suffixIcon,
     this._inputBorder,
     this._onChanged
   });

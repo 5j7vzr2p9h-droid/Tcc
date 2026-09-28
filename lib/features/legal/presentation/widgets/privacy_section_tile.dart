@@ -18,37 +18,18 @@ final class PrivacySectionTile extends StatelessWidget {
   Padding build(BuildContext context) 
   => Padding(
     padding: const .all(16.0),
-    child: Row(
+    child: Column(
+      mainAxisSize: .min,
       crossAxisAlignment: .start,
-      spacing: 12.0,
-      children: <Widget>[
-        Container(
-          width: 44.0,
-          height: 44.0,
-          decoration: BoxDecoration(
-            color: Colors.grey.shade200,
-            borderRadius: .circular(12.0)
-          ),
-          child: HandledNetworkImage(
-            imageUrl: _section.icon ?? '',
-            width: 20.0,
-          ),
+      spacing: 4.0,
+      children: <Text>[
+        Text(
+          "$_number. ${_section.title}",
+          style: TextStyles.font16Weight700
         ),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: .start,
-            spacing: 4.0,
-            children: <Text>[
-              Text(
-                "$_number. ${_section.title}",
-                style: TextStyles.font16Weight700
-              ),
-              Text(
-                _section.body,
-                style: TextStyles.font14Weight700.copyWith(color: Colors.grey.shade600)
-              )
-            ],
-          ),
+        Text(
+          _section.body,
+          style: TextStyles.font14Weight700.copyWith(color: Colors.grey.shade600)
         )
       ],
     ),

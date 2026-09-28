@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import '../../../../core/extensions/context_l10n.dart';
 import '../../../../core/utils/text_styles.dart';
 import '../../../../core/utils/validators.dart';
+import '../../../location/domain/entities/region_entity.dart';
 
-final class AddressDropdownField extends StatelessWidget {
-  final ValueSetter<String?> _setter;
-  const new(this._setter, {super.key});
+final class const AddressDropdownField({
+  super.key,
+  required final List<RegionEntity> _regions,
+  required final ValueNotifier<int?> _regionController
+}) extends StatelessWidget {
 
   @override
   Column build(BuildContext context)
@@ -16,20 +19,20 @@ final class AddressDropdownField extends StatelessWidget {
     spacing: 8.0,
     children: <Widget>[
       Text(context.l10n.regionName, style: TextStyles.font14Weight700),
-      DropdownButtonFormField<String>(
+      DropdownButtonFormField<int>(
         validator: Validators.getRegionDropdownValidator(context),
-        items: const <DropdownMenuItem<String>>[
-          DropdownMenuItem<String>(
-            value: "المشحمة",
-            child: Text("المشحمة")
-          )
+        items: <DropdownMenuItem<int>>[
+          for(final RegionEntity region in _regions)
+            DropdownMenuItem<int>(
+              value: region.id,
+              child: Text(region.title)
+            )
         ],
-        isExpanded: true,
         hint: Text(
           context.l10n.region,
           style: Theme.of(context).inputDecorationTheme.hintStyle
         ),
-        onChanged: _setter,
+        onChanged: (int? id) => _regionController.value = id,
         decoration: InputDecoration(
           contentPadding: const .symmetric(
             horizontal: 12.0,

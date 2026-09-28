@@ -34,6 +34,7 @@ void main() async{
     .portraitUp,
     .portraitDown,
   ]);
+  
   runApp(const MyApp());
 }
 
@@ -61,7 +62,7 @@ final class const MyApp({super.key}) extends StatelessWidget {
           Locale(AppLocales.ar),
           Locale(AppLocales.en)
         ],
-        initialRoute: Routes.payment
+        initialRoute: Routes.splash
       )
     )
   );

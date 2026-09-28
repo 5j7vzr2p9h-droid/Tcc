@@ -42,9 +42,7 @@ class _NewOrderPageState extends State<NewOrderPage> {
           padding: const .only(
             bottom: 12.0
           ),
-          sliver: HomeAppBar(
-            imageUrl: widget._product.image,
-          )
+          sliver: DefaultAppBar(imageUrl: widget._product.image)
         ),
         SliverToBoxAdapter(
           child: Padding(

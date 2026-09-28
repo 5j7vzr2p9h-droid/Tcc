@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'config/routing/routes.dart';
+import 'di.dart';
 
 final class const SplashPage({super.key}) extends StatefulWidget {
 
@@ -20,8 +22,14 @@ final class _SplashPageState extends State<SplashPage> with SingleTickerProvider
     _controller.forward();
     WidgetsBinding.instance.addPostFrameCallback((Duration _) async{
       await Future.delayed(const Duration(seconds: 5));
+      final String? token = await getIt<FlutterSecureStorage>().read(key: "token");
       if(mounted)
-        Navigator.pushReplacementNamed(context, Routes.login);
+        Navigator.pushReplacementNamed(
+          context,
+          token is String
+            ? Routes.main
+            : Routes.selectLocation
+        );
     });
   }
 
@@ -62,7 +70,8 @@ final class const _AnimatedLogo(final double _progress) extends StatelessWidget 
 
   static const TextStyle _textStyle = TextStyle(
     color: Colors.black,
-    fontWeight: .w900
+    fontWeight: .w900,
+    fontFamily: "Coopbl"
   );
 
   @override

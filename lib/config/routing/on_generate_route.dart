@@ -15,7 +15,9 @@ import '../../features/legal/presentation/pages/terms_and_conditions_page.dart';
 import '../../features/orders/presentation/pages/new_order_page.dart';
 import '../../features/payment/presentation/pages/payment_methods_page.dart';
 import '../../features/payment/presentation/pages/payment_page.dart';
+import '../../features/root/domain/entities/category_entity.dart';
 import '../../features/root/domain/entities/item_entity.dart';
+import '../../features/root/presentation/pages/category_products_page.dart';
 import '../../features/root/presentation/pages/main_page.dart';
 import '../../features/settings/presentation/pages/notification_settings_page.dart';
 import '../../features/settings/presentation/pages/settings_page.dart';
@@ -31,6 +33,14 @@ abstract final class AppRoutes{
       case Routes.newOrder:
         return _materialPageRoute<bool>(
           NewOrderPage(route.arguments as ItemEntity)
+        );
+      case Routes.categoryProducts:
+        final (List<CategoryEntity> categories, int initialCategoryIndex) = route.arguments as (List<CategoryEntity>, int);
+        return _materialPageRoute(
+          CategoryProductsPage(
+            categories: categories,
+            initialCategoryIndex: initialCategoryIndex,
+          )
         );
       case Routes.selectLocation:
         final bool? isInitial = route.arguments as bool?;

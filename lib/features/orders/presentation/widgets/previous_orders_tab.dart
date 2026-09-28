@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/constants/numerical_values.dart';
+import '../../../../core/errors/failures.dart';
+import '../../../../core/widgets/failure_place_holder.dart';
+import '../../../../di.dart';
 import '../../domain/entities/order_entity.dart';
-import 'order_card.dart';
+import '../viewmodels/previous_orders_viewmodel/previous_orders_cubit.dart';
+import '../viewmodels/previous_orders_viewmodel/previous_orders_state.dart';
 import 'orders_filter_dropdown_button.dart';
+import 'orders_list.dart';
 
 final class PreviousOrdersTab extends StatefulWidget {
   const new({super.key});
@@ -14,41 +20,6 @@ final class PreviousOrdersTab extends StatefulWidget {
 
 final class _PreviousOrdersTabState extends State<PreviousOrdersTab> {
   final ValueNotifier<String> _selectedFilter = ValueNotifier<String>(OrdersFilterDropdownButton.filters.first);
-
-  static final List<OrderEntity> _orders = <OrderEntity>[
-    OrderEntity(
-      number: "12410",
-      address: "مدينة نصر، القاهرة",
-      image: "https://cdn.pixabay.com/photo/2016/03/05/19/02/hamburger-1238246_1280.jpg",
-      date: DateTime(2024, 5, 18, 20, 15),
-      total: 150.0,
-      status: .completed
-    ),
-    OrderEntity(
-      number: "12322",
-      address: "المعادي، القاهرة",
-      image: "https://cdn.pixabay.com/photo/2016/03/05/19/02/hamburger-1238246_1280.jpg",
-      date: DateTime(2024, 5, 16, 14, 10),
-      total: 95.0,
-      status: .completed
-    ),
-    OrderEntity(
-      number: "12201",
-      address: "6 أكتوبر، الجيزة",
-      image: "https://cdn.pixabay.com/photo/2016/03/05/19/02/hamburger-1238246_1280.jpg",
-      date: DateTime(2024, 5, 13, 21, 30),
-      total: 180.0,
-      status: .completed
-    ),
-    OrderEntity(
-      number: "12055",
-      address: "شبرا، القاهرة",
-      image: "https://cdn.pixabay.com/photo/2016/03/05/19/02/hamburger-1238246_1280.jpg",
-      date: DateTime(2024, 5, 10, 19, 0),
-      total: 130.0,
-      status: .completed
-    ),
-  ];
 
   @override
   void dispose() {
@@ -73,20 +44,24 @@ final class _PreviousOrdersTabState extends State<PreviousOrdersTab> {
         ),
       ),
       Expanded(
-        child: ListView.separated(
-          padding: const .fromLTRB(
-            pageContentPadding,
-            pageContentPadding,
-            pageContentPadding,
-            120.0
-          ),
-          physics: const BouncingScrollPhysics(),
-          itemCount: _orders.length,
-          separatorBuilder: (BuildContext _, int _) => const SizedBox(height: defaultItemsSeparator),
-          itemBuilder: (BuildContext context, int i) => OrderCard(
-            order: _orders[i],
-            onDetailsPressed: (){},
-            onActionPressed: (){},
+        child: BlocProvider<PreviousOrdersCubit>(
+          create: (BuildContext _) => getIt<PreviousOrdersCubit>()..init(),
+          child: BlocBuilder<PreviousOrdersCubit, PreviousOrdersState>(
+            builder: (BuildContext context, PreviousOrdersState state)
+            => switch(state){
+              PreviousOrdersInitialState() => const SizedBox.shrink(),
+              PreviousOrdersLoadingState() => const Center(
+                child: CircularProgressIndicator(),
+              ),
+              PreviousOrdersGetFailureState(:final Failure failure) => Center(
+                child: FailurePlaceHolder(
+                  failure: failure,
+                  onRetry: context.read<PreviousOrdersCubit>().init,
+                ),
+              ),
+              PreviousOrdersGetSuccessState(:final List<OrderEntity> orders) 
+              => OrdersList(orders),
+            }
           ),
         ),
       )

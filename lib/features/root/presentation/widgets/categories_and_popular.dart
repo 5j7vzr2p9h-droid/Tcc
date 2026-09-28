@@ -2,13 +2,13 @@ import 'package:flutter/widgets.dart';
 
 import '../../../../core/constants/numerical_values.dart';
 import '../../../../core/extensions/context_l10n.dart';
+import '../../../../core/utils/text_styles.dart';
 import '../../domain/entities/category_entity.dart';
 import '../../domain/entities/item_entity.dart';
 import 'categories_grid_view.dart';
 import 'item_card.dart';
-import 'title_with_view_all.dart';
 
-class CategoriesAndPopular extends StatelessWidget {
+final class CategoriesAndPopular extends StatelessWidget {
   final ValueChanged<int> _onCategoryTap;
   final List<CategoryEntity> _categories;
   final List<ItemEntity> _items;
@@ -40,24 +40,24 @@ class CategoriesAndPopular extends StatelessWidget {
             left: pageContentPadding,
             top: 12.0,
           ),
-          child: TitleWithViewAll(
-            title: context.l10n.popularItem,
+          child: Text(
+            context.l10n.popularItem,
+            style: TextStyles.font20Weight700,
           ),
         ),
       ),
-      SliverPadding(
-        padding: const .all(24.0),
-        sliver: SliverGrid.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            childAspectRatio: 1.0,
-            mainAxisSpacing: defaultItemsSeparator,
-            crossAxisSpacing: defaultItemsSeparator,
+      SliverToBoxAdapter(
+        child: SizedBox(
+          height: 240.0,
+          child: ListView.separated(
+            padding: const .all(pageContentPadding),
+            scrollDirection: .horizontal,
+            itemCount: _items.length,
+            separatorBuilder: (BuildContext _, int _) => const SizedBox(width: defaultItemsSeparator),
+            itemBuilder: (BuildContext context, int i) => ItemCard(
+              _items[i]
+            )
           ),
-          itemCount: _items.length,
-          itemBuilder: (BuildContext context, int i) => ItemCard(
-            _items[i]
-          )
         ),
       )
     ]

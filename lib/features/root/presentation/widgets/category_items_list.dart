@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/constants/numerical_values.dart';
 import '../../../../core/utils/text_styles.dart';
 import '../../domain/entities/item_entity.dart';
-import 'product_of_specified_category.dart';
+import 'item_wide_card.dart';
 
 class CategoryItemsList extends StatelessWidget {
   final String _categoryTitle, _categoryDescription;
@@ -41,7 +41,7 @@ class CategoryItemsList extends StatelessWidget {
       SliverList.separated(
         itemCount: _products.length,
         separatorBuilder: (BuildContext _, int _) => const SizedBox(height: defaultItemsSeparator),
-        itemBuilder: (BuildContext context, int i) => ProductOfSpecifiedCategory(
+        itemBuilder: (BuildContext context, int i) => ItemWideCard(
           _products[i]
         ),
       )

@@ -722,7 +722,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noFavoritesTitle => 'No favorites yet';
 
   @override
-  String get noFavoritesMessage => 'You can add your favorite foods and restaurants to reach them quickly';
+  String get noFavoritesMessage => 'You can add your favorite foods to reach them quickly';
 
   @override
   String get account => 'Account';

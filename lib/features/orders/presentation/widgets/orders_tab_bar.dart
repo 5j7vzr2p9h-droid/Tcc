@@ -19,7 +19,6 @@ final class OrdersTabBar extends StatelessWidget{
     labelStyle: TextStyles.font16Weight700,
     labelColor: Theme.of(context).colorScheme.onSurface,
     unselectedLabelColor: Colors.grey,
-    indicatorColor: Theme.of(context).colorScheme.error,
     indicatorSize: .tab,
     padding: const .symmetric(horizontal: pageContentPadding),
     indicatorWeight: 3.0,

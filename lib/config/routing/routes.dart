@@ -1,6 +1,7 @@
 abstract final class Routes{
   static const String main = "main",
     newOrder = "new_order",
+    categoryProducts = "category_products",
     payment = "payment",
     selectLocation = "select_location",
     login = "login",

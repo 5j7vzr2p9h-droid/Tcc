@@ -42,7 +42,7 @@ final class OrderCard extends StatelessWidget {
                 spacing: 4.0,
                 children: <Widget>[
                   Text(
-                    "#${_order.number}",
+                    "#${_order.id}",
                     style: TextStyles.font16Weight700
                   ),
                   Text(
@@ -54,7 +54,10 @@ final class OrderCard extends StatelessWidget {
                 ],
               ),
             ),
-            OrderStatusChip(status: _order.status)
+            OrderStatusChip(
+              status: _order.status,
+              statusText: _order.statusText,
+            )
           ],
         ),
         Row(
@@ -82,7 +85,7 @@ final class OrderCard extends StatelessWidget {
                     ],
                   ),
                   Text(
-                    _order.address,
+                    _order.deliveyAddress,
                     style: TextStyles.font14Weight700
                   ),
                   InkWell(
@@ -98,7 +101,7 @@ final class OrderCard extends StatelessWidget {
               ),
             ),
             ClipRRect(
-              borderRadius: .circular(12.0),
+              borderRadius: const .all(.circular(12.0)),
               child: HandledNetworkImage(
                 imageUrl: _order.image,
                 width: 80.0,
@@ -134,7 +137,7 @@ final class OrderCard extends StatelessWidget {
               ),
             ),
             OrderActionButton(
-              isTracking: _order.status == .preparing,
+              isTracking: _order.status == .held,
               onPressed: _onActionPressed,
             )
           ],

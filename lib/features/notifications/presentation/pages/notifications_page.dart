@@ -96,11 +96,9 @@ final class _NotificationsTabState extends State<NotificationsTab> {
   Scaffold build(BuildContext context)
   => Scaffold(
     appBar: AppBar(
+      automaticallyImplyLeading: false,
       centerTitle: true,
-      title: Text(context.l10n.notifications, style: TextStyles.font18Weight700),
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      surfaceTintColor: Colors.transparent,
-      elevation: 0.0,
+      title: Text(context.l10n.notifications),
       actions: <IconButton>[
         IconButton(
           onPressed: () => Navigator.pushNamed(context, Routes.notificationSettings),

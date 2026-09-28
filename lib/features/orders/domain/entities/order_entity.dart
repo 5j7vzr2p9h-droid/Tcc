@@ -1,17 +1,19 @@
 import '../../../../core/enums/order_status.dart';
 
-final class OrderEntity {
-  final String number, address, image;
+class OrderEntity {
+  final int id;
   final DateTime date;
   final double total;
+  final String deliveyAddress, image, statusText;
   final OrderStatus status;
 
   const new({
-    required this.number,
-    required this.address,
-    required this.image,
+    required this.id,
     required this.date,
     required this.total,
-    required this.status
+    required this.deliveyAddress,
+    required this.image,
+    required this.status,
+    required this.statusText
   });
 }

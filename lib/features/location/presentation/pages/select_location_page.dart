@@ -84,8 +84,9 @@ final class _SelectLocationPageState extends State<SelectLocationPage> {
             );
           else{
             Navigator.pop(context);
-            Scaffold.of(context).showBottomSheet(
-              (BuildContext context) => AddressDetailsForm(),
+            showModalBottomSheet(
+              context: context,
+              builder: (BuildContext context) => AddressDetailsForm(),
                shape: const RoundedRectangleBorder(
                 borderRadius: .vertical(top: .circular(16.0))
               ),

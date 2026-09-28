@@ -9,26 +9,29 @@ abstract interface class ItemsLocalDatasource {
     required List<ItemModel> items
   });
   List<ItemModel> getCachedCategoryProducts(int categoryId);
+
+  void cachePopularProducts(List<ItemModel> items);
+  List<ItemModel> getCachedPopularProducts();
 }
 
-final class ItemsLocalDatasourceImpl implements ItemsLocalDatasource{
-  final Box<ItemModel> _box;
-
-  const ItemsLocalDatasourceImpl(this._box);
+final class ItemsLocalDatasourceImpl({
+  required final Box<ItemModel> _categoriesItemsBox,
+  required final Box<ItemModel> _popularItemsBox
+}) implements ItemsLocalDatasource{
 
   @override
   void cacheCategoryProducts({
     required int categoryId,
     required List<ItemModel> items
   }) {
-    _box.deleteAll(_itemsKeysOfCategory(categoryId));
+    _categoriesItemsBox.deleteAll(_itemsKeysOfCategory(categoryId));
     for(ItemModel item in items)
-      _box.put(item.id, item);
+      _categoriesItemsBox.put(item.id, item);
   }
 
   @override
   List<ItemModel> getCachedCategoryProducts(int categoryId) {
-    final List<ItemModel> items = _box.values
+    final List<ItemModel> items = _categoriesItemsBox.values
       .where((ItemModel item) => item.categoryId == categoryId).toList();
     if(items.isNotEmpty)
       return items;
@@ -36,6 +39,21 @@ final class ItemsLocalDatasourceImpl implements ItemsLocalDatasource{
   }
 
   List<dynamic> _itemsKeysOfCategory(int categoryId)
-  => _box.keys
-    .where((dynamic key) => _box.get(key)?.categoryId == categoryId).toList();
+  => _categoriesItemsBox.keys
+    .where((dynamic key) => _categoriesItemsBox.get(key)?.categoryId == categoryId).toList();
+
+  @override
+  void cachePopularProducts(List<ItemModel> items) {
+    _popularItemsBox.clear();
+    for(ItemModel item in items)
+      _popularItemsBox.put(item.id, item);
+  }
+
+  @override
+  List<ItemModel> getCachedPopularProducts(){
+    final List<ItemModel> items = _popularItemsBox.values.toList();
+    if(items.isNotEmpty)
+      return items;
+    throw const OfflineException();
+  }
 }

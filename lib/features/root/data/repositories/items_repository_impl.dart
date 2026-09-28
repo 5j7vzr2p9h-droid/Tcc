@@ -21,7 +21,7 @@ final class const ItemsRepositoryImpl({
 }) implements ItemsRepository{
 
   @override
-  Future<Either<Failure, List<ItemEntity>>> getCategoryProducts(int categoryId) async{
+  Future<Either<Failure, List<ItemModel>>> getCategoryProducts(int categoryId) async{
     if (await _networkInfo.isDeviceConnected) {
       try {
         final int branchId = _prefs.getInt(CacheKeys.branchId)!;
@@ -42,7 +42,7 @@ final class const ItemsRepositoryImpl({
     else return _getCachedCategoryProductsOrFailure(categoryId, const OfflineFailure());
   }
 
-  Future<Either<Failure, List<ItemEntity>>> _getCachedCategoryProductsOrFailure(
+  Future<Either<Failure, List<ItemModel>>> _getCachedCategoryProductsOrFailure(
     int categoryId,
     Failure defaultFailure
   ) async {
@@ -52,5 +52,56 @@ final class const ItemsRepositoryImpl({
     } catch (_) {
       return Left(defaultFailure);
     }
+  }
+
+  @override
+  Future<Either<Failure, List<ItemEntity>>> getPopularProducts() async{
+    if (await _networkInfo.isDeviceConnected) {
+      try {
+        final int branchId = _prefs.getInt(CacheKeys.branchId)!;
+        final List<ItemModel> items = await _remoteDatasource.getPopularProducts(
+          branchId: branchId,
+        );
+        _localDatasource.cachePopularProducts(items);
+        return Right(items);
+      } on ServerException catch(e) {
+        return _getCachedPopularProductsOrFailure(ServerFailure(e.message));
+      } on OfflineException {
+        return _getCachedPopularProductsOrFailure(const OfflineFailure());
+      } on UnknownException {
+        return _getCachedPopularProductsOrFailure(const UnknownFailure());
+      }
+    }
+    else return _getCachedPopularProductsOrFailure(const OfflineFailure());
+  }
+
+  Future<Either<Failure, List<ItemModel>>> _getCachedPopularProductsOrFailure(Failure defaultFailure) async {
+    try {
+      final cachedItems = _localDatasource.getCachedPopularProducts();
+      return Right(cachedItems);
+    } catch (_) {
+      return Left(defaultFailure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ItemEntity>>> searchProducts(String query) async{
+    if(await _networkInfo.isDeviceConnected){
+      try{
+        final int branchId = _prefs.getInt(CacheKeys.branchId)!;
+        final List<ItemEntity> products = await _remoteDatasource.searchProducts(
+          branchId: branchId,
+          query: query
+        );
+        return Right(products);
+      }on ServerException catch(e){
+        return Left(ServerFailure(e.message));
+      }on OfflineFailure{
+        return const Left(OfflineFailure());
+      }catch(_){
+        return const Left(UnknownFailure());
+      }
+    }
+    else return const Left(OfflineFailure());
   }
 }

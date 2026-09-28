@@ -1,7 +1,7 @@
 class ItemEntity {
   final int id, categoryId;
   final String name, image, description;
-  final bool isFeatured, hasSizes;
+  final bool isFeatured, hasSizes, isFavorite;
   final double price;
   final List<AddonEntity> obligatoryAddons, optionalAddons;
   final List<MenuSizeEntity> sizes;
@@ -15,6 +15,7 @@ class ItemEntity {
     required this.description,
     required this.isFeatured,
     required this.hasSizes,
+    required this.isFavorite,
     required this.price,
     required this.obligatoryAddons,
     required this.optionalAddons,

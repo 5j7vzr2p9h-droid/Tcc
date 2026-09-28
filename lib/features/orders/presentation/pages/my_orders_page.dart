@@ -30,6 +30,7 @@ final class _MyOrdersTabState extends State<MyOrdersTab> with SingleTickerProvid
   Scaffold build(BuildContext context)
   => Scaffold(
     appBar: AppBar(
+      automaticallyImplyLeading: false,
       title: Text(context.l10n.myOrders, style: TextStyles.font18Weight700),
       backgroundColor: Theme.of(context).colorScheme.surface,
       surfaceTintColor: Colors.transparent,

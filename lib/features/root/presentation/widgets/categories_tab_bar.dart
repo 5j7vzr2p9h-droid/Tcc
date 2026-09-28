@@ -18,6 +18,7 @@ final class CategoriesTabBar extends StatelessWidget {
   @override
   TabBar build(BuildContext context)
   => TabBar(
+    isScrollable: true,
     controller: _tabController,
     labelStyle: TextStyles.font18Weight700,
     labelColor: Theme.of(context).colorScheme.onSurface,
@@ -29,9 +30,10 @@ final class CategoriesTabBar extends StatelessWidget {
       _tabController.index = i;
       context.read<CategoryProductsCubit>().getCategoryProducts(_categories[i].id);
     },
+    tabAlignment: .center,
     tabs: <Text>[
       for(CategoryEntity category in _categories)
-        Text(category.title)
+        Text(category.title),
     ]
       
   );

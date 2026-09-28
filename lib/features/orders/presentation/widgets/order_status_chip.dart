@@ -6,31 +6,26 @@ import '../../../../core/utils/text_styles.dart';
 
 final class OrderStatusChip extends StatelessWidget {
   final OrderStatus _status;
+  final String _statusText;
 
   const new({
     super.key,
-    required this._status
+    required this._status,
+    required this._statusText
   });
 
-  String _getLabel(BuildContext context) => switch(_status){
-    .preparing => context.l10n.preparing,
-    .delivered => context.l10n.delivered,
-    .received => context.l10n.orderReceived,
-    .completed => context.l10n.completed
-  };
-
   IconData? get _icon => switch(_status){
-    .preparing => Icons.access_time,
-    .delivered => Icons.check,
-    .received => Icons.check_circle_outline,
-    .completed => null
+    .held => Icons.access_time,
+    .paid => Icons.check,
+    .sentToKitchen => Icons.check_circle_outline,
+    .cancelled => null
   };
 
   Color get _color => switch(_status){
-    .preparing => Colors.orange,
-    .delivered => Colors.blue,
-    .received => Colors.green,
-    .completed => Colors.grey
+    .held => Colors.orange,
+    .paid => Colors.blue,
+    .sentToKitchen => Colors.green,
+    .cancelled => Colors.grey
   };
 
   @override
@@ -42,7 +37,7 @@ final class OrderStatusChip extends StatelessWidget {
     ),
     decoration: BoxDecoration(
       color: _color.withValues(alpha: 0.12),
-      borderRadius: .circular(8.0)
+      borderRadius: const .all(.circular(8.0))
     ),
     child: Row(
       mainAxisSize: .min,
@@ -54,7 +49,7 @@ final class OrderStatusChip extends StatelessWidget {
           color: _color
         ),
         Text(
-          _getLabel(context),
+          _statusText,
           style: TextStyles.font12Weight700.copyWith(
             color: _color
           ),

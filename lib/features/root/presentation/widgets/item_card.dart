@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/text_styles.dart';
+import '../../../favorites/presentation/widgets/favorite_button.dart';
 import '../../domain/entities/item_entity.dart';
 import 'add_to_cart_button.dart';
 
@@ -13,8 +14,9 @@ final class ItemCard extends StatelessWidget {
   @override
   Container build(BuildContext context)
   => Container(
-    decoration: BoxDecoration(
-      borderRadius: .circular(12.0),
+    width: 150.0,
+    decoration: const BoxDecoration(
+      borderRadius: .all(.circular(12.0)),
       color: Colors.white
     ),
     clipBehavior: .antiAliasWithSaveLayer,
@@ -28,16 +30,16 @@ final class ItemCard extends StatelessWidget {
               borderRadius: const .all(.circular(12.0)),
               child: CachedNetworkImage(
                 imageUrl: _product.image,
-                height: 100.0,
+                height: 130.0,
                 width: .infinity,
                 fit: .cover,
               ),
             ),
-            IconButton(
-              onPressed: (){
-
-              },
-              icon: const Icon(Icons.favorite_outline, color: Colors.grey)
+            FavoriteButton(
+              // Recreates the toggle cubit when fresh data changes the favorite value.
+              key: ValueKey<(int, bool)>((_product.id, _product.isFavorite)),
+              productId: _product.id,
+              isFavorite: _product.isFavorite,
             )
           ],
         ),

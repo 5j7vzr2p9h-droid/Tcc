@@ -1472,7 +1472,7 @@ abstract class AppLocalizations {
   /// No description provided for @noFavoritesMessage.
   ///
   /// In en, this message translates to:
-  /// **'You can add your favorite foods and restaurants to reach them quickly'**
+  /// **'You can add your favorite foods to reach them quickly'**
   String get noFavoritesMessage;
 
   /// No description provided for @account.
