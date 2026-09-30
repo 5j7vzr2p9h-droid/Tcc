@@ -1,5 +1,3 @@
-import 'package:hive_flutter/hive_flutter.dart';
-
 import '../../domain/entities/item_entity.dart';
 
 final class ItemModel extends ItemEntity{
@@ -13,10 +11,10 @@ final class ItemModel extends ItemEntity{
     required super.hasSizes,
     required super.isFavorite,
     required super.price,
-    required super.obligatoryAddons,
-    required super.optionalAddons,
-    required super.sizes,
-    required super.addonNote
+    required super.addons,
+    required super.notes,
+    required super.conditionalGroups,
+    required super.sizes
   });
 
   factory ItemModel.fromJson(dynamic json)
@@ -30,15 +28,14 @@ final class ItemModel extends ItemEntity{
     hasSizes: json["hasSizes"] ?? false,
     isFavorite: json["isFavorite"] ?? false,
     price: (json["price"] as num).toDouble(),
-    obligatoryAddons: (json["configuration"]?["addons"] as List?)
+    addons: (json["configuration"]?["addons"] as List?)
       ?.map<AddonModel>((e) => AddonModel.fromJson(e)).toList() ?? const <AddonModel>[],
-    optionalAddons: (json["configuration"]?["conditionalGroups"] as List?)
-      ?.expand<AddonModel>((group) => (group?["options"] as List?)
-        ?.map<AddonModel>((e) => AddonModel.fromJson(e)) ?? const <AddonModel>[])
-      .toList() ?? const <AddonModel>[],
+    notes: (json["configuration"]?["notes"] as List?)
+      ?.map<NoteModel>((e) => NoteModel.fromJson(e)).toList() ?? const <NoteModel>[],
+    conditionalGroups: (json["configuration"]?["conditionalGroups"] as List?)
+      ?.map<ConditionalGroupModel>((e) => ConditionalGroupModel.fromJson(e)).toList() ?? const <ConditionalGroupModel>[],
     sizes: (json["configuration"]?["sizes"] as List?)
-      ?.map<MenuSizeModel>((e) => MenuSizeModel.fromJson(e)).toList() ?? const <MenuSizeModel>[],
-    addonNote: (json["configuration"]?["notes"] as List?)?.firstOrNull?["name"]
+      ?.map<MenuSizeModel>((e) => MenuSizeModel.fromJson(e)).toList() ?? const <MenuSizeModel>[]
   );
 
 }
@@ -58,6 +55,56 @@ final class AddonModel extends AddonEntity{
   );
 }
 
+final class NoteModel extends NoteEntity{
+  const new({
+    required super.id,
+    required super.name
+  });
+
+  factory NoteModel.fromJson(dynamic json)
+  => NoteModel(
+    id: json["noteId"],
+    name: json["name"] ?? ""
+  );
+}
+
+final class ConditionalGroupModel extends ConditionalGroupEntity{
+  const new({
+    required super.id,
+    required super.name,
+    required super.minSelection,
+    required super.maxSelection,
+    required super.options
+  });
+
+  factory ConditionalGroupModel.fromJson(dynamic json)
+  => ConditionalGroupModel(
+    id: json["conditionalGroupId"],
+    name: json["name"] ?? "",
+    minSelection: json["minSelection"] ?? 0,
+    maxSelection: json["maxSelection"] ?? 0,
+    options: (json["options"] as List?)
+      ?.map<ConditionalOptionModel>((e) => ConditionalOptionModel.fromJson(e)).toList() ?? const <ConditionalOptionModel>[]
+  );
+}
+
+final class ConditionalOptionModel extends ConditionalOptionEntity{
+  const new({
+    required super.id,
+    required super.name,
+    required super.price,
+    required super.allowCombine
+  });
+
+  factory ConditionalOptionModel.fromJson(dynamic json)
+  => ConditionalOptionModel(
+    id: json["addonId"],
+    name: json["name"] ?? "",
+    price: (json["price"] as num?)?.toDouble() ?? 0.0,
+    allowCombine: json["allowCombine"] ?? true
+  );
+}
+
 final class MenuSizeModel extends MenuSizeEntity{
   const new({
     required super.id,
@@ -72,85 +119,4 @@ final class MenuSizeModel extends MenuSizeEntity{
     price: (json["price"] as num).toDouble()
   );
 
-}
-
-final class ItemTypeAdapter extends TypeAdapter<ItemModel>{
-  @override
-  ItemModel read(BinaryReader reader)
-  => ItemModel(
-    id: reader.readInt(),
-    categoryId: reader.readInt(),
-    name: reader.readString(),
-    image: reader.readString(),
-    description: reader.readString(),
-    isFeatured: reader.readBool(),
-    hasSizes: reader.readBool(),
-    price: reader.readDouble(),
-    obligatoryAddons: reader.readList().cast<AddonModel>().toList(),
-    optionalAddons: reader.readList().cast<AddonModel>().toList(),
-    sizes: reader.readList().cast<MenuSizeModel>().toList(),
-    addonNote: reader.read() as String?,
-    // Guarded so items cached before this field existed still load.
-    isFavorite: reader.availableBytes > 0 && reader.readBool()
-  );
-
-  @override
-  int get typeId => 1;
-
-  @override
-  void write(BinaryWriter writer, ItemModel obj) {
-    writer.writeInt(obj.id);
-    writer.writeInt(obj.categoryId);
-    writer.writeString(obj.name);
-    writer.writeString(obj.image);
-    writer.writeString(obj.description);
-    writer.writeBool(obj.isFeatured);
-    writer.writeBool(obj.hasSizes);
-    writer.writeDouble(obj.price);
-    writer.writeList(obj.obligatoryAddons);
-    writer.writeList(obj.optionalAddons);
-    writer.writeList(obj.sizes);
-    writer.write(obj.addonNote);
-    writer.writeBool(obj.isFavorite);
-  }
-}
-
-final class AddonTypeAdapter extends TypeAdapter<AddonModel>{
-  @override
-  AddonModel read(BinaryReader reader)
-  => AddonModel(
-    id: reader.readInt(),
-    name: reader.readString(),
-    price: reader.readDouble()
-  );
-
-  @override
-  int get typeId => 2;
-
-  @override
-  void write(BinaryWriter writer, AddonModel obj) {
-    writer.writeInt(obj.id);
-    writer.writeString(obj.name);
-    writer.writeDouble(obj.price);
-  }
-}
-
-final class MenuSizeTypeAdapter extends TypeAdapter<MenuSizeModel>{
-  @override
-  MenuSizeModel read(BinaryReader reader)
-  => MenuSizeModel(
-    id: reader.readInt(),
-    name: reader.readString(),
-    price: reader.readDouble()
-  );
-
-  @override
-  int get typeId => 3;
-
-  @override
-  void write(BinaryWriter writer, MenuSizeModel obj) {
-    writer.writeInt(obj.id);
-    writer.writeString(obj.name);
-    writer.writeDouble(obj.price);
-  }
 }

@@ -1,29 +1,25 @@
-import 'package:flutter/material.dart';
-
 import '../../../../core/enums/coupon_status.dart';
+import '../../../../core/enums/coupon_type.dart';
 
-final class CouponEntity {
-  final String code, title;
-  final String? discount;
-  final int minimumOrder;
-  final DateTime expiryDate;
-  final int? remainingUses, totalUses;
-  final Color color;
+class CouponEntity {
+  final String code, title, typeText, subtitle, notes;
+  final CouponType type;
+  final DateTime expirationDate;
+  final int remainingUses, totalUses;
   final CouponStatus status;
 
   const new({
     required this.code,
     required this.title,
-    required this.minimumOrder,
-    required this.expiryDate,
-    required this.color,
-    this.discount,
-    this.remainingUses,
-    this.totalUses,
-    this.status = .active
+    required this.typeText,
+    required this.subtitle,
+    required this.notes,
+    required this.type,
+    required this.expirationDate,
+    required this.remainingUses,
+    required this.totalUses,
+    required this.status
   });
 
-  bool get isFreeShipping => discount == null;
-
-  bool get hasUnlimitedUses => remainingUses == null || totalUses == null;
+  bool get hasUnlimitedUses => totalUses <= 0;
 }

@@ -20,7 +20,7 @@ final class DeliveryMethodSelector extends StatelessWidget {
     => Row(
       spacing: defaultItemsSeparator,
       children: <Widget>[
-        for(final DeliveryMethod method in DeliveryMethod.values) Expanded(
+        for(final DeliveryMethod method in DeliveryMethod.values.reversed) Expanded(
           child: DeliveryMethodOption(
             method: method,
             selected: selected == method,
@@ -52,7 +52,7 @@ final class DeliveryMethodOption extends StatelessWidget {
   @override
   Material build(BuildContext context)
   => Material(
-    borderRadius: .circular(12.0),
+    borderRadius: const .all(.circular(12.0)),
     child: CheckboxListTile(
       value: _selected,
       onChanged: (bool? value) => _onSelected(),

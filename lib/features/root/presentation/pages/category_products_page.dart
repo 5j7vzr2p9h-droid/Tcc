@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/constants/numerical_values.dart';
+import '../../../../core/utils/assets_manager.dart';
 import '../../domain/entities/category_entity.dart';
 import '../widgets/category_products_view.dart';
 import '../widgets/default_app_bar.dart';
@@ -21,7 +23,14 @@ final class CategoryProductsPage extends StatelessWidget {
       slivers: <Widget>[
         const SliverPadding(
           padding: .only(bottom: 12.0),
-          sliver: DefaultAppBar(),
+          sliver: DefaultAppBar(
+            background: Padding(
+              padding: .all(pageContentPadding),
+              child: Image(
+                image: AssetImage(AssetsManager.logo),
+              ),
+            ),
+          ),
         ),
         CategoryProductsView(
           categories: _categories,

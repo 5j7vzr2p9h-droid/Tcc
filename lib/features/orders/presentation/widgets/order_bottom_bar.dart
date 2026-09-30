@@ -3,22 +3,20 @@ import 'package:flutter/material.dart';
 import '../../../../core/constants/numerical_values.dart';
 import '../../../../core/extensions/context_l10n.dart';
 import '../../../../core/utils/text_styles.dart';
-import '../../../../core/widgets/cart_summary_bar.dart';
 import '../../../../core/widgets/quantity_stepper.dart';
+import '../../../cart/presentation/widgets/cart_summary_bar.dart';
 
 final class OrderBottomBar extends StatelessWidget {
   final ValueNotifier<int> _quantityController;
   final VoidCallback _onAddToOrder;
-  final String _cartImage;
-  final double _unitPrice;
+  final double _totalPrice;
   final VoidCallback _onViewCart;
 
   const new({
     super.key,
     required this._quantityController,
     required this._onAddToOrder,
-    required this._cartImage,
-    required this._unitPrice,
+    required this._totalPrice,
     required this._onViewCart
   });
 
@@ -50,15 +48,12 @@ final class OrderBottomBar extends StatelessWidget {
               Expanded(
                 child: ElevatedButton(
                   onPressed: _onAddToOrder,
-                  child: Text(context.l10n.addToOrder),
+                  child: Text("${context.l10n.addToOrder} • ${_totalPrice.toStringAsFixed(2)} ${context.l10n.pound}"),
                 ),
               )
             ],
           ),
           CartSummaryBar(
-            image: _cartImage,
-            itemsCountController: _quantityController,
-            unitPrice: _unitPrice,
             onTap: _onViewCart,
           )
         ],

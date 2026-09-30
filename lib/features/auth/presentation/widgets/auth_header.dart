@@ -4,7 +4,6 @@ import '../../../../core/utils/assets_manager.dart';
 import '../../../../core/utils/text_styles.dart';
 
 final class AuthHeader extends StatelessWidget {
-  static const double _logoSize = 120.0;
 
   final String _title, _subtitle;
 

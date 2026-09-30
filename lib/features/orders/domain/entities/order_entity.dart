@@ -4,7 +4,7 @@ class OrderEntity {
   final int id;
   final DateTime date;
   final double total;
-  final String deliveyAddress, image, statusText;
+  final String deliveyAddress, image;
   final OrderStatus status;
 
   const new({
@@ -14,6 +14,5 @@ class OrderEntity {
     required this.deliveyAddress,
     required this.image,
     required this.status,
-    required this.statusText
   });
 }

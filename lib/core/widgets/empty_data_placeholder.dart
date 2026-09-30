@@ -6,7 +6,7 @@ final class const EmptyDataPlaceholder({
   super.key,
   required final IconData _iconData,
   required final String _title,
-  required final String _description
+  final String? _description
 }) extends StatelessWidget {
 
   @override
@@ -28,11 +28,12 @@ final class const EmptyDataPlaceholder({
         _title,
         style: TextStyles.font20Weight700
       ),
-      Text(
-        _description,
-        textAlign: .center,
-        style: TextStyles.font14Weight700.copyWith(color: Colors.grey)
-      )
+      if(_description is String)
+        Text(
+          _description,
+          textAlign: .center,
+          style: TextStyles.font14Weight700.copyWith(color: Colors.grey)
+        )
     ],
   );
 }

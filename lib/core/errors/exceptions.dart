@@ -12,10 +12,6 @@ final class UnknownException implements Exception{
   const UnknownException();
 }
 
-final class EmptyCacheException implements Exception{
-  const EmptyCacheException();
-}
-
 final class LocationDisabledException implements Exception{
   const LocationDisabledException();
 }

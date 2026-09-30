@@ -6,12 +6,10 @@ import '../../../../core/utils/text_styles.dart';
 
 final class OrderStatusChip extends StatelessWidget {
   final OrderStatus _status;
-  final String _statusText;
 
   const new({
     super.key,
     required this._status,
-    required this._statusText
   });
 
   IconData? get _icon => switch(_status){
@@ -26,6 +24,14 @@ final class OrderStatusChip extends StatelessWidget {
     .paid => Colors.blue,
     .sentToKitchen => Colors.green,
     .cancelled => Colors.grey
+  };
+
+  String _getStatusText(BuildContext context) => switch(_status){
+    .held => context.l10n.preparing,
+    .sentToKitchen => throw UnimplementedError(),
+    OrderStatus.paid => throw UnimplementedError(),
+    // TODO: Handle this case.
+    OrderStatus.cancelled => throw UnimplementedError(),
   };
 
   @override
@@ -49,7 +55,7 @@ final class OrderStatusChip extends StatelessWidget {
           color: _color
         ),
         Text(
-          _statusText,
+          _getStatusText(context),
           style: TextStyles.font12Weight700.copyWith(
             color: _color
           ),

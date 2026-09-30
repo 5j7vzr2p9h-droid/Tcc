@@ -56,7 +56,6 @@ final class OrderCard extends StatelessWidget {
             ),
             OrderStatusChip(
               status: _order.status,
-              statusText: _order.statusText,
             )
           ],
         ),

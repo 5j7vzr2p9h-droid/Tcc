@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../config/routing/routes.dart';
-import '../widgets/cart_summary_bar.dart';
+import '../../features/cart/presentation/widgets/cart_summary_bar.dart';
 import 'text_styles.dart';
 
 abstract final class SnackBarMessage {
@@ -92,9 +92,6 @@ abstract final class SnackBarMessage {
     backgroundColor: Colors.transparent,
     behavior: .floating,
     content: CartSummaryBar(
-      image: "https://pngmagic.com/webp_images/veg-burger-png-image_NXAT.webp",
-      itemsCountController: ValueNotifier<int>(1),
-      unitPrice: 32,
       onTap: () {
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
         Navigator.pushNamed(context, Routes.payment);

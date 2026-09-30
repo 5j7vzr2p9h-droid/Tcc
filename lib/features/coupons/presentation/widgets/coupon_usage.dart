@@ -32,7 +32,7 @@ final class CouponUsage extends StatelessWidget {
           Text(
             _coupon.hasUnlimitedUses?
               context.l10n.unlimited:
-              context.l10n.couponUsesCount(_coupon.remainingUses!, _coupon.totalUses!),
+              context.l10n.couponUsesCount(_coupon.remainingUses, _coupon.totalUses),
             style: TextStyles.font14Weight700.copyWith(
               color: Theme.of(context).colorScheme.primary
             )

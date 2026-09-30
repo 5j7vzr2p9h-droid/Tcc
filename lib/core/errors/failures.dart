@@ -17,11 +17,6 @@ final class UnknownFailure extends Failure{
   const UnknownFailure();
 }
 
-final class EmptyCacheFailure extends Failure{
-
-  const EmptyCacheFailure();
-}
-
 final class LocationDisabledFailure extends Failure{
   const LocationDisabledFailure();
 }

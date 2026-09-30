@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../../../core/constants/numerical_values.dart';
 import '../../../../core/utils/assets_manager.dart';
 import '../../../../core/widgets/handled_network_image.dart';
+import 'banners_slider.dart';
 
 final class const DefaultAppBar({
   super.key,
-  final String? _imageUrl,
+  required final Widget _background,
   final IconButton? _leading
   }) extends StatelessWidget {
 
@@ -28,16 +30,7 @@ final class const DefaultAppBar({
     
     backgroundColor: Theme.of(context).colorScheme.primary,
     flexibleSpace: FlexibleSpaceBar(
-      background: _imageUrl is String
-      ? HandledNetworkImage(
-        imageUrl: _imageUrl,
-      )
-      : const Padding(
-        padding: .all(pageContentPadding),
-        child: Image(
-          image: AssetImage(AssetsManager.logo),
-        ),
-      )
+      background: _background
     )
   );
 }

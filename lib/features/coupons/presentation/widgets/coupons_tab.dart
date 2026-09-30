@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/constants/numerical_values.dart';
-import '../../../../core/enums/coupon_status.dart';
+import '../../../../core/errors/failures.dart';
 import '../../../../core/extensions/context_l10n.dart';
+import '../../../../core/extensions/failure_message.dart';
+import '../../../../core/utils/snack_bar_message.dart';
+import '../../../../core/widgets/empty_data_placeholder.dart';
+import '../../../../core/widgets/failure_place_holder.dart';
+import '../../../../di.dart';
 import '../../domain/entities/coupon_entity.dart';
-import 'coupon_card.dart';
+import '../../domain/entities/coupon_quote_entity.dart';
+import '../viewmodels/apply_coupon_viewmodel/apply_coupon_cubit.dart';
+import '../viewmodels/apply_coupon_viewmodel/apply_coupon_state.dart';
+import '../viewmodels/coupons_viewmodel/coupons_cubit.dart';
+import '../viewmodels/coupons_viewmodel/coupons_state.dart';
 import 'coupon_code_field.dart';
-import 'coupons_info_card.dart';
-import 'coupons_section_header.dart';
+import 'coupons_list.dart';
 
 final class CouponsTab extends StatefulWidget {
   const new({super.key});
@@ -19,137 +28,96 @@ final class CouponsTab extends StatefulWidget {
 final class _CouponsTabState extends State<CouponsTab> {
   final TextEditingController _codeController = TextEditingController();
 
-  static final List<CouponEntity> _coupons = <CouponEntity>[
-    CouponEntity(
-      code: "SWIFT20",
-      title: "خصم 20% على أول طلب",
-      discount: "20%",
-      minimumOrder: 50,
-      expiryDate: DateTime(2025, 5, 24),
-      remainingUses: 3,
-      totalUses: 5,
-      color: Colors.deepOrange
-    ),
-    CouponEntity(
-      code: "NEW15",
-      title: "خصم 15% على جميع الطلبات",
-      discount: "15%",
-      minimumOrder: 60,
-      expiryDate: DateTime(2025, 6, 1),
-      remainingUses: 2,
-      totalUses: 3,
-      color: Colors.red
-    ),
-    CouponEntity(
-      code: "FREESHIP",
-      title: "شحن مجاني على جميع الطلبات",
-      minimumOrder: 40,
-      expiryDate: DateTime(2025, 6, 10),
-      color: Colors.deepPurple
-    ),
-    CouponEntity(
-      code: "OLD10",
-      title: "خصم 10% على الطلبات",
-      discount: "10%",
-      minimumOrder: 50,
-      expiryDate: DateTime(2025, 4, 15),
-      color: Colors.grey,
-      status: .expired
-    )
-  ];
-
-  static final List<CouponEntity> _availableCoupons = _coupons.where(
-    (CouponEntity coupon) => coupon.status == CouponStatus.active
-  ).toList();
-
-  static final List<CouponEntity> _expiredCoupons = _coupons.where(
-    (CouponEntity coupon) => coupon.status == CouponStatus.expired
-  ).toList();
-
   @override
   void dispose() {
     _codeController.dispose();
     super.dispose();
   }
 
+  void _onApplyCouponStateChanged(BuildContext context, ApplyCouponState state){
+    switch(state){
+      case ApplyCouponSuccessState(:final CouponQuoteEntity quote):
+        SnackBarMessage.showSuccessMessage(
+          context,
+          context.l10n.couponAppliedMessage(quote.discount)
+        );
+      case ApplyCouponEmptyCartState():
+        SnackBarMessage.showErrorMessage(context, context.l10n.couponEmptyCartMessage);
+      case ApplyCouponFailureState(:final Failure failure):
+        SnackBarMessage.showErrorMessage(context, failure.mapFailureToMessage(context));
+      case ApplyCouponIdleState() || ApplyCouponLoadingState():
+        break;
+    }
+  }
+
   @override
-  CustomScrollView build(BuildContext context)
-  => CustomScrollView(
-    physics: const BouncingScrollPhysics(),
-    slivers: <Widget>[
-      SliverToBoxAdapter(
-        child: Padding(
-          padding: const .all(pageContentPadding),
-          child: CouponCodeField(
-            controller: _codeController,
-            onApplyPressed: (){},
-          ),
-        ),
+  MultiBlocProvider build(BuildContext context)
+  => MultiBlocProvider(
+    providers: <BlocProvider>[
+      BlocProvider<CouponsCubit>(
+        create: (BuildContext _) => getIt<CouponsCubit>()..init()
       ),
-      SliverToBoxAdapter(
-        child: Padding(
-          padding: const .only(
-            left: pageContentPadding,
-            right: pageContentPadding,
-            bottom: defaultItemsSeparator
-          ),
-          child: CouponsSectionHeader(
-            title: context.l10n.availableCoupons,
-            count: _availableCoupons.length
-          ),
-        ),
-      ),
-      SliverPadding(
-        padding: const .only(
-          left: pageContentPadding,
-          right: pageContentPadding,
-          bottom: pageContentPadding,
-        ),
-        sliver: SliverList.separated(
-          itemCount: _availableCoupons.length,
-          separatorBuilder: (BuildContext _, int _) => const SizedBox(
-            height: defaultItemsSeparator,
-          ),
-          itemBuilder: (BuildContext context, int i)
-          => CouponCard(coupon: _availableCoupons[i]),
-        ),
-      ),
-      SliverToBoxAdapter(
-        child: Padding(
-          padding: const .symmetric(horizontal: pageContentPadding),
-          child: CouponsSectionHeader(
-            title: context.l10n.expiredCoupons,
-            count: _expiredCoupons.length,
-            isExpired: true
-          ),
-        ),
-      ),
-      SliverPadding(
-        padding: const .only(
-          left: pageContentPadding,
-          right: pageContentPadding,
-          top: defaultItemsSeparator,
-          bottom: pageContentPadding
-        ),
-        sliver: SliverList.separated(
-          itemCount: _expiredCoupons.length,
-          separatorBuilder: (BuildContext _, int _) => const SizedBox(
-            height: defaultItemsSeparator,
-          ),
-          itemBuilder: (BuildContext context, int i)
-          => CouponCard(coupon: _expiredCoupons[i]),
-        )
-      ),
-      SliverToBoxAdapter(
-        child: Padding(
-          padding: const .only(
-            left: pageContentPadding,
-            right: pageContentPadding,
-            bottom: pageContentPadding
-          ),
-          child: CouponsInfoCard(),
-        ),
+      BlocProvider<ApplyCouponCubit>(
+        create: (BuildContext _) => getIt<ApplyCouponCubit>()
       )
     ],
+    child: CustomScrollView(
+      physics: const BouncingScrollPhysics(),
+      slivers: <Widget>[
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const .all(pageContentPadding),
+            child: BlocConsumer<ApplyCouponCubit, ApplyCouponState>(
+              listener: _onApplyCouponStateChanged,
+              builder: (BuildContext context, ApplyCouponState state)
+              => CouponCodeField(
+                controller: _codeController,
+                isLoading: state is ApplyCouponLoadingState,
+                onApplyPressed: () => context.read<ApplyCouponCubit>().apply(_codeController.text),
+              ),
+            ),
+          ),
+        ),
+        BlocBuilder<CouponsCubit, CouponsState>(
+          builder: (BuildContext context, CouponsState state)
+          => switch(state){
+            CouponsInitialState() => const SliverToBoxAdapter(),
+            CouponsLoadingState() => const SliverFillRemaining(
+              hasScrollBody: false,
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
+            CouponsGetFailureState(:final Failure failure) => SliverFillRemaining(
+              hasScrollBody: false,
+              child: Center(
+                child: FailurePlaceHolder(
+                  failure: failure,
+                  onRetry: context.read<CouponsCubit>().init,
+                ),
+              ),
+            ),
+            CouponsGetSuccessState(
+              :final List<CouponEntity> activeCoupons,
+              :final List<CouponEntity> expiredCoupons
+            ) => activeCoupons.isEmpty && expiredCoupons.isEmpty
+              ? SliverFillRemaining(
+                hasScrollBody: false,
+                child: Center(
+                  child: EmptyDataPlaceholder(
+                    iconData: Icons.discount_outlined,
+                    title: context.l10n.noCouponsTitle,
+                    description: context.l10n.noCouponsMessage,
+                  ),
+                ),
+              )
+              : CouponsList(
+                activeCoupons: activeCoupons,
+                expiredCoupons: expiredCoupons
+              )
+          }
+        )
+      ],
+    ),
   );
 }

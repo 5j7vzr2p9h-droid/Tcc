@@ -1,12 +1,12 @@
-import 'package:flutter/widgets.dart';
-
-final class PaymentMethodEntity {
-  final String title, description;
-  final Widget icon;
+class PaymentMethodEntity {
+  final int id;
+  final String name, code;
+  final bool requiresProof;
 
   const new({
-    required this.title,
-    required this.description,
-    required this.icon
+    required this.id,
+    required this.name,
+    required this.code,
+    required this.requiresProof
   });
 }

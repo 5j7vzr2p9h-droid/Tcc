@@ -23,7 +23,7 @@ final class PaymentMethodTile extends StatelessWidget {
   InkWell build(BuildContext context)
   => InkWell(
     onTap: _onTap,
-    borderRadius: .circular(12.0),
+    borderRadius: const .all(.circular(12.0)),
     child: Container(
       padding: const .all(16.0),
       decoration: BoxDecoration(
@@ -39,10 +39,14 @@ final class PaymentMethodTile extends StatelessWidget {
       child: Row(
         spacing: 12.0,
         children: <Widget>[
+          // Placeholder until each method gets its own image.
           SizedBox(
             width: 32.0,
             height: 32.0,
-            child: _method.icon
+            child: Icon(
+              Icons.payments_outlined,
+              color: Theme.of(context).colorScheme.primary
+            )
           ),
           Expanded(
             child: Column(
@@ -50,18 +54,14 @@ final class PaymentMethodTile extends StatelessWidget {
               spacing: 2.0,
               children: <Widget>[
                 Text(
-                  _method.title,
+                  _method.name,
                   style: TextStyles.font14Weight700
                 ),
-                _balance is double
-                  ? IconLabel(
+                if(_balance is double)
+                  IconLabel(
                     icon: Icons.wallet,
                     color: Theme.of(context).colorScheme.primary,
                     label: "${context.l10n.yourCurrentBalance}: ${_balance.toStringAsFixed(2)} ${context.l10n.pound}"
-                  )
-                  : Text(
-                    _method.description,
-                    style: TextStyles.font12Weight400.copyWith(color: Colors.grey)
                   )
               ],
             ),

@@ -100,10 +100,12 @@
   "total": "Total",
   "noNewOrdersTitle": "No Recent Orders",
   "noNewOrdersMessage": "When you place an order, it will appear here.",
+  "noPreviousOrdersTitle": "No Previous Orders",
   "checkout": "Payment",
   "delivery": "Delivery",
   "payment": "Payment",
   "choosePaymentMethod": "Choose a payment method",
+  "noPaymentMethods": "No payment methods available right now",
   "cashOnDelivery": "Cash on Delivery",
   "cashOnDeliveryDescription": "Pay in cash when you receive your order",
   "visaMastercard": "Visa / Mastercard",
@@ -302,6 +304,18 @@
   "freeShipping": "Free shipping",
   "couponsInfoTitle": "Apply coupons before payment",
   "couponsInfoMessage": "You cannot combine more than one coupon in a single order",
+  "noCouponsTitle": "No coupons yet",
+  "noCouponsMessage": "Your coupons will show up here once you get them",
+  "couponEmptyCartMessage": "Add items to your cart first to apply a coupon",
+  "couponAppliedMessage": "Coupon applied! You saved {discount} EGP",
+  "@couponAppliedMessage": {
+    "placeholders": {
+      "discount": {
+        "type": "double",
+        "format": "decimalPattern"
+      }
+    }
+  },
   "offerValidUntil": "Valid until {date}",
   "@offerValidUntil": {
     "placeholders": {
@@ -420,5 +434,29 @@
   "sendMoneyToNumber": "Send the money to this number",
   "vodafoneCash": "Vodafone Cash",
   "unknownError": "Uknown Error",
-  "notificationSettings": "Notification Settings"
+  "notificationSettings": "Notification Settings",
+  "emptyCartTitle": "Your cart is empty",
+  "emptyCartMessage": "Add products from the menu to see them here",
+  "sizeIsRequired": "Please choose a size",
+  "orderPlacedMessage": "Your order has been placed successfully",
+  "chooseUpTo": "Choose up to {count}",
+  "@chooseUpTo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cannotBeCombined": "Chosen alone, can't be combined with other choices",
+  "minSelectionRequired": "Please choose at least {count} from {group}",
+  "@minSelectionRequired": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "group": {
+        "type": "String"
+      }
+    }
+  }
 }

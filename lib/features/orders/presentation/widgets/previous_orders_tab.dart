@@ -3,6 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/constants/numerical_values.dart';
 import '../../../../core/errors/failures.dart';
+import '../../../../core/extensions/context_l10n.dart';
+import '../../../../core/utils/app_icons.dart';
+import '../../../../core/widgets/empty_data_placeholder.dart';
 import '../../../../core/widgets/failure_place_holder.dart';
 import '../../../../di.dart';
 import '../../domain/entities/order_entity.dart';
@@ -60,7 +63,14 @@ final class _PreviousOrdersTabState extends State<PreviousOrdersTab> {
                 ),
               ),
               PreviousOrdersGetSuccessState(:final List<OrderEntity> orders) 
-              => OrdersList(orders),
+              => orders.isEmpty
+                ? Center(
+                  child: EmptyDataPlaceholder(
+                    iconData: AppIcons.no_bag,
+                    title: context.l10n.noPreviousOrdersTitle,
+                  ),
+                )
+                : OrdersList(orders)
             }
           ),
         ),

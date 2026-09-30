@@ -38,7 +38,7 @@ class AmountOption extends StatelessWidget {
           ),
         ),
         Text(
-          "(+ $_price ${context.l10n.pound})",
+          "($_price ${context.l10n.pound})",
           style: const TextStyle(
             color: Colors.grey
           ),

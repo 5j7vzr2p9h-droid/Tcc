@@ -10,7 +10,12 @@ import '../../../delivery/presentation/widgets/address_card.dart';
 import '../../../delivery/presentation/widgets/delivery_method_selector.dart';
 
 final class DeliveryStep extends StatefulWidget {
-  const new({super.key});
+  final ValueNotifier<DeliveryMethod> _methodController;
+
+  const new({
+    super.key,
+    required this._methodController
+  });
 
   @override
   State<DeliveryStep> createState() => _DeliveryStepState();
@@ -18,7 +23,6 @@ final class DeliveryStep extends StatefulWidget {
 
 class _DeliveryStepState extends State<DeliveryStep> {
 
-  final ValueNotifier<DeliveryMethod> _methodController = ValueNotifier<DeliveryMethod>(.delivery);
   final ValueNotifier<int> _pickupPlaceController = ValueNotifier<int>(0);
   final ValueNotifier<AddressEntity?> _addressController = ValueNotifier<AddressEntity?>(_addresses.first);
 
@@ -34,7 +38,6 @@ class _DeliveryStepState extends State<DeliveryStep> {
 
   @override
   void dispose() {
-    _methodController.dispose();
     _pickupPlaceController.dispose();
     _addressController.dispose();
     super.dispose();
@@ -50,13 +53,13 @@ class _DeliveryStepState extends State<DeliveryStep> {
         spacing: 16.0,
         children: <Widget>[
           Text("${context.l10n.chooseMethod}:", style: TextStyles.font16Weight700),
-          DeliveryMethodSelector(controller: _methodController),
+          DeliveryMethodSelector(controller: widget._methodController),
           Divider(
             height: 0.0,
             color: Theme.of(context).colorScheme.outline
           ),
           ValueListenableBuilder<DeliveryMethod>(
-            valueListenable: _methodController,
+            valueListenable: widget._methodController,
             builder: (BuildContext context, DeliveryMethod method, Widget? child)
             => switch(method){
               .delivery => Column(

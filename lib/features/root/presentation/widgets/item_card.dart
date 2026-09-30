@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/text_styles.dart';
+import '../../../../core/widgets/handled_network_image.dart';
 import '../../../favorites/presentation/widgets/favorite_button.dart';
 import '../../domain/entities/item_entity.dart';
 import 'add_to_cart_button.dart';
@@ -28,11 +29,9 @@ final class ItemCard extends StatelessWidget {
           children: <Widget>[
             ClipRRect(
               borderRadius: const .all(.circular(12.0)),
-              child: CachedNetworkImage(
+              child: HandledNetworkImage(
                 imageUrl: _product.image,
                 height: 130.0,
-                width: .infinity,
-                fit: .cover,
               ),
             ),
             FavoriteButton(

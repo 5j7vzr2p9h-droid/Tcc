@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/numerical_values.dart';
 import '../../../../core/errors/failures.dart';
 import '../../../../core/extensions/failure_message.dart';
+import '../../../../core/widgets/failure_place_holder.dart';
 import '../../../../di.dart';
 import '../../domain/entities/category_entity.dart';
 import '../../domain/entities/item_entity.dart';
@@ -63,7 +64,12 @@ final class _CategoryProductsViewState extends State<CategoryProductsView> with 
                 ),
               ),
               CategoryProductsGetFailureState(:final Failure failure) => SliverToBoxAdapter(
-                child: Text(failure.mapFailureToMessage(context)),
+                child: Center(
+                  child: FailurePlaceHolder(
+                    failure: failure,
+                    onRetry: () => context.read<CategoryProductsCubit>().getCategoryProducts(widget._categories[_tabController.index].id),
+                  )
+                ),
               ),
               CategoryProductsLoadingState() => const SliverFillRemaining(
                 hasScrollBody: false,

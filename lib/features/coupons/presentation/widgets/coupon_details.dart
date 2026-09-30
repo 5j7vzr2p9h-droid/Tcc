@@ -17,7 +17,7 @@ final class CouponDetails extends StatelessWidget {
 
   @override
   Column build(BuildContext context) {
-    final String date = DateFormat.yMMMd(context.l10n.localeName).format(_coupon.expiryDate);
+    final String date = DateFormat.yMMMd(context.l10n.localeName).format(_coupon.expirationDate);
     return Column(
       crossAxisAlignment: .start,
       mainAxisAlignment: .center,
@@ -27,8 +27,12 @@ final class CouponDetails extends StatelessWidget {
           _coupon.title,
           style: TextStyles.font14Weight700
         ),
-        Text(
-          context.l10n.couponMinimumOrder(_coupon.minimumOrder),
+        if(_coupon.subtitle.isNotEmpty) Text(
+          _coupon.subtitle,
+          style: TextStyles.font12Weight400.copyWith(color: Colors.grey)
+        ),
+        if(_coupon.notes.isNotEmpty) Text(
+          _coupon.notes,
           style: TextStyles.font12Weight400.copyWith(color: Colors.grey)
         ),
         IconLabel(

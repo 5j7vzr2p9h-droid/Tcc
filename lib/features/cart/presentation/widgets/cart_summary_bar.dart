@@ -1,29 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../extensions/context_l10n.dart';
-import '../utils/text_styles.dart';
-import 'handled_network_image.dart';
+import '../../../../core/extensions/context_l10n.dart';
+import '../../../../core/utils/text_styles.dart';
+import '../../../../core/widgets/handled_network_image.dart';
+import '../viewmodel/cart_cubit.dart';
+import '../viewmodel/cart_state.dart';
 
+/// Shows the current cart, and hides itself while the cart is empty.
 final class CartSummaryBar extends StatelessWidget {
-  final String _image;
-  final ValueNotifier<int> _itemsCountController;
-  final double _unitPrice;
   final VoidCallback _onTap;
 
   const new({
     super.key,
-    required this._image,
-    required this._itemsCountController,
-    required this._unitPrice,
     required this._onTap
   });
 
   @override
-  ValueListenableBuilder<int> build(BuildContext context)
-  => ValueListenableBuilder<int>(
-    valueListenable: _itemsCountController,
-    builder: (BuildContext context, int itemsCount, Widget? child)
-    => InkWell(
+  BlocBuilder<CartCubit, CartState> build(BuildContext context)
+  => BlocBuilder<CartCubit, CartState>(
+    builder: (BuildContext context, CartState state)
+    => state.isEmpty
+    ? const SizedBox.shrink()
+    : InkWell(
       onTap: _onTap,
       borderRadius: .circular(16.0),
       child: Container(
@@ -41,7 +40,7 @@ final class CartSummaryBar extends StatelessWidget {
                 ClipRRect(
                   borderRadius: const .all(.circular(10.0)),
                   child: HandledNetworkImage(
-                    imageUrl: _image,
+                    imageUrl: state.items.last.image,
                     width: 36.0,
                     height: 36.0,
                   ),
@@ -53,7 +52,7 @@ final class CartSummaryBar extends StatelessWidget {
                     radius: 8.0,
                     backgroundColor: Theme.of(context).colorScheme.surface,
                     child: Text(
-                      "$itemsCount",
+                      "${state.itemsCount}",
                       style: TextStyles.font12Weight700.copyWith(
                         color: Theme.of(context).colorScheme.onSurface
                       )
@@ -71,7 +70,7 @@ final class CartSummaryBar extends StatelessWidget {
                     style: TextStyles.font14Weight700.copyWith(color: Colors.white)
                   ),
                   Text(
-                    "$itemsCount ${context.l10n.product}",
+                    "${state.itemsCount} ${context.l10n.product}",
                     style: TextStyles.font12Weight400.copyWith(
                       color: Theme.of(context).colorScheme.onPrimary
                     )
@@ -80,7 +79,7 @@ final class CartSummaryBar extends StatelessWidget {
               ),
             ),
             Text(
-              "${(_unitPrice * itemsCount).toStringAsFixed(2)} ${context.l10n.pound}",
+              "${state.subtotal.toStringAsFixed(2)} ${context.l10n.pound}",
               style: TextStyles.font14Weight700.copyWith(color: Colors.white)
             ),
             const Icon(Icons.chevron_right, color: Colors.white, size: 20.0)

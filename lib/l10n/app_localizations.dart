@@ -605,6 +605,12 @@ abstract class AppLocalizations {
   /// **'When you place an order, it will appear here.'**
   String get noNewOrdersMessage;
 
+  /// No description provided for @noPreviousOrdersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No Previous Orders'**
+  String get noPreviousOrdersTitle;
+
   /// No description provided for @checkout.
   ///
   /// In en, this message translates to:
@@ -628,6 +634,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Choose a payment method'**
   String get choosePaymentMethod;
+
+  /// No description provided for @noPaymentMethods.
+  ///
+  /// In en, this message translates to:
+  /// **'No payment methods available right now'**
+  String get noPaymentMethods;
 
   /// No description provided for @cashOnDelivery.
   ///
@@ -1403,6 +1415,30 @@ abstract class AppLocalizations {
   /// **'You cannot combine more than one coupon in a single order'**
   String get couponsInfoMessage;
 
+  /// No description provided for @noCouponsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No coupons yet'**
+  String get noCouponsTitle;
+
+  /// No description provided for @noCouponsMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Your coupons will show up here once you get them'**
+  String get noCouponsMessage;
+
+  /// No description provided for @couponEmptyCartMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Add items to your cart first to apply a coupon'**
+  String get couponEmptyCartMessage;
+
+  /// No description provided for @couponAppliedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Coupon applied! You saved {discount} EGP'**
+  String couponAppliedMessage(double discount);
+
   /// No description provided for @offerValidUntil.
   ///
   /// In en, this message translates to:
@@ -1990,6 +2026,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Notification Settings'**
   String get notificationSettings;
+
+  /// No description provided for @emptyCartTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your cart is empty'**
+  String get emptyCartTitle;
+
+  /// No description provided for @emptyCartMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Add products from the menu to see them here'**
+  String get emptyCartMessage;
+
+  /// No description provided for @sizeIsRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please choose a size'**
+  String get sizeIsRequired;
+
+  /// No description provided for @orderPlacedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Your order has been placed successfully'**
+  String get orderPlacedMessage;
+
+  /// No description provided for @chooseUpTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose up to {count}'**
+  String chooseUpTo(int count);
+
+  /// No description provided for @cannotBeCombined.
+  ///
+  /// In en, this message translates to:
+  /// **'Chosen alone, can\'t be combined with other choices'**
+  String get cannotBeCombined;
+
+  /// No description provided for @minSelectionRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please choose at least {count} from {group}'**
+  String minSelectionRequired(int count, String group);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

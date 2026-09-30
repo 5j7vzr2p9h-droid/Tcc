@@ -15,6 +15,8 @@ import '../../features/legal/presentation/pages/terms_and_conditions_page.dart';
 import '../../features/orders/presentation/pages/new_order_page.dart';
 import '../../features/payment/presentation/pages/payment_methods_page.dart';
 import '../../features/payment/presentation/pages/payment_page.dart';
+import '../../features/payment/presentation/viewmodels/checkout_viewmodel/checkout_cubit.dart';
+import '../../features/payment/presentation/viewmodels/payment_methods_viewmodel/payment_methods_cubit.dart';
 import '../../features/root/domain/entities/category_entity.dart';
 import '../../features/root/domain/entities/item_entity.dart';
 import '../../features/root/presentation/pages/category_products_page.dart';
@@ -53,7 +55,19 @@ abstract final class AppRoutes{
           )
         );
       case Routes.payment:
-        return _materialPageRoute(const PaymentPage());
+        return _materialPageRoute(
+          MultiBlocProvider(
+            providers: <BlocProvider>[
+              BlocProvider<CheckoutCubit>(
+                create: (BuildContext context) => getIt<CheckoutCubit>()
+              ),
+              BlocProvider<PaymentMethodsCubit>(
+                create: (BuildContext context) => getIt<PaymentMethodsCubit>()..init()
+              )
+            ],
+            child: const PaymentPage()
+          )
+        );
       case Routes.login:
         return _materialPageRoute(const LoginPage());
       case Routes.register:

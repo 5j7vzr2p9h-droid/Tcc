@@ -7,6 +7,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 
 import 'core/cache/prefs.dart';
 import 'core/constants/cache_keys.dart';
@@ -14,6 +15,7 @@ import 'core/location/location_service.dart';
 import 'core/network/network_info.dart';
 import 'core/utils/api_endpoints.dart';
 import 'core/utils/app_locales.dart';
+import 'core/uuid_generator/uuid_generator.dart';
 import 'features/auth/data/datasources/auth_remote_datasource.dart';
 import 'features/auth/data/repositories/auth_repository_impl.dart';
 import 'features/auth/domain/repositories/auth_repository.dart';
@@ -25,6 +27,22 @@ import 'features/auth/domain/usecase/verify_phone_usecase.dart';
 import 'features/auth/presentation/viewmodels/login_viewmodel/login_cubit.dart';
 import 'features/auth/presentation/viewmodels/register_viewmodel/register_cubit.dart';
 import 'features/auth/presentation/viewmodels/verify_phone_viewmodel/verify_phone_cubit.dart';
+import 'features/cart/data/datasources/cart_local_datasource.dart';
+import 'features/cart/data/repositories/cart_repository_impl.dart';
+import 'features/cart/domain/repositories/cart_repository.dart';
+import 'features/cart/domain/usecases/add_to_cart_usecase.dart';
+import 'features/cart/domain/usecases/clear_cart_usecase.dart';
+import 'features/cart/domain/usecases/get_cart_usecase.dart';
+import 'features/cart/domain/usecases/remove_from_cart_usecase.dart';
+import 'features/cart/domain/usecases/update_cart_item_quantity_usecase.dart';
+import 'features/cart/presentation/viewmodel/cart_cubit.dart';
+import 'features/coupons/data/datasources/coupons_remote_datasource.dart';
+import 'features/coupons/data/repositories/coupons_repository_impl.dart';
+import 'features/coupons/domain/repositories/coupons_repository.dart';
+import 'features/coupons/domain/usecases/apply_coupon_usecase.dart';
+import 'features/coupons/domain/usecases/get_coupons_usecase.dart';
+import 'features/coupons/presentation/viewmodels/apply_coupon_viewmodel/apply_coupon_cubit.dart';
+import 'features/coupons/presentation/viewmodels/coupons_viewmodel/coupons_cubit.dart';
 import 'features/favorites/data/datasources/favorites_remote_datasource.dart';
 import 'features/favorites/data/repositories/favorites_repository_impl.dart';
 import 'features/favorites/domain/repositories/favorites_repository.dart';
@@ -32,9 +50,7 @@ import 'features/favorites/domain/usecases/get_favorites_usecase.dart';
 import 'features/favorites/domain/usecases/toggle_favorite_usecase.dart';
 import 'features/favorites/presentation/viewmodel/favorite_toggle_viewmodel/favorite_toggle_cubit.dart';
 import 'features/favorites/presentation/viewmodel/favorites_viewmodel/favorites_cubit.dart';
-import 'features/legal/data/datasources/legal_local_datasource.dart';
 import 'features/legal/data/datasources/legal_remote_datasource.dart';
-import 'features/legal/data/models/legal_list_model.dart';
 import 'features/legal/data/repositories/legal_repository_impl.dart';
 import 'features/legal/domain/repositories/legal_repository.dart';
 import 'features/legal/domain/usecases/get_privacy_policy_usecase.dart';
@@ -59,13 +75,17 @@ import 'features/orders/domain/usecases/get_current_orders_usecase.dart';
 import 'features/orders/domain/usecases/get_previous_orders_usecase.dart';
 import 'features/orders/presentation/viewmodels/current_orders_view/current_orders_cubit.dart';
 import 'features/orders/presentation/viewmodels/previous_orders_viewmodel/previous_orders_cubit.dart';
+import 'features/payment/data/datasources/checkout_local_datasource.dart';
+import 'features/payment/data/datasources/checkout_remote_datasource.dart';
+import 'features/payment/data/repositories/checkout_repository_impl.dart';
+import 'features/payment/domain/repositories/checkout_repository.dart';
+import 'features/payment/domain/usecases/checkout_usecase.dart';
+import 'features/payment/domain/usecases/get_payment_methods_usecase.dart';
+import 'features/payment/presentation/viewmodels/checkout_viewmodel/checkout_cubit.dart';
+import 'features/payment/presentation/viewmodels/payment_methods_viewmodel/payment_methods_cubit.dart';
 import 'features/profile/presentation/viewmodel/profile_cubit.dart';
-import 'features/root/data/datasources/categories_local_datasource.dart';
 import 'features/root/data/datasources/categories_remote_datasource.dart';
-import 'features/root/data/datasources/items_local_datasource.dart';
 import 'features/root/data/datasources/items_remote_datasource.dart';
-import 'features/root/data/models/category_model.dart';
-import 'features/root/data/models/item_model.dart';
 import 'features/root/data/repositories/categories_repository_impl.dart';
 import 'features/root/data/repositories/items_repository_impl.dart';
 import 'features/root/domain/repositories/categories_repository.dart';
@@ -76,6 +96,11 @@ import 'features/root/domain/usecases/search_products_usecase.dart';
 import 'features/root/presentation/viewmodels/category_items_viewmodel/category_items_cubit.dart';
 import 'features/root/presentation/viewmodels/home_viewmodel/home_cubit.dart';
 import 'features/root/presentation/viewmodels/search_viewmodel/search_cubit.dart';
+import 'features/wallet/data/datasources/wallet_remote_datasource.dart';
+import 'features/wallet/data/repositories/wallet_repository_impl.dart';
+import 'features/wallet/domain/repositories/wallet_repository.dart';
+import 'features/wallet/domain/usecases/get_balance_usecase.dart';
+import 'features/wallet/presentation/viewmodels/wallet_viewmodel/wallet_cubit.dart';
 import 'language_controller.dart';
 import 'theme_controller.dart';
 
@@ -85,12 +110,9 @@ Future<void> setupDependencyInjection() async{
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   const FlutterSecureStorage secureStorage = FlutterSecureStorage();
   final String? token = await secureStorage.read(key: "token");
+  final Box<Map> cartBox = await Hive.openBox<Map>("cart");
 
-  final Box<CategoryModel> categoriesBox = await Hive.openBox<CategoryModel>("categories");
-  final Box<ItemModel> categoriesItemsBox = await Hive.openBox<ItemModel>("categories_items");
-  final Box<ItemModel> popularItemsBox = await Hive.openBox<ItemModel>("popular_items");
-  final Box<LegalListModel> legalBox = await Hive.openBox<LegalListModel>("legal");
-
+  getIt.registerLazySingleton<UuidGenerator>(() => const UuidGeneratorImpl(Uuid()));
   getIt.registerSingleton<Prefs>(PrefsImpl(prefs));
   getIt.registerSingleton(
     LanguageController(
@@ -113,6 +135,7 @@ Future<void> setupDependencyInjection() async{
         sendTimeout: const Duration(seconds: 30),
         receiveTimeout: const Duration(seconds: 30),
         headers: <String, dynamic>{
+          "accept": "text/plain",
           "Authorization": ?(token is String? "Bearer $token": null),
           "Accept-Language": getIt<LanguageController>().value
         }
@@ -123,6 +146,7 @@ Future<void> setupDependencyInjection() async{
         print("headers: ${options.headers}");
         print("queryParams: ${options.queryParameters}");
         print("method: ${options.method}");
+        print("data: ${options.data}");
         print("uri: ${options.uri}");
         print("===============");
         handler.next(options);
@@ -168,11 +192,7 @@ Future<void> setupDependencyInjection() async{
   getIt.registerLazySingleton<AuthRemoteDatasource>(
     () => AuthRemoteDatasourceImpl(
       dio: getIt<Dio>(),
-      secureStorage: getIt<FlutterSecureStorage>(),
-      categoriesItemsBox: categoriesItemsBox,
-      popularItemsBox: popularItemsBox,
-      categoriesBox: categoriesBox,
-      legalBox: legalBox
+      secureStorage: getIt<FlutterSecureStorage>()
     )
   );
   getIt.registerLazySingleton<CategoriesRemoteDatasource>(
@@ -187,18 +207,18 @@ Future<void> setupDependencyInjection() async{
   ));
   getIt.registerLazySingleton<LegalRemoteDatasource>(() => LegalRemoteDatasourceImpl(getIt<Dio>()));
 
-  getIt.registerLazySingleton<CategoriesLocalDatasource>(() => CategoriesLocalDatasourceImpl(categoriesBox));
-
-  getIt.registerLazySingleton<ItemsLocalDatasource>(() => ItemsLocalDatasourceImpl(
-    categoriesItemsBox: categoriesItemsBox,
-    popularItemsBox: popularItemsBox
-  ));
-
-  getIt.registerLazySingleton<LegalLocalDatasource>(() => LegalLocalDatasourceImpl(legalBox));
-
   getIt.registerLazySingleton<OrdersRemoteDatasource>(() => OrdersRemoteDatasourceImpl(getIt<Dio>()));
 
   getIt.registerLazySingleton<FavoritesRemoteDatasource>(() => FavoritesRemoteDatasourceImpl(getIt<Dio>()));
+
+  getIt.registerLazySingleton<CouponsRemoteDatasource>(() => CouponsRemoteDatasourceImpl(getIt<Dio>()));
+
+  getIt.registerLazySingleton<CartLocalDatasource>(() => CartLocalDatasourceImpl(cartBox));
+
+  getIt.registerLazySingleton<CheckoutRemoteDatasource>(() => CheckoutRemoteDatasourceImpl(getIt<Dio>()));
+  getIt.registerLazySingleton<CheckoutLocalDatasource>(() => CheckoutLocalDatasourceImpl(getIt<Prefs>()));
+
+  getIt.registerLazySingleton<WalletRemoteDatasource>(() => WalletRemoteDatasourceImpl(getIt<Dio>()));
 
   getIt.registerLazySingleton<LocationRepository>(() => LocationRepositoryImpl(
     prefs: getIt<Prefs>(),
@@ -208,6 +228,7 @@ Future<void> setupDependencyInjection() async{
   ));
   getIt.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(
+      prefs: getIt<Prefs>(),
       networkInfo: getIt<NetworkInfo>(),
       remoteDatasource: getIt<AuthRemoteDatasource>()
     )
@@ -216,22 +237,19 @@ Future<void> setupDependencyInjection() async{
     () => CategoriesRepositoryImpl(
       prefs: getIt<Prefs>(),
       networkInfo: getIt<NetworkInfo>(),
-      remoteDatasource: getIt<CategoriesRemoteDatasource>(),
-      localDatasource: getIt<CategoriesLocalDatasource>()
+      remoteDatasource: getIt<CategoriesRemoteDatasource>()
     )
   );
   getIt.registerLazySingleton<ItemsRepository>(
     () => ItemsRepositoryImpl(
       prefs: getIt<Prefs>(),
       networkInfo: getIt<NetworkInfo>(),
-      remoteDatasource: getIt<ItemsRemoteDatasource>(),
-      localDatasource: getIt<ItemsLocalDatasource>()
+      remoteDatasource: getIt<ItemsRemoteDatasource>()
     )
   );
   getIt.registerLazySingleton<LegalRepository>(() => LegalRepositoryImpl(
     networkInfo: getIt<NetworkInfo>(),
-    remoteDatasource: getIt<LegalRemoteDatasource>(),
-    localDatasource: getIt<LegalLocalDatasource>()
+    remoteDatasource: getIt<LegalRemoteDatasource>()
   ));
   getIt.registerLazySingleton<OrdersRepository>(() => OrdersRepositoryImpl(
     networkInfo: getIt<NetworkInfo>(),
@@ -241,6 +259,23 @@ Future<void> setupDependencyInjection() async{
     prefs: getIt<Prefs>(),
     networkInfo: getIt<NetworkInfo>(),
     remoteDatasource: getIt<FavoritesRemoteDatasource>()
+  ));
+  getIt.registerLazySingleton<CouponsRepository>(() => CouponsRepositoryImpl(
+    prefs: getIt<Prefs>(),
+    networkInfo: getIt<NetworkInfo>(),
+    remoteDatasource: getIt<CouponsRemoteDatasource>()
+  ));
+  getIt.registerLazySingleton<CartRepository>(() => CartRepositoryImpl(getIt<CartLocalDatasource>()));
+  getIt.registerLazySingleton<CheckoutRepository>(() => CheckoutRepositoryImpl(
+    networkInfo: getIt<NetworkInfo>(),
+    prefs: getIt<Prefs>(),
+    uuidGenerator: getIt<UuidGenerator>(),
+    remoteDatasource: getIt<CheckoutRemoteDatasource>(),
+    localDatasource: getIt<CheckoutLocalDatasource>()
+  ));
+  getIt.registerLazySingleton<WalletRepository>(() => WalletRepositoryImpl(
+    networkInfo: getIt<NetworkInfo>(),
+    remoteDatasource: getIt<WalletRemoteDatasource>()
   ));
 
   getIt.registerLazySingleton<GetAddressNameUsecase>(() => GetAddressNameUsecase(getIt<LocationRepository>()));
@@ -263,6 +298,16 @@ Future<void> setupDependencyInjection() async{
   getIt.registerLazySingleton<GetPreviousOrdersUsecase>(() => GetPreviousOrdersUsecase(getIt<OrdersRepository>()));
   getIt.registerLazySingleton<GetFavoritesUsecase>(() => GetFavoritesUsecase(getIt<FavoritesRepository>()));
   getIt.registerLazySingleton<ToggleFavoriteUsecase>(() => ToggleFavoriteUsecase(getIt<FavoritesRepository>()));
+  getIt.registerLazySingleton<GetCouponsUsecase>(() => GetCouponsUsecase(getIt<CouponsRepository>()));
+  getIt.registerLazySingleton<ApplyCouponUsecase>(() => ApplyCouponUsecase(getIt<CouponsRepository>()));
+  getIt.registerLazySingleton<GetCartUsecase>(() => GetCartUsecase(getIt<CartRepository>()));
+  getIt.registerLazySingleton<AddToCartUsecase>(() => AddToCartUsecase(getIt<CartRepository>()));
+  getIt.registerLazySingleton<UpdateCartItemQuantityUsecase>(() => UpdateCartItemQuantityUsecase(getIt<CartRepository>()));
+  getIt.registerLazySingleton<RemoveFromCartUsecase>(() => RemoveFromCartUsecase(getIt<CartRepository>()));
+  getIt.registerLazySingleton<ClearCartUsecase>(() => ClearCartUsecase(getIt<CartRepository>()));
+  getIt.registerLazySingleton<CheckoutUsecase>(() => CheckoutUsecase(getIt<CheckoutRepository>()));
+  getIt.registerLazySingleton<GetPaymentMethodsUsecase>(() => GetPaymentMethodsUsecase(getIt<CheckoutRepository>()));
+  getIt.registerLazySingleton<GetBalanceUsecase>(() => GetBalanceUsecase(getIt<WalletRepository>()));
 
   getIt.registerFactory<ProfileCubit>(() => ProfileCubit(getIt<LogoutUsecase>()));
   getIt.registerFactory<RegisterCubit>(() => RegisterCubit(getIt<RegisterUsecase>()));
@@ -296,4 +341,22 @@ Future<void> setupDependencyInjection() async{
       isFavorite: isFavorite
     )
   );
+  getIt.registerFactory<CouponsCubit>(() => CouponsCubit(getIt<GetCouponsUsecase>()));
+  getIt.registerFactory<ApplyCouponCubit>(() => ApplyCouponCubit(
+    getCartUsecase: getIt<GetCartUsecase>(),
+    applyCouponUsecase: getIt<ApplyCouponUsecase>()
+  ));
+  getIt.registerFactory<CartCubit>(() => CartCubit(
+    getCartUsecase: getIt<GetCartUsecase>(),
+    addToCartUsecase: getIt<AddToCartUsecase>(),
+    updateCartItemQuantityUsecase: getIt<UpdateCartItemQuantityUsecase>(),
+    removeFromCartUsecase: getIt<RemoveFromCartUsecase>(),
+    clearCartUsecase: getIt<ClearCartUsecase>()
+  ));
+  getIt.registerFactory<CheckoutCubit>(() => CheckoutCubit(getIt<CheckoutUsecase>()));
+  getIt.registerFactory<PaymentMethodsCubit>(() => PaymentMethodsCubit(
+    getPaymentMethodsUsecase: getIt<GetPaymentMethodsUsecase>(),
+    getBalanceUsecase: getIt<GetBalanceUsecase>()
+  ));
+  getIt.registerFactory<WalletCubit>(() => WalletCubit(getIt<GetBalanceUsecase>()));
 }

@@ -93,10 +93,12 @@
   "total": "المجموع",
   "noNewOrdersTitle": "لا توجد طلبات حديثة",
   "noNewOrdersMessage": "عندما تقوم بطلب، سيظهر هنا.",
+  "noPreviousOrdersTitle": "لا توجد طلبات سابقة",
   "checkout": "الدفع",
   "delivery": "التوصيل",
   "payment": "الدفع",
   "choosePaymentMethod": "اختر طريقة الدفع",
+  "noPaymentMethods": "لا توجد طرق دفع متاحة حالياً",
   "cashOnDelivery": "الدفع نقداً (عند الاستلام)",
   "cashOnDeliveryDescription": "ادفع نقداً عند استلام الطلب",
   "visaMastercard": "فيزا / ماستركارد",
@@ -302,6 +304,10 @@
   "freeShipping": "شحن مجاني",
   "couponsInfoTitle": "تطبيق الكوبونات قبل الدفع",
   "couponsInfoMessage": "لا يمكن دمج أكثر من كوبون في الطلب الواحد",
+  "noCouponsTitle": "لا توجد كوبونات حالياً",
+  "noCouponsMessage": "ستظهر كوبوناتك هنا فور حصولك عليها",
+  "couponEmptyCartMessage": "أضف منتجات إلى السلة أولاً لتطبيق الكوبون",
+  "couponAppliedMessage": "تم تطبيق الكوبون! وفرت {discount} جنيه",
   "offerValidUntil": "ساري حتى {date}",
   "@offerValidUntil": {
     "placeholders": {
@@ -420,5 +426,12 @@
   "sendMoneyToNumber": "أرسل الحساب إلى هذا الرقم",
   "vodafoneCash": "ڤودافون كاش",
   "unknownError": "خطأ غير متوقع",
-  "notificationSettings": "إعدادات الإشعارات"
+  "notificationSettings": "إعدادات الإشعارات",
+  "emptyCartTitle": "السلة فارغة",
+  "emptyCartMessage": "أضف منتجات من القائمة لتظهر هنا",
+  "sizeIsRequired": "يُرجى اختيار الحجم",
+  "orderPlacedMessage": "تم إرسال طلبك بنجاح",
+  "chooseUpTo": "اختر حتى {count}",
+  "cannotBeCombined": "يُختار بمفرده، ولا يمكن جمعه مع اختيارات أخرى",
+  "minSelectionRequired": "يُرجى اختيار {count} على الأقل من {group}"
 }

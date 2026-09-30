@@ -268,6 +268,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noNewOrdersMessage => 'When you place an order, it will appear here.';
 
   @override
+  String get noPreviousOrdersTitle => 'No Previous Orders';
+
+  @override
   String get checkout => 'Payment';
 
   @override
@@ -278,6 +281,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get choosePaymentMethod => 'Choose a payment method';
+
+  @override
+  String get noPaymentMethods => 'No payment methods available right now';
 
   @override
   String get cashOnDelivery => 'Cash on Delivery';
@@ -685,6 +691,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get couponsInfoMessage => 'You cannot combine more than one coupon in a single order';
 
   @override
+  String get noCouponsTitle => 'No coupons yet';
+
+  @override
+  String get noCouponsMessage => 'Your coupons will show up here once you get them';
+
+  @override
+  String get couponEmptyCartMessage => 'Add items to your cart first to apply a coupon';
+
+  @override
+  String couponAppliedMessage(double discount) {
+    final intl.NumberFormat discountNumberFormat = intl.NumberFormat.decimalPattern(localeName);
+    final String discountString = discountNumberFormat.format(discount);
+
+    return 'Coupon applied! You saved $discountString EGP';
+  }
+
+  @override
   String offerValidUntil(String date) {
     return 'Valid until $date';
   }
@@ -983,4 +1006,29 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notificationSettings => 'Notification Settings';
+
+  @override
+  String get emptyCartTitle => 'Your cart is empty';
+
+  @override
+  String get emptyCartMessage => 'Add products from the menu to see them here';
+
+  @override
+  String get sizeIsRequired => 'Please choose a size';
+
+  @override
+  String get orderPlacedMessage => 'Your order has been placed successfully';
+
+  @override
+  String chooseUpTo(int count) {
+    return 'Choose up to $count';
+  }
+
+  @override
+  String get cannotBeCombined => 'Chosen alone, can\'t be combined with other choices';
+
+  @override
+  String minSelectionRequired(int count, String group) {
+    return 'Please choose at least $count from $group';
+  }
 }

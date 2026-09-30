@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 
-import '../../../root/domain/entities/item_entity.dart';
 import 'food_addition_tile.dart';
 import 'order_field_title.dart';
 
 final class AdditionsField extends StatelessWidget {
   final String _title;
-  final List<AddonEntity> _addons;
+  /// [price] is null for free additions.
+  final List<({String name, double? price})> _options;
+  /// Indexes of the selected [_options].
+  final ValueNotifier<Set<int>> _controller;
 
   const new({
     super.key,
     required this._title,
-    required this._addons
+    required this._options,
+    required this._controller
   });
 
   @override
@@ -30,19 +33,26 @@ final class AdditionsField extends StatelessWidget {
             color: Theme.of(context).colorScheme.outline
           ),
         ),
-        child: ListView.separated(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          padding: .zero,
-          itemCount: _addons.length,
-          separatorBuilder: (BuildContext _, int _) => Divider(
-            color: Theme.of(context).colorScheme.outline,
-            height: 1.0,
-          ),
-          itemBuilder: (BuildContext context, int i) => FoodAdditionTile(
-            title: _addons[i].name,
-            price: _addons[i].price,
-            controller: ValueNotifier<bool>(true)
+        child: ValueListenableBuilder<Set<int>>(
+          valueListenable: _controller,
+          builder: (BuildContext context, Set<int> selectedIndexes, Widget? child)
+          => ListView.separated(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            padding: .zero,
+            itemCount: _options.length,
+            separatorBuilder: (BuildContext _, int _) => Divider(
+              color: Theme.of(context).colorScheme.outline,
+              height: 1.0,
+            ),
+            itemBuilder: (BuildContext context, int i) => FoodAdditionTile(
+              title: _options[i].name,
+              price: _options[i].price,
+              value: selectedIndexes.contains(i),
+              onChanged: (bool isSelected) => _controller.value = isSelected
+                ? <int>{...selectedIndexes, i}
+                : (<int>{...selectedIndexes}..remove(i))
+            ),
           ),
         ),
       )

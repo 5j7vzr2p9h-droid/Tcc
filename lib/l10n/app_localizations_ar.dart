@@ -268,6 +268,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get noNewOrdersMessage => 'عندما تقوم بطلب، سيظهر هنا.';
 
   @override
+  String get noPreviousOrdersTitle => 'لا توجد طلبات سابقة';
+
+  @override
   String get checkout => 'الدفع';
 
   @override
@@ -278,6 +281,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get choosePaymentMethod => 'اختر طريقة الدفع';
+
+  @override
+  String get noPaymentMethods => 'لا توجد طرق دفع متاحة حالياً';
 
   @override
   String get cashOnDelivery => 'الدفع نقداً (عند الاستلام)';
@@ -685,6 +691,23 @@ class AppLocalizationsAr extends AppLocalizations {
   String get couponsInfoMessage => 'لا يمكن دمج أكثر من كوبون في الطلب الواحد';
 
   @override
+  String get noCouponsTitle => 'لا توجد كوبونات حالياً';
+
+  @override
+  String get noCouponsMessage => 'ستظهر كوبوناتك هنا فور حصولك عليها';
+
+  @override
+  String get couponEmptyCartMessage => 'أضف منتجات إلى السلة أولاً لتطبيق الكوبون';
+
+  @override
+  String couponAppliedMessage(double discount) {
+    final intl.NumberFormat discountNumberFormat = intl.NumberFormat.decimalPattern(localeName);
+    final String discountString = discountNumberFormat.format(discount);
+
+    return 'تم تطبيق الكوبون! وفرت $discountString جنيه';
+  }
+
+  @override
   String offerValidUntil(String date) {
     return 'ساري حتى $date';
   }
@@ -983,4 +1006,29 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get notificationSettings => 'إعدادات الإشعارات';
+
+  @override
+  String get emptyCartTitle => 'السلة فارغة';
+
+  @override
+  String get emptyCartMessage => 'أضف منتجات من القائمة لتظهر هنا';
+
+  @override
+  String get sizeIsRequired => 'يُرجى اختيار الحجم';
+
+  @override
+  String get orderPlacedMessage => 'تم إرسال طلبك بنجاح';
+
+  @override
+  String chooseUpTo(int count) {
+    return 'اختر حتى $count';
+  }
+
+  @override
+  String get cannotBeCombined => 'يُختار بمفرده، ولا يمكن جمعه مع اختيارات أخرى';
+
+  @override
+  String minSelectionRequired(int count, String group) {
+    return 'يُرجى اختيار $count على الأقل من $group';
+  }
 }

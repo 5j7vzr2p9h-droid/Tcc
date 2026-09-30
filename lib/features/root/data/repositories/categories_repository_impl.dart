@@ -7,15 +7,13 @@ import '../../../../core/errors/failures.dart';
 import '../../../../core/network/network_info.dart';
 import '../../domain/entities/category_entity.dart';
 import '../../domain/repositories/categories_repository.dart';
-import '../datasources/categories_local_datasource.dart';
 import '../datasources/categories_remote_datasource.dart';
 import '../models/category_model.dart';
 
 final class const CategoriesRepositoryImpl({
   required final Prefs _prefs,
   required final NetworkInfo _networkInfo,
-  required final CategoriesRemoteDatasource _remoteDatasource,
-  required final CategoriesLocalDatasource _localDatasource
+  required final CategoriesRemoteDatasource _remoteDatasource
 }) implements CategoriesRepository{
 
   @override
@@ -24,23 +22,15 @@ final class const CategoriesRepositoryImpl({
       try {
         final int branchId = _prefs.getInt(CacheKeys.branchId)!;
         final List<CategoryModel> categories = await _remoteDatasource.getCategories(branchId);
-        _localDatasource.cacheCategories(categories);
         return Right(categories);
       } on ServerException catch(e) {
-        return _getCachedCategoriesOrFailure(ServerFailure(e.message));
+        return Left(ServerFailure(e.message));
       } on OfflineException {
-        return _getCachedCategoriesOrFailure(const OfflineFailure());
+        return const Left(OfflineFailure());
+      } catch(_) {
+        return const Left(UnknownFailure());
       }
     }
-    else return _getCachedCategoriesOrFailure(const OfflineFailure());
+    else return const Left(OfflineFailure());
   }
-
-  Future<Either<Failure, List<CategoryEntity>>> _getCachedCategoriesOrFailure(Failure defaultFailure) async {
-    try {
-      final cachedCategories = _localDatasource.getCachedCategories();
-      return Right(cachedCategories);
-    } catch (_) {
-      return Left(defaultFailure);
-    }
-  } 
 }

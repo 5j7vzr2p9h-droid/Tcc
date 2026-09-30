@@ -13,6 +13,8 @@ abstract interface class Prefs {
     required int value
   });
 
+  Future<bool> remove(String key);
+
   Future<bool> clear();
 }
 
@@ -40,6 +42,9 @@ final class const PrefsImpl(this._prefs) implements Prefs{
     required int value
   })
   => _prefs.setInt(key, value);
+
+  @override
+  Future<bool> remove(String key) => _prefs.remove(key);
 
   @override
   Future<bool> clear() => _prefs.clear();

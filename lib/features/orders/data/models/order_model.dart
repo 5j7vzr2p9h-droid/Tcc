@@ -7,7 +7,6 @@ final class const OrderModel({
   required super.total,
   required super.deliveyAddress,
   required super.image,
-  required super.statusText,
   required super.status,
 }) extends OrderEntity{
 
@@ -18,7 +17,6 @@ final class const OrderModel({
     total: json["total"],
     deliveyAddress: json["deliveryAddress"]??'',
     image: json["image"]??'',
-    statusText: json["statusText"]??'',
-    status: OrderStatus.fromJson(json["status"]?? "held")
+    status: OrderStatus.fromJson(json["status"]?? "Held")
   );
 }

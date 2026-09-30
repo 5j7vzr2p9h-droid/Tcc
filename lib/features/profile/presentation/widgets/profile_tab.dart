@@ -10,6 +10,7 @@ import '../../../../core/utils/snack_bar_message.dart';
 import '../../../../core/utils/text_styles.dart';
 import '../../../../core/widgets/failure_place_holder.dart';
 import '../../../../di.dart';
+import '../../../cart/presentation/viewmodel/cart_cubit.dart';
 import '../viewmodel/profile_cubit.dart';
 import '../viewmodel/profile_state.dart';
 import 'profile_header.dart';
@@ -34,8 +35,10 @@ final class ProfileTab extends StatelessWidget {
         listener: (BuildContext context, ProfileState state){
           if(state is LogoutFailureState)
             SnackBarMessage.showErrorMessage(context, state.failure.mapFailureToMessage(context));
-          else if(state is LogoutSuccessState)
+          else if(state is LogoutSuccessState){
+            context.read<CartCubit>().clearCart();
             Navigator.pushReplacementNamed(context, Routes.selectLocation);
+          }
         },
         builder: (BuildContext context, ProfileState state)
         => switch(state){

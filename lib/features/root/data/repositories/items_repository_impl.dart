@@ -9,15 +9,13 @@ import '../../../../core/constants/cache_keys.dart';
 import '../../../../core/errors/exceptions.dart';
 import '../../../../core/network/network_info.dart';
 import '../../domain/repositories/items_repository.dart';
-import '../datasources/items_local_datasource.dart';
 import '../datasources/items_remote_datasource.dart';
 import '../models/item_model.dart';
 
 final class const ItemsRepositoryImpl({
   required final Prefs _prefs,
   required final NetworkInfo _networkInfo,
-  required final ItemsRemoteDatasource _remoteDatasource,
-  required final ItemsLocalDatasource _localDatasource
+  required final ItemsRemoteDatasource _remoteDatasource
 }) implements ItemsRepository{
 
   @override
@@ -29,29 +27,16 @@ final class const ItemsRepositoryImpl({
           branchId: branchId,
           categoryId: categoryId
         );
-        _localDatasource.cacheCategoryProducts(categoryId: categoryId, items: items);
         return Right(items);
       } on ServerException catch(e) {
-        return _getCachedCategoryProductsOrFailure(categoryId, ServerFailure(e.message));
+        return Left(ServerFailure(e.message));
       } on OfflineException {
-        return _getCachedCategoryProductsOrFailure(categoryId, const OfflineFailure());
-      } on UnknownException {
-        return _getCachedCategoryProductsOrFailure(categoryId, const UnknownFailure());
+        return const Left(OfflineFailure());
+      } catch(_) {
+        return const Left(UnknownFailure());
       }
     }
-    else return _getCachedCategoryProductsOrFailure(categoryId, const OfflineFailure());
-  }
-
-  Future<Either<Failure, List<ItemModel>>> _getCachedCategoryProductsOrFailure(
-    int categoryId,
-    Failure defaultFailure
-  ) async {
-    try {
-      final cachedItems = _localDatasource.getCachedCategoryProducts(categoryId);
-      return Right(cachedItems);
-    } catch (_) {
-      return Left(defaultFailure);
-    }
+    else return const Left(OfflineFailure());
   }
 
   @override
@@ -62,26 +47,16 @@ final class const ItemsRepositoryImpl({
         final List<ItemModel> items = await _remoteDatasource.getPopularProducts(
           branchId: branchId,
         );
-        _localDatasource.cachePopularProducts(items);
         return Right(items);
       } on ServerException catch(e) {
-        return _getCachedPopularProductsOrFailure(ServerFailure(e.message));
+        return Left(ServerFailure(e.message));
       } on OfflineException {
-        return _getCachedPopularProductsOrFailure(const OfflineFailure());
-      } on UnknownException {
-        return _getCachedPopularProductsOrFailure(const UnknownFailure());
+        return const Left(OfflineFailure());
+      } catch(_) {
+        return const Left(UnknownFailure());
       }
     }
-    else return _getCachedPopularProductsOrFailure(const OfflineFailure());
-  }
-
-  Future<Either<Failure, List<ItemModel>>> _getCachedPopularProductsOrFailure(Failure defaultFailure) async {
-    try {
-      final cachedItems = _localDatasource.getCachedPopularProducts();
-      return Right(cachedItems);
-    } catch (_) {
-      return Left(defaultFailure);
-    }
+    else return const Left(OfflineFailure());
   }
 
   @override

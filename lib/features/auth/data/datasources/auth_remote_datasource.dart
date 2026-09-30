@@ -2,13 +2,9 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:electronic_menu/core/errors/exceptions.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 import '../../../../core/utils/api_endpoints.dart';
 import '../../../../core/utils/api_error_handler.dart';
-import '../../../legal/data/models/legal_list_model.dart';
-import '../../../root/data/models/category_model.dart';
-import '../../../root/data/models/item_model.dart';
 
 abstract interface class AuthRemoteDatasource{
   Future<Unit> login({required String phone});
@@ -27,11 +23,7 @@ abstract interface class AuthRemoteDatasource{
 
 final class const AuthRemoteDatasourceImpl({
   required final Dio _dio,
-  required final FlutterSecureStorage _secureStorage,
-  required final Box<ItemModel> _categoriesItemsBox,
-  required final Box<ItemModel> _popularItemsBox,
-  required final Box<CategoryModel> _categoriesBox,
-  required final Box<LegalListModel> _legalBox,
+  required final FlutterSecureStorage _secureStorage
 }) implements AuthRemoteDatasource{
 
   @override
@@ -98,13 +90,8 @@ final class const AuthRemoteDatasourceImpl({
       ));
     });
     try{
-      await Future.wait<void>([
-        _legalBox.clear(),
-        _categoriesItemsBox.clear(),
-        _popularItemsBox.clear(),
-        _categoriesBox.clear(),
-      ]);
-      _secureStorage.delete(key: "token");
+      await _secureStorage.delete(key: "token");
+      _dio.options.headers.remove("Authorization");
     }catch(e){
       throw const UnknownException();
     }
