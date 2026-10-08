@@ -185,6 +185,18 @@ abstract class AppLocalizations {
   /// **'Enter your phone number'**
   String get enterPhoneNumber;
 
+  /// No description provided for @enterNewPhoneNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the new phone number'**
+  String get enterNewPhoneNumber;
+
+  /// No description provided for @requestPhoneEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Request Phone Edit'**
+  String get requestPhoneEdit;
+
   /// No description provided for @address.
   ///
   /// In en, this message translates to:
@@ -437,6 +449,12 @@ abstract class AppLocalizations {
   /// **'Edit Profile'**
   String get editProfile;
 
+  /// No description provided for @saveChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'Save changes'**
+  String get saveChanges;
+
   /// No description provided for @addresses.
   ///
   /// In en, this message translates to:
@@ -557,11 +575,29 @@ abstract class AppLocalizations {
   /// **'Delivered'**
   String get delivered;
 
-  /// No description provided for @orderReceived.
+  /// No description provided for @orderSent.
   ///
   /// In en, this message translates to:
-  /// **'Order received'**
-  String get orderReceived;
+  /// **'Order Sent'**
+  String get orderSent;
+
+  /// No description provided for @readyForPickup.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready for Pickup'**
+  String get readyForPickup;
+
+  /// No description provided for @cancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get cancelled;
+
+  /// No description provided for @delivering.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivering'**
+  String get delivering;
 
   /// No description provided for @deliveryTo.
   ///
@@ -1538,7 +1574,7 @@ abstract class AppLocalizations {
   /// No description provided for @accountInformationSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Name, phone number, email'**
+  /// **'Edit phone number'**
   String get accountInformationSubtitle;
 
   /// No description provided for @notificationsSubtitle.
@@ -1582,30 +1618,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Manage location access'**
   String get locationSettingsSubtitle;
-
-  /// No description provided for @appearance.
-  ///
-  /// In en, this message translates to:
-  /// **'Appearance'**
-  String get appearance;
-
-  /// No description provided for @appearanceSubtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Change the app theme'**
-  String get appearanceSubtitle;
-
-  /// No description provided for @lightAppearance.
-  ///
-  /// In en, this message translates to:
-  /// **'Light appearance'**
-  String get lightAppearance;
-
-  /// No description provided for @darkAppearance.
-  ///
-  /// In en, this message translates to:
-  /// **'Dark appearance'**
-  String get darkAppearance;
 
   /// No description provided for @helpCenter.
   ///

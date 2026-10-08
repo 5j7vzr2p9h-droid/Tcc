@@ -1,6 +1,5 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:geocoding/geocoding.dart';
@@ -61,6 +60,7 @@ import 'features/location/data/datasources/places_remote_datasource.dart';
 import 'features/location/data/repositories/location_repository_impl.dart';
 import 'features/location/domain/repositories/location_repository.dart';
 import 'features/delivery/domain/usecases/get_address_name_usecase.dart';
+import 'features/location/domain/usecases/add_address_usecase.dart';
 import 'features/location/domain/usecases/get_branch_usecase.dart';
 import 'features/location/domain/usecases/get_device_location_usecase.dart';
 import 'features/location/domain/usecases/get_place_coordinates_usecase.dart';
@@ -83,7 +83,15 @@ import 'features/payment/domain/usecases/checkout_usecase.dart';
 import 'features/payment/domain/usecases/get_payment_methods_usecase.dart';
 import 'features/payment/presentation/viewmodels/checkout_viewmodel/checkout_cubit.dart';
 import 'features/payment/presentation/viewmodels/payment_methods_viewmodel/payment_methods_cubit.dart';
-import 'features/profile/presentation/viewmodel/profile_cubit.dart';
+import 'features/profile/data/datasources/profile_remote_datasource.dart';
+import 'features/profile/data/repositories/profile_repository_impl.dart';
+import 'features/profile/domain/repositories/profile_repository.dart';
+import 'features/profile/domain/usecases/get_profile_usecase.dart';
+import 'features/profile/domain/usecases/request_phone_update_usecase.dart';
+import 'features/profile/domain/usecases/update_profile_usecase.dart';
+import 'features/profile/presentation/viewmodel/edit_phone_viewmodel/edit_phone_cubit.dart';
+import 'features/profile/presentation/viewmodel/edit_profile_viewmodel/edit_profile_cubit.dart';
+import 'features/profile/presentation/viewmodel/profile_viewmodel/profile_cubit.dart';
 import 'features/root/data/datasources/categories_remote_datasource.dart';
 import 'features/root/data/datasources/items_remote_datasource.dart';
 import 'features/root/data/repositories/categories_repository_impl.dart';
@@ -102,7 +110,6 @@ import 'features/wallet/domain/repositories/wallet_repository.dart';
 import 'features/wallet/domain/usecases/get_balance_usecase.dart';
 import 'features/wallet/presentation/viewmodels/wallet_viewmodel/wallet_cubit.dart';
 import 'language_controller.dart';
-import 'theme_controller.dart';
 
 final GetIt getIt = GetIt.instance;
 
@@ -117,11 +124,6 @@ Future<void> setupDependencyInjection() async{
   getIt.registerSingleton(
     LanguageController(
       getIt<Prefs>().getString(CacheKeys.language) ?? AppLocales.ar
-    )
-  );
-  getIt.registerSingleton(
-    ThemeController(
-      ThemeMode.values.asNameMap()[getIt<Prefs>().getString(CacheKeys.theme)] ?? .light
     )
   );
   getIt.registerLazySingleton<FlutterSecureStorage>(() => secureStorage);
@@ -206,19 +208,14 @@ Future<void> setupDependencyInjection() async{
     googlePlacesDio: getIt<Dio>(instanceName: "google_places_dio")
   ));
   getIt.registerLazySingleton<LegalRemoteDatasource>(() => LegalRemoteDatasourceImpl(getIt<Dio>()));
-
   getIt.registerLazySingleton<OrdersRemoteDatasource>(() => OrdersRemoteDatasourceImpl(getIt<Dio>()));
-
   getIt.registerLazySingleton<FavoritesRemoteDatasource>(() => FavoritesRemoteDatasourceImpl(getIt<Dio>()));
-
   getIt.registerLazySingleton<CouponsRemoteDatasource>(() => CouponsRemoteDatasourceImpl(getIt<Dio>()));
-
   getIt.registerLazySingleton<CartLocalDatasource>(() => CartLocalDatasourceImpl(cartBox));
-
   getIt.registerLazySingleton<CheckoutRemoteDatasource>(() => CheckoutRemoteDatasourceImpl(getIt<Dio>()));
   getIt.registerLazySingleton<CheckoutLocalDatasource>(() => CheckoutLocalDatasourceImpl(getIt<Prefs>()));
-
   getIt.registerLazySingleton<WalletRemoteDatasource>(() => WalletRemoteDatasourceImpl(getIt<Dio>()));
+  getIt.registerLazySingleton<ProfileRemoteDatasource>(() => ProfileRemoteDatasourceImpl(getIt<Dio>()));
 
   getIt.registerLazySingleton<LocationRepository>(() => LocationRepositoryImpl(
     prefs: getIt<Prefs>(),
@@ -240,6 +237,7 @@ Future<void> setupDependencyInjection() async{
       remoteDatasource: getIt<CategoriesRemoteDatasource>()
     )
   );
+
   getIt.registerLazySingleton<ItemsRepository>(
     () => ItemsRepositoryImpl(
       prefs: getIt<Prefs>(),
@@ -274,8 +272,13 @@ Future<void> setupDependencyInjection() async{
     localDatasource: getIt<CheckoutLocalDatasource>()
   ));
   getIt.registerLazySingleton<WalletRepository>(() => WalletRepositoryImpl(
+    uuidGenerator: getIt<UuidGenerator>(),
     networkInfo: getIt<NetworkInfo>(),
     remoteDatasource: getIt<WalletRemoteDatasource>()
+  ));
+  getIt.registerLazySingleton<ProfileRepository>(() => ProfileRepositoryImpl(
+    networkInfo: getIt<NetworkInfo>(),
+    remoteDatasource: getIt<ProfileRemoteDatasource>()
   ));
 
   getIt.registerLazySingleton<GetAddressNameUsecase>(() => GetAddressNameUsecase(getIt<LocationRepository>()));
@@ -308,8 +311,15 @@ Future<void> setupDependencyInjection() async{
   getIt.registerLazySingleton<CheckoutUsecase>(() => CheckoutUsecase(getIt<CheckoutRepository>()));
   getIt.registerLazySingleton<GetPaymentMethodsUsecase>(() => GetPaymentMethodsUsecase(getIt<CheckoutRepository>()));
   getIt.registerLazySingleton<GetBalanceUsecase>(() => GetBalanceUsecase(getIt<WalletRepository>()));
+  getIt.registerLazySingleton<AddAddressUsecase>(() => AddAddressUsecase(getIt<LocationRepository>()));
+  getIt.registerLazySingleton<GetProfileUsecase>(() => GetProfileUsecase(getIt<ProfileRepository>()));
+  getIt.registerLazySingleton<UpdateProfileUsecase>(() => UpdateProfileUsecase(getIt<ProfileRepository>()));
+  getIt.registerLazySingleton<RequestPhoneUpdateUsecase>(() => RequestPhoneUpdateUsecase(getIt<ProfileRepository>()));
 
-  getIt.registerFactory<ProfileCubit>(() => ProfileCubit(getIt<LogoutUsecase>()));
+  getIt.registerFactory<ProfileCubit>(() => ProfileCubit(
+    getProfileUsecase: getIt<GetProfileUsecase>(),
+    logoutUsecase: getIt<LogoutUsecase>()
+  ));
   getIt.registerFactory<RegisterCubit>(() => RegisterCubit(getIt<RegisterUsecase>()));
   getIt.registerFactory<LoginCubit>(() => LoginCubit(getIt<LoginUsecase>()));
   getIt.registerFactory<SelectLocationCubit>(() => SelectLocationCubit(
@@ -329,7 +339,10 @@ Future<void> setupDependencyInjection() async{
   getIt.registerFactory<CategoryProductsCubit>(() => CategoryProductsCubit(getIt<GetCategoryProductsUsecase>()));
   getIt.registerFactory<PrivacyPolicyCubit>(() => PrivacyPolicyCubit(getIt<GetPrivacyPolicyUsecase>()));
   getIt.registerFactory<TermsCubit>(() => TermsCubit(getIt<GetTermsUsecase>()));
-  getIt.registerFactory<AddressDetailsCubit>(() => AddressDetailsCubit(getIt<GetRegionsUsecase>()));
+  getIt.registerFactory<AddressDetailsCubit>(() => AddressDetailsCubit(
+    getRegionsUsecase: getIt<GetRegionsUsecase>(),
+    addAddressUsecase: getIt<AddAddressUsecase>()
+  ));
   getIt.registerFactory<SearchCubit>(() => SearchCubit(getIt<SearchProductsUsecase>()));
   getIt.registerFactory<CurrentOrdersCubit>(() => CurrentOrdersCubit(getIt<GetCurrentOrdersUsecase>()));
   getIt.registerFactory<PreviousOrdersCubit>(() => PreviousOrdersCubit(getIt<GetPreviousOrdersUsecase>()));
@@ -359,4 +372,6 @@ Future<void> setupDependencyInjection() async{
     getBalanceUsecase: getIt<GetBalanceUsecase>()
   ));
   getIt.registerFactory<WalletCubit>(() => WalletCubit(getIt<GetBalanceUsecase>()));
+  getIt.registerFactory<EditProfileCubit>(() => EditProfileCubit(getIt<UpdateProfileUsecase>()));
+  getIt.registerFactory<EditPhoneCubit>(() => EditPhoneCubit(getIt<RequestPhoneUpdateUsecase>()));
 }

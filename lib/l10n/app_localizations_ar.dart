@@ -56,6 +56,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get enterPhoneNumber => 'أدخل رقم هاتفك';
 
   @override
+  String get enterNewPhoneNumber => 'أدخل الرقم الجديد';
+
+  @override
+  String get requestPhoneEdit => 'طلب تعديل الرقم';
+
+  @override
   String get address => 'العنوان';
 
   @override
@@ -184,6 +190,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get editProfile => 'تعديل الملف الشخصي';
 
   @override
+  String get saveChanges => 'حفظ التعديلات';
+
+  @override
   String get addresses => 'العناوين';
 
   @override
@@ -241,10 +250,19 @@ class AppLocalizationsAr extends AppLocalizations {
   String get preparing => 'قيد التجهيز';
 
   @override
-  String get delivered => 'تم توصيله';
+  String get delivered => 'Delivered';
 
   @override
-  String get orderReceived => 'تم استلام الطلب';
+  String get orderSent => 'تم إرسال الطلب';
+
+  @override
+  String get readyForPickup => 'جاهز للاستلام';
+
+  @override
+  String get cancelled => 'ملغي';
+
+  @override
+  String get delivering => 'جاري التوصيل';
 
   @override
   String get deliveryTo => 'التوصيل إلى';
@@ -760,7 +778,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get accountInformation => 'معلومات الحساب';
 
   @override
-  String get accountInformationSubtitle => 'الاسم، رقم الهاتف، البريد الإلكتروني';
+  String get accountInformationSubtitle => 'تعديل رقم الهاتف';
 
   @override
   String get notificationsSubtitle => 'إدارة تفضيلات الإشعارات';
@@ -782,18 +800,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get locationSettingsSubtitle => 'إدارة الوصول للموقع';
-
-  @override
-  String get appearance => 'المظهر';
-
-  @override
-  String get appearanceSubtitle => 'تغيير سمة التطبيق';
-
-  @override
-  String get lightAppearance => 'المظهر الفاتح';
-
-  @override
-  String get darkAppearance => 'المظهر الداكن';
 
   @override
   String get helpCenter => 'مركز المساعدة';

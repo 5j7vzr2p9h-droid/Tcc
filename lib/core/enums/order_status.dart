@@ -1,7 +1,9 @@
 enum OrderStatus {
-  held,
-  sentToKitchen,
-  paid,
+  orderSent,
+  preparing,
+  readyForPickup,
+  delivering,
+  completed,
   cancelled;
 
   static OrderStatus fromJson(String value)

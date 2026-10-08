@@ -1,6 +1,6 @@
 abstract interface class ApiEndpoints {
   static const String googlePlacesBaseUrl = "https://places.googleapis.com/v1/places",
-  baseUrl = "http://192.168.1.21:5259/api/",
+  baseUrl = "http://192.168.1.14:5259/api/",
   categories = "emenu/v1/catalog/categories",
   item = "emenu/v1/catalog/products",
   login = "emenu/v1/auth/login",
@@ -11,7 +11,8 @@ abstract interface class ApiEndpoints {
   privacyPolicy = "emenu/v1/legal/privacy",
   termsAndConditions = "emenu/v1/legal/terms",
   locationResolve = "emenu/v1/location/resolve",
-  availableAddresses = "CustomerAddress",
+  profileAddresses = "emenu/v1/profile/addresses",
+  regions= "emenu/v1/configuration",
   currentOrders = "emenu/v1/orders/current",
   previousOrders = "emenu/v1/orders/previous",
   favroites = "emenu/v1/favorites",
@@ -21,5 +22,8 @@ abstract interface class ApiEndpoints {
   paymentMethods = "paymentmethod",
   wallet = "emenu/v1/payments/wallet",
   topupFromInstapay = "emenu/v1/payments/topups/instapay",
-  topupFromVodafoneCash = "/api/emenu/v1/payments/topups/instapay";
+  topupFromVodafoneCash = "emenu/v1/payments/topups/instapay",
+  notifications = "emenu/v1/notifications",
+  profile = "emenu/v1/profile",
+  phoneChangeRequest = "emenu/v1/profile/phone/change/request";
 }

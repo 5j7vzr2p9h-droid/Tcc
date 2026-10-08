@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/errors/failures.dart';
@@ -18,13 +19,14 @@ final class CurrentOrdersCubit extends Cubit<CurrentOrdersState>{
     
     emit(const CurrentOrdersLoadingState());
 
-    (await _getCurrentOrdersUsecase()).fold(
-      (Failure failure) {
-        emit(CurrentOrdersGetFailureState(failure));
-      },
-      (List<OrderEntity> orders) {
-        emit(CurrentOrdersGetSuccessState(_orders = orders));
-      }
+    final Either<Failure, List<OrderEntity>> result = await _getCurrentOrdersUsecase();
+
+    if(isClosed)
+      return;
+
+    result.fold(
+      (Failure failure) => emit(CurrentOrdersGetFailureState(failure)),
+      (List<OrderEntity> orders) => emit(CurrentOrdersGetSuccessState(_orders = orders))
     );
   }
 }

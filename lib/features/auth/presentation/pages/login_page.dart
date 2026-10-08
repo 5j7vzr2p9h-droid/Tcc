@@ -72,7 +72,9 @@ final class _LoginPageState extends State<LoginPage> {
                 hint: context.l10n.enterPhoneNumber,
                 icon: Icons.phone_outlined,
                 keyboardType: .phone,
-                validator: Validators.getPhoneNumberValidator(context),
+                validator: (String? input) => input!.isEmpty
+                  ? context.l10n.phoneIsRequired
+                  : Validators.getPhoneNumberValidator(context)(input),
               ),
               const SizedBox(height: 60.0),
               ElevatedButton(

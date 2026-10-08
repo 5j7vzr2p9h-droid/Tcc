@@ -41,7 +41,5 @@ class AddToCartButton extends StatelessWidget {
       Routes.newOrder,
       arguments: _product
     );
-    if(result is bool && context.mounted)
-      SnackBarMessage.showProductAddedMessage(context);
   }
 }

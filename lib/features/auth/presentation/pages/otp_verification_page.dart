@@ -51,8 +51,13 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
         create: (BuildContext context) => getIt<VerifyPhoneCubit>(),
         child: BlocConsumer<VerifyPhoneCubit, VerifyPhoneState>(
           listener: (BuildContext context, VerifyPhoneState state){
-            if(state is VerifyPhoneSuccessState)
-              Navigator.pushReplacementNamed(context, Routes.main);
+            if(state is VerifyPhoneSuccessState){
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                Routes.main,
+                (Route<dynamic> predicate) => false
+              );
+            }
             else if(state is VerifyPhoneFailureState)
               SnackBarMessage.showErrorMessage(context, state.failure.mapFailureToMessage(context));
             else if(state is ResendOtpSuccessState)
@@ -103,7 +108,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
                   const SizedBox(height: 4.0),
                   OtpTargetNote(
                     phoneNumber: widget._phoneNumber,
-                    onChangeNumber: () => Navigator.of(context).maybePop(),
+                    onChangeNumber: () => Navigator.pop(context),
                   )
                 ],
                 const SizedBox(height: 40.0),

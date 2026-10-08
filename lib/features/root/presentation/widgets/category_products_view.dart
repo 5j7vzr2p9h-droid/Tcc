@@ -3,9 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/constants/numerical_values.dart';
 import '../../../../core/errors/failures.dart';
-import '../../../../core/extensions/failure_message.dart';
 import '../../../../core/widgets/failure_place_holder.dart';
-import '../../../../di.dart';
 import '../../domain/entities/category_entity.dart';
 import '../../domain/entities/item_entity.dart';
 import '../viewmodels/category_items_viewmodel/category_items_cubit.dart';
@@ -41,44 +39,41 @@ final class _CategoryProductsViewState extends State<CategoryProductsView> with 
   }
 
   @override
-  BlocProvider<CategoryProductsCubit> build(BuildContext context)
-  => BlocProvider<CategoryProductsCubit>(
-    create: (BuildContext _) => getIt<CategoryProductsCubit>()..getCategoryProducts(widget._categories[widget._initialCategoryIndex].id),
-    child: SliverMainAxisGroup(
-      slivers: [
-        SliverToBoxAdapter(
-          child: CategoriesTabBar(
-            tabController: _tabController,
-            categories: widget._categories,
-          ),
+  SliverMainAxisGroup build(BuildContext context)
+  => SliverMainAxisGroup(
+    slivers: <Widget>[
+      SliverToBoxAdapter(
+        child: CategoriesTabBar(
+          tabController: _tabController,
+          categories: widget._categories,
         ),
-        BlocBuilder<CategoryProductsCubit, CategoryProductsState>(
-          builder: (BuildContext context, CategoryProductsState state)
-          => switch(state){
-              CategoryProductsGetSuccessState(:final List<ItemEntity> products) => SliverPadding(
-                padding: const .all(pageContentPadding),
-                sliver: CategoryItemsList(
-                  categoryTitle: widget._categories[_tabController.index].title,
-                  categoryDescription: "da asdsa dasds dsasad", // Need From BACKENDDDDDDDD
-                  products: products
-                ),
+      ),
+      BlocBuilder<CategoryProductsCubit, CategoryProductsState>(
+        builder: (BuildContext context, CategoryProductsState state)
+        => switch(state){
+            CategoryProductsGetSuccessState(:final List<ItemEntity> products) => SliverPadding(
+              padding: const .all(pageContentPadding),
+              sliver: CategoryItemsList(
+                categoryTitle: widget._categories[_tabController.index].title,
+                categoryDescription: "da asdsa dasds dsasad", // Need From BACKENDDDDDDDD
+                products: products
               ),
-              CategoryProductsGetFailureState(:final Failure failure) => SliverToBoxAdapter(
-                child: Center(
-                  child: FailurePlaceHolder(
-                    failure: failure,
-                    onRetry: () => context.read<CategoryProductsCubit>().getCategoryProducts(widget._categories[_tabController.index].id),
-                  )
-                ),
+            ),
+            CategoryProductsGetFailureState(:final Failure failure) => SliverToBoxAdapter(
+              child: Center(
+                child: FailurePlaceHolder(
+                  failure: failure,
+                  onRetry: () => context.read<CategoryProductsCubit>().getCategoryProducts(widget._categories[_tabController.index].id),
+                )
               ),
-              CategoryProductsLoadingState() => const SliverFillRemaining(
-                hasScrollBody: false,
-                child: Center(child: CircularProgressIndicator())
-              ),
-              _ => const SliverPadding(padding: .zero)
-            }
-        ),
-      ],
-    ),
+            ),
+            CategoryProductsLoadingState() => const SliverFillRemaining(
+              hasScrollBody: false,
+              child: Center(child: CircularProgressIndicator())
+            ),
+            _ => const SliverPadding(padding: .zero)
+          }
+      ),
+    ],
   );
 }

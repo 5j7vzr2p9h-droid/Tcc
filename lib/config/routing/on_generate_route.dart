@@ -17,10 +17,14 @@ import '../../features/payment/presentation/pages/payment_methods_page.dart';
 import '../../features/payment/presentation/pages/payment_page.dart';
 import '../../features/payment/presentation/viewmodels/checkout_viewmodel/checkout_cubit.dart';
 import '../../features/payment/presentation/viewmodels/payment_methods_viewmodel/payment_methods_cubit.dart';
+import '../../features/profile/domain/entities/profile_entity.dart';
+import '../../features/profile/presentation/pages/edit_phone_page.dart';
+import '../../features/profile/presentation/pages/edit_profile_page.dart';
 import '../../features/root/domain/entities/category_entity.dart';
 import '../../features/root/domain/entities/item_entity.dart';
 import '../../features/root/presentation/pages/category_products_page.dart';
 import '../../features/root/presentation/pages/main_page.dart';
+import '../../features/root/presentation/viewmodels/search_viewmodel/search_cubit.dart';
 import '../../features/settings/presentation/pages/notification_settings_page.dart';
 import '../../features/settings/presentation/pages/settings_page.dart';
 import '../../features/support/presentation/pages/support_page.dart';
@@ -39,9 +43,12 @@ abstract final class AppRoutes{
       case Routes.categoryProducts:
         final (List<CategoryEntity> categories, int initialCategoryIndex) = route.arguments as (List<CategoryEntity>, int);
         return _materialPageRoute(
-          CategoryProductsPage(
-            categories: categories,
-            initialCategoryIndex: initialCategoryIndex,
+          BlocProvider<SearchCubit>(
+            create: (BuildContext context) => getIt<SearchCubit>(),
+            child: CategoryProductsPage(
+              categories: categories,
+              initialCategoryIndex: initialCategoryIndex,
+            ),
           )
         );
       case Routes.selectLocation:
@@ -94,6 +101,11 @@ abstract final class AppRoutes{
         return _materialPageRoute(const PrivacyPolicyPage());
       case Routes.support:
         return _materialPageRoute(const SupportPage());
+      case Routes.editProfile:
+        final ProfileEntity profile = route.arguments as ProfileEntity;
+        return _materialPageRoute<ProfileEntity>(EditProfilePage(profile));
+      case Routes.editPhone:
+        return _materialPageRoute(const EditPhonePage());
       case Routes.splash:
         return _materialPageRoute(const SplashPage());
     }

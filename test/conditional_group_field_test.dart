@@ -13,9 +13,9 @@ void main() {
     minSelection: 1,
     maxSelection: maxSelection,
     options: const <ConditionalOptionEntity>[
-      ConditionalOptionEntity(id: 1, name: "أرز", price: 0.0, allowCombine: true),
-      ConditionalOptionEntity(id: 2, name: "شيدر", price: 15.0, allowCombine: true),
-      ConditionalOptionEntity(id: 3, name: "باستا", price: 0.0, allowCombine: false)
+      ConditionalOptionEntity(id: 1, name: "أرز", price: 0.0, conditionalGroupId: 1, allowCombine: true),
+      ConditionalOptionEntity(id: 2, name: "شيدر", price: 15.0, conditionalGroupId: 1, allowCombine: true),
+      ConditionalOptionEntity(id: 3, name: "باستا", price: 0.0, conditionalGroupId: 1, allowCombine: false)
     ]
   );
 
@@ -83,9 +83,9 @@ void main() {
       minSelection: 0,
       maxSelection: 2,
       options: <ConditionalOptionEntity>[
-        ConditionalOptionEntity(id: 1, name: "كاتشب", price: 0.0, allowCombine: true),
-        ConditionalOptionEntity(id: 2, name: "مايونيز", price: 0.0, allowCombine: true),
-        ConditionalOptionEntity(id: 3, name: "رانش", price: 0.0, allowCombine: true)
+        ConditionalOptionEntity(id: 1, name: "كاتشب", price: 0.0, conditionalGroupId: 1, allowCombine: true),
+        ConditionalOptionEntity(id: 2, name: "مايونيز", price: 0.0, conditionalGroupId: 1, allowCombine: true),
+        ConditionalOptionEntity(id: 3, name: "رانش", price: 0.0, conditionalGroupId: 1, allowCombine: true)
       ]
     );
     final ValueNotifier<Set<int>> controller = await pumpGroup(tester, twoMax);

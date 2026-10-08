@@ -100,7 +100,10 @@ class _NewOrderPageState extends State<NewOrderPage> {
     if(cartCubit.state case CartFailureState(:final Failure failure))
       SnackBarMessage.showErrorMessage(context, failure.mapFailureToMessage(context));
     else
-      Navigator.pop<bool>(context, true);
+      Navigator.popUntil(
+        context,
+        (Route<dynamic> route) => route.isFirst
+      );
   }
 
   @override
@@ -113,11 +116,8 @@ class _NewOrderPageState extends State<NewOrderPage> {
             bottom: 12.0
           ),
           sliver: DefaultAppBar(
-            background: Padding(
-              padding: const .all(pageContentPadding),
-              child: HandledNetworkImage(
-                imageUrl: widget._product.image,
-              ),
+            background: HandledNetworkImage(
+              imageUrl: widget._product.image,
             ),
           )
         ),

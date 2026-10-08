@@ -12,7 +12,6 @@ import '../../../../di.dart';
 import '../../domain/entities/legal_list_entity.dart';
 import '../viewmodels/terms_viewmodel/terms_cubit.dart';
 import '../viewmodels/terms_viewmodel/terms_state.dart';
-import '../widgets/terms_agreement_bar.dart';
 import '../widgets/terms_section_tile.dart';
 
 final class const TermsAndConditionsPage({super.key}) extends StatelessWidget {
@@ -76,9 +75,6 @@ final class const TermsAndConditionsPage({super.key}) extends StatelessWidget {
           ),
         }
       ),
-    ),
-    bottomNavigationBar: TermsAgreementBar(
-      onAgreePressed: () => Navigator.pop(context),
-    ),
+    )
   );
 }

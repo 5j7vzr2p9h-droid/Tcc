@@ -1,5 +1,4 @@
-import '../../../cart/domain/entities/cart_item_entity.dart';
-import '../../../root/domain/entities/item_entity.dart';
+import '../../../cart/data/models/cart_item_model.dart';
 import '../../domain/entities/checkout_entity.dart';
 
 final class CheckoutModel extends CheckoutEntity{
@@ -35,19 +34,7 @@ final class CheckoutModel extends CheckoutEntity{
     "paymentMethodId": paymentMethodId,
     "coupon": ?_nullIfBlank(coupon),
     "note": ?_nullIfBlank(note),
-    "items": items.map<Map<String, dynamic>>(_itemToJson).toList()
-  };
-
-  static Map<String, dynamic> _itemToJson(CartItemEntity item)
-  => <String, dynamic>{
-    "productId": item.productId,
-    "quantity": item.quantity,
-    "sizeId": ?item.size?.id,
-    "addons": item.addons.map<Map<String, int>>((AddonEntity addon) => <String, int>{
-      "addonId": addon.id,
-      "quantity": 1
-    }).toList(),
-    "note": ?_nullIfBlank(item.notes)
+    "items": items.map<Map<String, dynamic>>(CartItemModel.toCheckoutLine).toList()
   };
 
   static String? _nullIfBlank(String? value)

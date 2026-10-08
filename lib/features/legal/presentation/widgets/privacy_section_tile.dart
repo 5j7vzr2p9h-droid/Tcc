@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/text_styles.dart';
-import '../../../../core/widgets/handled_network_image.dart';
 import '../../domain/entities/legal_section_entity.dart';
 
 final class PrivacySectionTile extends StatelessWidget {

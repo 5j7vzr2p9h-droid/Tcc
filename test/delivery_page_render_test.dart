@@ -1,5 +1,4 @@
 import 'package:electronic_menu/config/theming/light_theme.dart';
-import 'package:electronic_menu/features/location/presentation/pages/select_location_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

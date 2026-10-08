@@ -56,6 +56,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enterPhoneNumber => 'Enter your phone number';
 
   @override
+  String get enterNewPhoneNumber => 'Enter the new phone number';
+
+  @override
+  String get requestPhoneEdit => 'Request Phone Edit';
+
+  @override
   String get address => 'Address';
 
   @override
@@ -184,6 +190,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get editProfile => 'Edit Profile';
 
   @override
+  String get saveChanges => 'Save changes';
+
+  @override
   String get addresses => 'Addresses';
 
   @override
@@ -244,7 +253,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get delivered => 'Delivered';
 
   @override
-  String get orderReceived => 'Order received';
+  String get orderSent => 'Order Sent';
+
+  @override
+  String get readyForPickup => 'Ready for Pickup';
+
+  @override
+  String get cancelled => 'Cancelled';
+
+  @override
+  String get delivering => 'Delivering';
 
   @override
   String get deliveryTo => 'Delivery to';
@@ -760,7 +778,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get accountInformation => 'Account information';
 
   @override
-  String get accountInformationSubtitle => 'Name, phone number, email';
+  String get accountInformationSubtitle => 'Edit phone number';
 
   @override
   String get notificationsSubtitle => 'Manage notification preferences';
@@ -782,18 +800,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get locationSettingsSubtitle => 'Manage location access';
-
-  @override
-  String get appearance => 'Appearance';
-
-  @override
-  String get appearanceSubtitle => 'Change the app theme';
-
-  @override
-  String get lightAppearance => 'Light appearance';
-
-  @override
-  String get darkAppearance => 'Dark appearance';
 
   @override
   String get helpCenter => 'Help center';

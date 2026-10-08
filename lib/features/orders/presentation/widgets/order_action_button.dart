@@ -3,15 +3,10 @@ import 'package:flutter/material.dart';
 import '../../../../core/extensions/context_l10n.dart';
 import '../../../../core/utils/text_styles.dart';
 
-final class OrderActionButton extends StatelessWidget {
-  final bool _isTracking;
-  final VoidCallback _onPressed;
-
-  const new({
-    super.key,
-    required this._isTracking,
-    required this._onPressed
-  });
+final class const OrderActionButton({
+  super.key,
+  required final VoidCallback _onPressed
+}) extends StatelessWidget {
 
   @override
   OutlinedButton build(BuildContext context)
@@ -19,25 +14,20 @@ final class OrderActionButton extends StatelessWidget {
     onPressed: _onPressed,
     iconAlignment: .end,
     style: OutlinedButton.styleFrom(
-      foregroundColor: _isTracking?
-        Theme.of(context).colorScheme.error:
-        Theme.of(context).colorScheme.onSurface,
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      foregroundColor: Theme.of(context).colorScheme.onSurface,
       textStyle: TextStyles.font14Weight700,
       padding: const .symmetric(horizontal: 20.0, vertical: 12.0),
       side: BorderSide(
-        color: _isTracking?
-          Theme.of(context).colorScheme.error:
-          Theme.of(context).colorScheme.outline
+        color: Theme.of(context).colorScheme.outline
       ),
-      shape: RoundedRectangleBorder(
-        borderRadius: .circular(12.0)
+      shape: const RoundedRectangleBorder(
+        borderRadius: .all(.circular(12.0))
       )
     ),
-    icon: Icon(
-      _isTracking? Icons.location_searching: Icons.refresh,
+    icon: const Icon(
+      Icons.refresh,
       size: 18.0
     ),
-    label: Text(_isTracking? context.l10n.trackOrder: context.l10n.reorder)
+    label: Text(context.l10n.reorder)
   );
 }

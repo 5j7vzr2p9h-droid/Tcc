@@ -7,13 +7,9 @@ abstract final class Validators {
   => (String? value) => value!.trim().isEmpty? context.l10n.nameIsRequired: null;
 
   static FormFieldValidator<String> getPhoneNumberValidator(BuildContext context)
-  => (String? value){
-    if(value!.isEmpty)
-      return context.l10n.phoneIsRequired;
-    else if(!RegExp(r"^(?:\+20)?0?1[0125]\d{8}$").hasMatch(value))
-      return context.l10n.invalidPhoneNumber;
-    return null;
-  };
+  => (String? value) => !RegExp(r"^(?:\+?20)?0?1[0125]\d{8}$").hasMatch(value!)
+    ? context.l10n.invalidPhoneNumber
+    : null;
 
   static FormFieldValidator<int> getRegionDropdownValidator(BuildContext context)
   => (int? value){
@@ -38,7 +34,5 @@ abstract final class Validators {
   };
 
   static FormFieldValidator<String> getAuthAddressValidator(BuildContext context)
-  => (String? value) => value!.isEmpty
-  ? context.l10n.addressIsRequired
-  : null;
+  => (String? value) => null;
 }

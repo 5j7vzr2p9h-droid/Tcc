@@ -18,10 +18,9 @@ final class HomeCubit extends Cubit<HomeState> {
   }): super(const HomeInitialState());
 
   void init() async {
-    if(isClosed) return;
   
     emit(const HomeLoadingState());
-  
+
     final List<Either<Failure, dynamic>> results = await Future.wait([
       _categoriesRepository.getCategories(),
       _getPopularProductsUsecase()
@@ -30,6 +29,9 @@ final class HomeCubit extends Cubit<HomeState> {
     final Either<Failure, List<CategoryEntity>> categoriesResult = results[0] as Either<Failure, List<CategoryEntity>>;
     final Either<Failure, List<ItemEntity>> popularProductsResult = results[1] as Either<Failure, List<ItemEntity>>;
   
+    if(isClosed)
+      return;
+    
     categoriesResult.fold(
       (Failure failure) => emit(HomeGetFailureState(failure)),
       (List<CategoryEntity> categories) => popularProductsResult.fold(

@@ -1,11 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/text_styles.dart';
 import '../../../../core/widgets/handled_network_image.dart';
 import '../../domain/entities/item_entity.dart';
 import 'add_to_cart_button.dart';
-import '../../../../core/widgets/product_placeholder.dart';
 
 class ItemWideCard extends StatelessWidget {
   final ItemEntity _product;

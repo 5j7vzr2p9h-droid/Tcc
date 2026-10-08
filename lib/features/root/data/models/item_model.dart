@@ -84,7 +84,8 @@ final class ConditionalGroupModel extends ConditionalGroupEntity{
     minSelection: json["minSelection"] ?? 0,
     maxSelection: json["maxSelection"] ?? 0,
     options: (json["options"] as List?)
-      ?.map<ConditionalOptionModel>((e) => ConditionalOptionModel.fromJson(e)).toList() ?? const <ConditionalOptionModel>[]
+      ?.map<ConditionalOptionModel>((e) => ConditionalOptionModel.fromJson(e, conditionalGroupId: json["conditionalGroupId"]))
+      .toList() ?? const <ConditionalOptionModel>[]
   );
 }
 
@@ -93,14 +94,17 @@ final class ConditionalOptionModel extends ConditionalOptionEntity{
     required super.id,
     required super.name,
     required super.price,
+    required super.conditionalGroupId,
     required super.allowCombine
   });
 
-  factory ConditionalOptionModel.fromJson(dynamic json)
+  /// The options don't carry their group id, so it's taken from the group they're listed under.
+  factory ConditionalOptionModel.fromJson(dynamic json, {required int conditionalGroupId})
   => ConditionalOptionModel(
     id: json["addonId"],
     name: json["name"] ?? "",
     price: (json["price"] as num?)?.toDouble() ?? 0.0,
+    conditionalGroupId: conditionalGroupId,
     allowCombine: json["allowCombine"] ?? true
   );
 }

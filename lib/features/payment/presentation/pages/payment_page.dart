@@ -80,7 +80,7 @@ class _PaymentPageState extends State<PaymentPage> {
       case CheckoutSuccessState():
         context.read<CartCubit>().clearCart();
         SnackBarMessage.showSuccessMessage(context, context.l10n.orderPlacedMessage);
-        Navigator.pop(context);
+        Navigator.popUntil(context, (Route<dynamic> route) => route.isFirst);
       case CheckoutFailureState(:final Failure failure):
         SnackBarMessage.showErrorMessage(context, failure.mapFailureToMessage(context));
       case CheckoutIdleState() || CheckoutLoadingState():

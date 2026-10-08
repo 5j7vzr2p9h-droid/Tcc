@@ -7,7 +7,6 @@ import '../../../../core/utils/app_locales.dart';
 import '../../../../core/utils/text_styles.dart';
 import '../../../../di.dart';
 import '../../../../language_controller.dart';
-import '../../../../theme_controller.dart';
 import '../widgets/settings_section.dart';
 import '../widgets/settings_tile.dart';
 
@@ -72,7 +71,7 @@ final class SettingsPage extends StatelessWidget {
               iconData: Icons.person_outline,
               title: context.l10n.accountInformation,
               subtitle: context.l10n.accountInformationSubtitle,
-              onTap: (){},
+              onTap: () => Navigator.pushNamed(context, Routes.editPhone),
             ),
             SettingsTile(
               iconData: Icons.notifications_outlined,
@@ -97,44 +96,6 @@ final class SettingsPage extends StatelessWidget {
                 options: _languages
               ),
             ),
-            SettingsTile(
-              iconData: Icons.palette_outlined,
-              title: context.l10n.appearance,
-              subtitle: context.l10n.appearanceSubtitle,
-              onTap: () => _showOptionsDialog<ThemeMode>(
-                context,
-                title: context.l10n.appearance,
-                controller: getIt<ThemeController>(),
-                options: <ThemeMode, String>{
-                  .light: context.l10n.lightAppearance,
-                  .dark: context.l10n.darkAppearance
-                }
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 24.0),
-        SettingsSection(
-          title: context.l10n.supportAndHelp,
-          tiles: <SettingsTile>[
-            SettingsTile(
-              iconData: Icons.headset_mic_outlined,
-              title: context.l10n.helpCenter,
-              subtitle: context.l10n.helpCenterSubtitle,
-              onTap: () => Navigator.pushNamed(context, Routes.support),
-            ),
-            SettingsTile(
-              iconData: Icons.description_outlined,
-              title: context.l10n.termsAndConditions,
-              subtitle: context.l10n.termsAndConditionsSubtitle,
-              onTap: () => Navigator.pushNamed(context, Routes.termsAndConditions),
-            ),
-            SettingsTile(
-              iconData: Icons.info_outline,
-              title: context.l10n.aboutApp,
-              subtitle: "${context.l10n.version} $_version",
-              onTap: (){},
-            )
           ],
         ),
       ],

@@ -54,9 +54,10 @@ final class _SelectLocationPageState extends State<SelectLocationPage> {
       listener: (BuildContext context, SelectLocationState state){
         if(state is SelectLocationGetDeviceLocationSuccessState)
           _mapPositionController.value = LatLng(state.myLocationCoordinates[0], state.myLocationCoordinates[1]);
+        else if(state is SelectLocationInitializationFailureState)
+          _mapPositionController.value = LatLng(state.myLocationCoordinates[0], state.myLocationCoordinates[1]);
         else if(state is SelectPlaceSuccessState){
           _mapPositionController.value = LatLng(state.selectedPlaceCoordinates[0], state.selectedPlaceCoordinates[1]);
-
         }
         else if(state is SearchPlaceFailureState)
           SnackBarMessage.showErrorMessage(
@@ -97,20 +98,21 @@ final class _SelectLocationPageState extends State<SelectLocationPage> {
       builder: (BuildContext context, SelectLocationState state) => switch(state){
         SelectLocationInitialState() => const SizedBox.shrink(),
         SelectLocationLoadingState() => const Center(child: CircularProgressIndicator()),
-        SelectLocationInitializationFailureState() => const SizedBox.shrink(),
-        SelectLocationGetDeviceLocationSuccessState(:final List<double> myLocationCoordinates) ||
-        SearchPlaceSuccessState(:final List<double> myLocationCoordinates) ||
-        SearchPlaceFailureState(:final List<double> myLocationCoordinates) ||
-        SearchPlaceLoadingState(:final List<double> myLocationCoordinates) ||
-        SelectPlaceSuccessState(:final List<double> myLocationCoordinates) ||
-        SelectPlaceFailureState(:final List<double> myLocationCoordinates) ||
-        SelectPlaceLoadingState(:final List<double> myLocationCoordinates) ||
-        ConfirmingLocationState(:final List<double> myLocationCoordinates) ||
-        ConfirmLocationFailureState(:final List<double> myLocationCoordinates) ||
-        ConfirmLocationSuccessState(:final List<double> myLocationCoordinates)
+        SelectLocationGetDeviceLocationSuccessState(:final List<double> myLocationCoordinates, :final bool locationEnabled) ||
+        SearchPlaceSuccessState(:final List<double> myLocationCoordinates, :final bool locationEnabled) ||
+        SearchPlaceFailureState(:final List<double> myLocationCoordinates, :final bool locationEnabled) ||
+        SearchPlaceLoadingState(:final List<double> myLocationCoordinates, :final bool locationEnabled) ||
+        SelectPlaceSuccessState(:final List<double> myLocationCoordinates, :final bool locationEnabled) ||
+        SelectPlaceFailureState(:final List<double> myLocationCoordinates, :final bool locationEnabled) ||
+        SelectPlaceLoadingState(:final List<double> myLocationCoordinates, :final bool locationEnabled) ||
+        ConfirmingLocationState(:final List<double> myLocationCoordinates, :final bool locationEnabled) ||
+        ConfirmLocationFailureState(:final List<double> myLocationCoordinates, :final bool locationEnabled) ||
+        ConfirmLocationSuccessState(:final List<double> myLocationCoordinates, :final bool locationEnabled) ||
+        SelectLocationInitializationFailureState(: final List<double> myLocationCoordinates ,:final bool locationEnabled)
         => Stack(
           children: <Widget>[
             DefaultMap(
+              locationEnabled: locationEnabled,
               userLocation: LatLng(myLocationCoordinates[0], myLocationCoordinates[1]),
               mapPositionController: _mapPositionController,
             ),
@@ -207,7 +209,6 @@ final class _SelectLocationPageState extends State<SelectLocationPage> {
       ),
     ),
   );
-
 
   void _selectPlace(BuildContext context, SuggestedPlaceEntity suggestedPlace){
     _debouncer.cancel();

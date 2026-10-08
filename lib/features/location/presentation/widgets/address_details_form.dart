@@ -55,7 +55,11 @@ final class _AddressDetailsFormState extends State<AddressDetailsForm> {
         => switch(state){
           AddressDetailsInitialState() || AddressDetailsFailureState() => const SizedBox.shrink(),
           AddressDetailsLoadingState() => const Center(child: CircularProgressIndicator()),
-          AddressDetailsSuccessState(:final List<RegionEntity> regions) => Form(
+          AddressDetailsSuccessState(:final List<RegionEntity> regions) ||
+          AddingAddressState(:final List<RegionEntity> regions) ||
+          AddAddressFailureState(:final List<RegionEntity> regions) ||
+          AddAddressSuccessState(:final List<RegionEntity> regions)
+          => Form(
             key: _formKey,
             child: Column(
               mainAxisSize: .min,
@@ -77,7 +81,7 @@ final class _AddressDetailsFormState extends State<AddressDetailsForm> {
                 ElevatedButton(
                   onPressed: () {
                     if(_formKey.currentState!.validate()){
-          
+                      context.read<AddressDetailsCubit>().addAddress();
                     }
                   },
                   child: Text(context.l10n.confirmAddress)

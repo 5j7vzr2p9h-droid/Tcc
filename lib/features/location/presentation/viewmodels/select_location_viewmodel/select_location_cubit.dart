@@ -10,12 +10,11 @@ import '../../../domain/usecases/search_places_usecase.dart';
 import 'select_location_state.dart';
 
 final class SelectLocationCubit extends Cubit<SelectLocationState>{
+  bool _locationEnabled = false;
   List<double> _coordinates = <double>[
-    30.9763126,
-    31.160289,15
+    30.0625736,
+    31.4972822,
   ];
-
-  late List<double>? myLocationCoordinates;
 
   final GetDeviceLocationUsecase _getDeviceLocationUsecase;
   final SearchPlacesUsecase _searchPlacesUsecasse;
@@ -32,18 +31,30 @@ final class SelectLocationCubit extends Cubit<SelectLocationState>{
   void getDeviceLocation() async{
     emit(const SelectLocationLoadingState());
     (await _getDeviceLocationUsecase()).fold(
-      (Failure failure) => emit(SelectLocationInitializationFailureState(failure)),
+      (Failure failure) => emit(SelectLocationInitializationFailureState(
+        locationEnabled: _locationEnabled,
+        myLocationCoordinates: _coordinates,
+        failure: failure
+      )),
       (List<double> coordinates) {
-        emit(SelectLocationGetDeviceLocationSuccessState(_coordinates = coordinates));
+        _locationEnabled = true;
+        emit(SelectLocationGetDeviceLocationSuccessState(
+          locationEnabled: _locationEnabled,
+          myLocationCoordinates: _coordinates = coordinates
+        ));
       }
     );
   }
 
   void searchPlace(String query) async{
-    emit(SearchPlaceLoadingState(_coordinates));
+    emit(SearchPlaceLoadingState(
+      locationEnabled: _locationEnabled,
+      myLocationCoordinates: _coordinates
+    ));
     (await _searchPlacesUsecasse(query)).fold(
       (Failure failure) => emit(
         SearchPlaceFailureState(
+          locationEnabled: _locationEnabled,
           myLocationCoordinates: _coordinates,
           failure: failure
         )
@@ -51,6 +62,7 @@ final class SelectLocationCubit extends Cubit<SelectLocationState>{
       (List<SuggestedPlaceEntity> suggestedPlaces)
       => emit(
         SearchPlaceSuccessState(
+          locationEnabled: _locationEnabled,
           myLocationCoordinates: _coordinates,
           suggestedPlaces: suggestedPlaces
         )
@@ -59,10 +71,14 @@ final class SelectLocationCubit extends Cubit<SelectLocationState>{
   }
 
   void selectPlace(String placeId) async{
-    emit(SelectPlaceLoadingState(_coordinates));
+    emit(SelectPlaceLoadingState(
+      locationEnabled: _locationEnabled,
+      myLocationCoordinates: _coordinates
+    ));
     (await _getPlaceCoordinatesUsecase(placeId)).fold(
       (Failure failure) => emit(
         SelectPlaceFailureState(
+          locationEnabled: _locationEnabled,
           myLocationCoordinates: _coordinates,
           failure: failure
         )
@@ -70,6 +86,7 @@ final class SelectLocationCubit extends Cubit<SelectLocationState>{
       (List<double> placeCoordinates)
       => emit(
         SelectPlaceSuccessState(
+          locationEnabled: _locationEnabled,
           myLocationCoordinates: _coordinates,
           selectedPlaceCoordinates: placeCoordinates
         )
@@ -81,13 +98,18 @@ final class SelectLocationCubit extends Cubit<SelectLocationState>{
     required double lat,
     required double lng
   }) async{
-    emit(ConfirmingLocationState(myLocationCoordinates: _coordinates));
+    emit(ConfirmingLocationState(
+      locationEnabled: _locationEnabled,
+      myLocationCoordinates: _coordinates
+    ));
     (await _getBranchUsecase(lat: lat, lng: lng)).fold(
       (Failure failure) => emit(ConfirmLocationFailureState(
+        locationEnabled: _locationEnabled,
         myLocationCoordinates: _coordinates,
         failure: failure
       )),
       (BranchEntity branch) => emit(ConfirmLocationSuccessState(
+        locationEnabled: _locationEnabled,
         myLocationCoordinates: _coordinates,
         branch: branch
       ))

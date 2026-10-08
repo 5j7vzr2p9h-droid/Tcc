@@ -13,25 +13,30 @@ final class OrderStatusChip extends StatelessWidget {
   });
 
   IconData? get _icon => switch(_status){
-    .held => Icons.access_time,
-    .paid => Icons.check,
-    .sentToKitchen => Icons.check_circle_outline,
-    .cancelled => null
+    .preparing => Icons.access_time,
+    .readyForPickup => Icons.check,
+    .completed => Icons.check_circle_outline,
+    .cancelled => Icons.cancel,
+    .orderSent => Icons.check,
+    .delivering => Icons.delivery_dining,
   };
 
   Color get _color => switch(_status){
-    .held => Colors.orange,
-    .paid => Colors.blue,
-    .sentToKitchen => Colors.green,
-    .cancelled => Colors.grey
+    .orderSent => Colors.green,
+    .preparing => Colors.orange,
+    .completed => Colors.grey,
+    .cancelled => Colors.red,
+    .readyForPickup => Colors.blue,
+    .delivering => Colors.purple
   };
 
   String _getStatusText(BuildContext context) => switch(_status){
-    .held => context.l10n.preparing,
-    .sentToKitchen => throw UnimplementedError(),
-    OrderStatus.paid => throw UnimplementedError(),
-    // TODO: Handle this case.
-    OrderStatus.cancelled => throw UnimplementedError(),
+    .preparing => context.l10n.preparing,
+    .orderSent => context.l10n.orderSent,
+    .readyForPickup => context.l10n.readyForPickup,
+    .delivering => context.l10n.delivering,
+    .completed => context.l10n.completed,
+    .cancelled => context.l10n.cancelled,
   };
 
   @override

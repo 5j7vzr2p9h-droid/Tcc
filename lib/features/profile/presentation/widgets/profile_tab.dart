@@ -11,8 +11,9 @@ import '../../../../core/utils/text_styles.dart';
 import '../../../../core/widgets/failure_place_holder.dart';
 import '../../../../di.dart';
 import '../../../cart/presentation/viewmodel/cart_cubit.dart';
-import '../viewmodel/profile_cubit.dart';
-import '../viewmodel/profile_state.dart';
+import '../../domain/entities/profile_entity.dart';
+import '../viewmodel/profile_viewmodel/profile_cubit.dart';
+import '../viewmodel/profile_viewmodel/profile_state.dart';
 import 'profile_header.dart';
 import 'profile_menu_section.dart';
 import 'profile_menu_tile.dart';
@@ -49,13 +50,12 @@ final class ProfileTab extends StatelessWidget {
           ProfileGetFailureState(:final Failure failure) => Center(
             child: FailurePlaceHolder(
               failure: failure,
-              onRetry: (){
-
-
-              },
+              onRetry: context.read<ProfileCubit>().init,
             ),
           ),
-          ProfileGetSuccessState() || LogoutFailureState() => ListView(
+          ProfileGetSuccessState(:final ProfileEntity profile) ||
+          ProfileEditSuccessState(:final ProfileEntity profile) ||
+          LogoutFailureState(:final ProfileEntity profile) => ListView(
             padding: const .only(
               top: pageContentPadding,
               left: pageContentPadding,
@@ -65,9 +65,18 @@ final class ProfileTab extends StatelessWidget {
             physics: const BouncingScrollPhysics(),
             children: <Widget>[
               ProfileHeader(
-                name: "محمد أحمد",
-                phoneNumber: "010 1234 5678",
-                onEditPressed: (){},
+                name: profile.name,
+                phoneNumber: profile.phone,
+                onEditPressed: () async{
+                  final ProfileEntity? newProfile = await Navigator.pushNamed<ProfileEntity>(
+                    context,
+                    Routes.editProfile,
+                    arguments: profile
+                  );
+
+                  if(context.mounted && newProfile != null)
+                    context.read<ProfileCubit>().emitNewProfileData(newProfile);
+                },
               ),
               const SizedBox(height: 24.0),
               ProfileMenuSection(

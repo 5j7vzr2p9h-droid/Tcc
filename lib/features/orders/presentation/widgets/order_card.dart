@@ -136,7 +136,6 @@ final class OrderCard extends StatelessWidget {
               ),
             ),
             OrderActionButton(
-              isTracking: _order.status == .held,
               onPressed: _onActionPressed,
             )
           ],

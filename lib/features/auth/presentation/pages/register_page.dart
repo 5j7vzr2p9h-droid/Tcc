@@ -82,7 +82,11 @@ final class _RegisterPageState extends State<RegisterPage> {
                 hint: context.l10n.enterFullName,
                 icon: Icons.person_outline_rounded,
                 keyboardType: .name,
-                validator: Validators.getNameValidator(context),
+                validator: (String? input){
+                  if(input!.isEmpty)
+                    return context.l10n.nameIsRequired;
+                  return Validators.getNameValidator(context)(input);
+                }
               ),
               const SizedBox(height: 24.0),
               AuthTextField(
@@ -92,7 +96,11 @@ final class _RegisterPageState extends State<RegisterPage> {
                 hint: context.l10n.enterPhoneNumber,
                 icon: Icons.phone_outlined,
                 keyboardType: .phone,
-                validator: Validators.getPhoneNumberValidator(context),
+                validator: (String? input){
+                  if(input!.isEmpty)
+                    return context.l10n.phoneIsRequired;
+                  return Validators.getPhoneNumberValidator(context)(input);
+                } 
               ),
               const SizedBox(height: 24.0),
               AuthTextField(
@@ -102,7 +110,11 @@ final class _RegisterPageState extends State<RegisterPage> {
                 hint: context.l10n.enterAddress,
                 icon: Icons.location_on_outlined,
                 keyboardType: .streetAddress,
-                validator: Validators.getAuthAddressValidator(context),
+                validator: (String? input){
+                  if(input!.isEmpty)
+                    return context.l10n.addressIsRequired;
+                  return Validators.getAuthAddressValidator(context)(input);
+                }
               ),
               const SizedBox(height: 60.0),
               ElevatedButton(

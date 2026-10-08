@@ -5,8 +5,8 @@ import 'package:dio/dio.dart';
 import '../../../../core/errors/exceptions.dart';
 import '../../../../core/utils/api_endpoints.dart';
 import '../../../../core/utils/api_error_handler.dart';
+import '../../../cart/data/models/cart_item_model.dart';
 import '../../../cart/domain/entities/cart_item_entity.dart';
-import '../../../root/domain/entities/item_entity.dart';
 import '../models/coupon_model.dart';
 import '../models/coupon_quote_model.dart';
 
@@ -53,7 +53,7 @@ final class const CouponsRemoteDatasourceImpl(final Dio _dio) implements Coupons
           "requestId": _generateRequestId(),
           "branchId": branchId,
           "coupon": code,
-          "items": items.map<Map<String, dynamic>>(_toCheckoutLine).toList()
+          "items": items.map<Map<String, dynamic>>(CartItemModel.toCheckoutLine).toList()
         }
       );
       return CouponQuoteModel.fromJson(response.data);
@@ -63,18 +63,6 @@ final class const CouponsRemoteDatasourceImpl(final Dio _dio) implements Coupons
       throw const UnknownException();
     }
   }
-
-  static Map<String, dynamic> _toCheckoutLine(CartItemEntity item)
-  => <String, dynamic>{
-    "productId": item.productId,
-    "quantity": item.quantity,
-    "sizeId": item.size?.id,
-    "addons": item.addons.map<Map<String, int>>((AddonEntity addon) => <String, int>{
-      "addonId": addon.id,
-      "quantity": 1
-    }).toList(),
-    "note": item.notes.trim().isEmpty ? null : item.notes.trim()
-  };
 
   static String _generateRequestId(){
     final Random random = Random.secure();

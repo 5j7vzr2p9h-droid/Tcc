@@ -65,6 +65,8 @@ class ConditionalGroupEntity{
 
 /// An addon that belongs to a [ConditionalGroupEntity].
 class ConditionalOptionEntity extends AddonEntity{
+  /// The [ConditionalGroupEntity.id] it belongs to, so it's still sent under its group once it's in the cart.
+  final int conditionalGroupId;
   /// When false, picking this option clears the rest of the group, so it's always picked alone.
   final bool allowCombine;
 
@@ -72,6 +74,7 @@ class ConditionalOptionEntity extends AddonEntity{
     required super.id,
     required super.name,
     required super.price,
+    required this.conditionalGroupId,
     required this.allowCombine
   });
 }

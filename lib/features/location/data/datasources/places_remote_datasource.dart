@@ -18,7 +18,9 @@ abstract interface class PlacesRemoteDatasource {
 
   Future<BranchModel> getBranch({required double lat, required double lng});
 
-  Future<List<RegionModel>> getRegions();
+  Future<List<RegionModel>> getRegions(int branchId);
+
+  Future<void> addAddress();
 }
 
 final class PlacesRemoteDatasourceImpl implements PlacesRemoteDatasource{
@@ -102,14 +104,28 @@ final class PlacesRemoteDatasourceImpl implements PlacesRemoteDatasource{
   }
 
   @override
-  Future<List<RegionModel>> getRegions() async{
+  Future<List<RegionModel>> getRegions(int branchId) async{
     try{
       final Response response = await _eMenuDio.get(
-        ApiEndpoints.availableAddresses
+        ApiEndpoints.regions,
+        queryParameters: <String, int>{
+          "branchId": branchId
+        }
       );
-      final List<RegionModel> regions = (response.data["data"] as List)
+      final List<RegionModel> regions = (response.data["deliveryZones"] as List)
         .map<RegionModel>((json) => RegionModel.fromJson(json)).toList();
       return regions;
+    }on DioException catch(exception){
+      ApiErrorHandler.handle(exception);
+    }catch(e){
+      throw const UnknownException();
+    }
+  }
+
+  @override
+  Future<void> addAddress() async{
+    try{
+      await _eMenuDio.post(ApiEndpoints.profileAddresses);
     }on DioException catch(exception){
       ApiErrorHandler.handle(exception);
     }catch(e){

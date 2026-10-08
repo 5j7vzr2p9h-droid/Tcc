@@ -19,4 +19,5 @@ abstract interface class LocationRepository {
 
   Future<Either<Failure, List<RegionModel>>> getRegions();
 
+  Future<Either<Failure, Unit>> addAddress();
 }

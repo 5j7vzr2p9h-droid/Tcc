@@ -13,3 +13,16 @@ final class const AddressDetailsFailureState(final Failure failure) extends Addr
 final class const AddressDetailsSuccessState(
   final List<RegionEntity> regions
 ) extends AddressDetailsState;
+
+final class const AddingAddressState(
+  final List<RegionEntity> regions
+) extends AddressDetailsState;
+
+final class const AddAddressFailureState({
+  required final List<RegionEntity> regions,
+  required final Failure failure
+}) extends AddressDetailsState;
+
+final class const AddAddressSuccessState(
+  final List<RegionEntity> regions
+) extends AddressDetailsState;

@@ -21,7 +21,7 @@ abstract final class SnackBarMessage {
       shape: RoundedRectangleBorder(
         borderRadius: const .all(.circular(12.0)),
         side: BorderSide(
-          color: Theme.of(context).colorScheme.error.withAlpha(100)
+          color: Theme.of(context).colorScheme.error
         )
       ),
       content: Row(
@@ -57,7 +57,7 @@ abstract final class SnackBarMessage {
       shape: RoundedRectangleBorder(
         borderRadius: const .all(.circular(12.0)),
         side: BorderSide(
-          color: Theme.of(context).colorScheme.primary.withAlpha(100)
+          color: Theme.of(context).colorScheme.primary
         )
       ),
       content: Row(
@@ -80,22 +80,4 @@ abstract final class SnackBarMessage {
       ),
     )
   );
-  
-  static void showProductAddedMessage(BuildContext context)
-  => ScaffoldMessenger.of(context)
-  ..hideCurrentSnackBar()
-  ..showSnackBar(SnackBar(
-    margin: const .only(
-      bottom: 64.0
-    ),
-    elevation: 0.0,
-    backgroundColor: Colors.transparent,
-    behavior: .floating,
-    content: CartSummaryBar(
-      onTap: () {
-        ScaffoldMessenger.of(context).hideCurrentSnackBar();
-        Navigator.pushNamed(context, Routes.payment);
-      },
-    )
-  ));
 }

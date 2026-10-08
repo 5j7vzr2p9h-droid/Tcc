@@ -13,10 +13,10 @@ import 'di.dart';
 import 'features/cart/presentation/viewmodel/cart_cubit.dart';
 import 'l10n/app_localizations.dart';
 import 'language_controller.dart';
-import 'theme_controller.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
+
   await dotenv.load();
   await Hive.initFlutter();
   await setupDependencyInjection();
@@ -37,25 +37,19 @@ final class const MyApp({super.key}) extends StatelessWidget {
     child: ValueListenableBuilder<String>(
       valueListenable: getIt<LanguageController>(),
       builder: (BuildContext context, String langCode, Widget? _)
-      => ValueListenableBuilder<ThemeMode>(
-        valueListenable: getIt<ThemeController>(),
-        builder: (BuildContext context, ThemeMode themeMode, Widget? _)
-        => MaterialApp(
-          theme: lightTheme,
-          darkTheme: .dark(),
-          themeMode: themeMode,
-          onGenerateRoute: AppRoutes.onGenerateRoute,
-          localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
-            AppLocalizations.delegate,
-            ...GlobalMaterialLocalizations.delegates,
-          ],
-          locale: Locale(langCode),
-          supportedLocales: const <Locale>[
-            Locale(AppLocales.ar),
-            Locale(AppLocales.en)
-          ],
-          initialRoute: Routes.splash
-        )
+      => MaterialApp(
+        theme: lightTheme,
+        onGenerateRoute: AppRoutes.onGenerateRoute,
+        localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
+          AppLocalizations.delegate,
+          ...GlobalMaterialLocalizations.delegates,
+        ],
+        locale: Locale(langCode),
+        supportedLocales: const <Locale>[
+          Locale(AppLocales.ar),
+          Locale(AppLocales.en)
+        ],
+        initialRoute: Routes.login
       )
     ),
   );

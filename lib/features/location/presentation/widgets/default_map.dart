@@ -6,10 +6,12 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../../../core/constants/numerical_values.dart';
 
 final class DefaultMap extends StatefulWidget {
+  final bool _locationEnabled;
   final LatLng _userLocation;
   final ValueNotifier<LatLng> _mapPositionController;
 
   const DefaultMap({
+    required this._locationEnabled,
     required this._userLocation,
     required this._mapPositionController,
     super.key
@@ -93,16 +95,17 @@ class _DefaultMapState extends State<DefaultMap> {
           );
         },
       ),
-      Align(
-        alignment: AlignmentDirectional.bottomEnd,
-        child: Padding(
-          padding: const .all(pageContentPadding),
-          child: FloatingActionButton(
-            onPressed: () => widget._mapPositionController.value = widget._userLocation,
-            child: const Icon(Icons.gps_fixed),
+      if(widget._locationEnabled)
+        Align(
+          alignment: AlignmentDirectional.bottomEnd,
+          child: Padding(
+            padding: const .all(pageContentPadding),
+            child: FloatingActionButton(
+              onPressed: () => widget._mapPositionController.value = widget._userLocation,
+              child: const Icon(Icons.gps_fixed),
+            ),
           ),
-        ),
-      )
+        )
     ],
   );
 

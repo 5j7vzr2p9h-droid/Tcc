@@ -107,7 +107,8 @@ final class LocationRepositoryImpl implements LocationRepository{
   Future<Either<Failure, List<RegionModel>>> getRegions() async{
     if(await _networkInfo.isDeviceConnected) {
        try{
-        final List<RegionModel> regions = await _placesRemoteDatasource.getRegions();
+        final int branchId = _prefs.getInt(CacheKeys.branchId)!;
+        final List<RegionModel> regions = await _placesRemoteDatasource.getRegions(branchId);
         return Right(regions);
       }on ServerException catch (e) {
         return Left(ServerFailure(e.message));
@@ -117,5 +118,11 @@ final class LocationRepositoryImpl implements LocationRepository{
         return const Left(UnknownFailure());
       }
     }else return const Left(OfflineFailure());
+  }
+
+  @override
+  Future<Either<Failure, Unit>> addAddress() {
+    // TODO: implement addAddress
+    throw UnimplementedError();
   }
 }

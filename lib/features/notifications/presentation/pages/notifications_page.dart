@@ -5,7 +5,6 @@ import '../../../../config/routing/routes.dart';
 import '../../../../core/constants/numerical_values.dart';
 import '../../../../core/enums/notification_type.dart';
 import '../../../../core/extensions/context_l10n.dart';
-import '../../../../core/utils/text_styles.dart';
 import '../../domain/entities/notification_entity.dart';
 import '../../domain/entities/notifications_group.dart';
 import '../widgets/no_notifications_placeholder.dart';
