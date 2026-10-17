@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/extensions/context_l10n.dart';
 import '../../../../core/utils/text_styles.dart';
-import '../../../../core/widgets/icon_label.dart';
-import '../../domain/entities/payment_method_entity.dart';
 
 final class PaymentMethodTile extends StatelessWidget {
-  final PaymentMethodEntity _method;
+  final String _title;
+  final IconData _icon;
   final bool _selected;
   final VoidCallback _onTap;
-  final double? _balance;
+
+  /// Extra content shown under the title, like the wallet balance.
+  final Widget? _child;
 
   const new({
     super.key,
-    required this._method,
+    required this._title,
     required this._selected,
     required this._onTap,
-    this._balance
+    this._icon = Icons.payments_outlined,
+    this._child
   });
 
   @override
@@ -39,12 +40,11 @@ final class PaymentMethodTile extends StatelessWidget {
       child: Row(
         spacing: 12.0,
         children: <Widget>[
-          // Placeholder until each method gets its own image.
           SizedBox(
             width: 32.0,
             height: 32.0,
             child: Icon(
-              Icons.payments_outlined,
+              _icon,
               color: Theme.of(context).colorScheme.primary
             )
           ),
@@ -54,15 +54,10 @@ final class PaymentMethodTile extends StatelessWidget {
               spacing: 2.0,
               children: <Widget>[
                 Text(
-                  _method.name,
+                  _title,
                   style: TextStyles.font14Weight700
                 ),
-                if(_balance is double)
-                  IconLabel(
-                    icon: Icons.wallet,
-                    color: Theme.of(context).colorScheme.primary,
-                    label: "${context.l10n.yourCurrentBalance}: ${_balance.toStringAsFixed(2)} ${context.l10n.pound}"
-                  )
+                ?_child
               ],
             ),
           ),

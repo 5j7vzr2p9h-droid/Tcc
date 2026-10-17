@@ -4,7 +4,6 @@ import 'package:electronic_menu/features/delivery/presentation/pages/saved_addre
 import 'package:electronic_menu/features/favorites/presentation/pages/favorites_page.dart';
 import 'package:electronic_menu/features/legal/presentation/pages/privacy_policy_page.dart';
 import 'package:electronic_menu/features/legal/presentation/pages/terms_and_conditions_page.dart';
-import 'package:electronic_menu/features/payment/presentation/pages/payment_methods_page.dart';
 import 'package:electronic_menu/features/settings/presentation/pages/settings_page.dart';
 import 'package:electronic_menu/features/support/presentation/pages/support_page.dart';
 import 'package:electronic_menu/l10n/app_localizations.dart';
@@ -74,14 +73,6 @@ void main() {
     expect(find.text("العناوين المحفوظة"), findsOneWidget);
     expect(find.text("المنزل"), findsOneWidget);
     expect(find.text("الافتراضي"), findsOneWidget);
-  });
-
-  testWidgets('renders the payment methods page', (WidgetTester tester) async {
-    await pumpPage(tester, const PaymentMethodsPage());
-
-    expect(find.text("طرق الدفع"), findsOneWidget);
-    expect(find.text("Mastercard"), findsOneWidget);
-    expect(find.text("•••• •••• •••• 4567"), findsOneWidget);
   });
 
   testWidgets('renders the terms and conditions page', (WidgetTester tester) async {

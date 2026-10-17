@@ -7,13 +7,13 @@ import '../../features/auth/presentation/pages/otp_verification_page.dart';
 import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/coupons/presentation/pages/coupons_and_offers_page.dart';
 import '../../features/delivery/presentation/pages/saved_addresses_page.dart';
+import '../../features/delivery/presentation/viewmodels/saved_address_model/saved_addresses_cubit.dart';
 import '../../features/location/presentation/pages/select_location_page.dart';
 import '../../features/location/presentation/viewmodels/select_location_viewmodel/select_location_cubit.dart';
 import '../../features/favorites/presentation/pages/favorites_page.dart';
 import '../../features/legal/presentation/pages/privacy_policy_page.dart';
 import '../../features/legal/presentation/pages/terms_and_conditions_page.dart';
 import '../../features/orders/presentation/pages/new_order_page.dart';
-import '../../features/payment/presentation/pages/payment_methods_page.dart';
 import '../../features/payment/presentation/pages/payment_page.dart';
 import '../../features/payment/presentation/viewmodels/checkout_viewmodel/checkout_cubit.dart';
 import '../../features/payment/presentation/viewmodels/payment_methods_viewmodel/payment_methods_cubit.dart';
@@ -28,6 +28,11 @@ import '../../features/root/presentation/viewmodels/search_viewmodel/search_cubi
 import '../../features/settings/presentation/pages/notification_settings_page.dart';
 import '../../features/settings/presentation/pages/settings_page.dart';
 import '../../features/support/presentation/pages/support_page.dart';
+import '../../features/wallet/presentation/viewmodels/balance_viewmodel/balance_cubit.dart';
+import '../../features/wallet/presentation/pages/topup_page.dart';
+import '../../features/wallet/domain/entities/wallet_transaction_entity.dart';
+import '../../features/wallet/presentation/pages/wallet_page.dart';
+import '../../features/wallet/presentation/pages/wallet_transactions_page.dart';
 import '../../splash_page.dart';
 import 'routes.dart';
 
@@ -53,7 +58,7 @@ abstract final class AppRoutes{
         );
       case Routes.selectLocation:
         final bool? isInitial = route.arguments as bool?;
-        return _materialPageRoute(
+        return _materialPageRoute<bool>(
           BlocProvider<SelectLocationCubit>(
             create: (BuildContext context) => getIt<SelectLocationCubit>()..getDeviceLocation(),
             child: SelectLocationPage(
@@ -68,8 +73,11 @@ abstract final class AppRoutes{
               BlocProvider<CheckoutCubit>(
                 create: (BuildContext context) => getIt<CheckoutCubit>()
               ),
-              BlocProvider<PaymentMethodsCubit>(
-                create: (BuildContext context) => getIt<PaymentMethodsCubit>()..init()
+              BlocProvider<BalanceCubit>(
+                create: (BuildContext context) => getIt<BalanceCubit>()..init()
+              ),
+              BlocProvider<SavedAddressesCubit>(
+                create: (BuildContext context) => getIt<SavedAddressesCubit>()..init()
               )
             ],
             child: const PaymentPage()
@@ -93,8 +101,6 @@ abstract final class AppRoutes{
         return _materialPageRoute(const NotificationSettingsPage());
       case Routes.savedAddresses:
         return _materialPageRoute(const SavedAddressesPage());
-      case Routes.paymentMethods:
-        return _materialPageRoute(const PaymentMethodsPage());
       case Routes.termsAndConditions:
         return _materialPageRoute(const TermsAndConditionsPage());
       case Routes.privacyPolicy:
@@ -108,6 +114,19 @@ abstract final class AppRoutes{
         return _materialPageRoute(const EditPhonePage());
       case Routes.splash:
         return _materialPageRoute(const SplashPage());
+      case Routes.wallet:
+        return _materialPageRoute(const WalletPage());
+      case Routes.topup:
+        return _materialPageRoute(
+          BlocProvider<PaymentMethodsCubit>(
+            create: (BuildContext context) => getIt<PaymentMethodsCubit>()..init(),
+            child: const TopupPage()
+          )
+        );
+      case Routes.walletTransactions:
+        return _materialPageRoute(
+          WalletTransactionsPage(route.arguments as List<WalletTransactionEntity>)
+        );
     }
     return _materialPageRoute(const HomePage());
   }

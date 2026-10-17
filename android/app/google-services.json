@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "584000427274",
+    "project_id": "the-crepe-company",
+    "storage_bucket": "the-crepe-company.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:584000427274:android:1b153a8b3796facf6ed6f3",
+        "android_client_info": {
+          "package_name": "com.thecrepecompany.emenu"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBYZQcNDjP6lcLDnzA5HD8ZU1M298Di2K0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../../config/routing/routes.dart';
-import '../../../../core/utils/snack_bar_message.dart';
 import '../../domain/entities/item_entity.dart';
 
 class AddToCartButton extends StatelessWidget {
@@ -35,11 +34,9 @@ class AddToCartButton extends StatelessWidget {
     ),
   );
 
-  void func (BuildContext context) async{
-    final bool? result = await Navigator.pushNamed<bool>(
-      context,
-      Routes.newOrder,
-      arguments: _product
-    );
-  }
+  void func (BuildContext context) async => await Navigator.pushNamed<bool>(
+    context,
+    Routes.newOrder,
+    arguments: _product
+  );
 }

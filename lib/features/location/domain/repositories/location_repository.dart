@@ -1,7 +1,6 @@
 import 'package:dartz/dartz.dart';
 
 import '../../../../core/errors/failures.dart';
-import '../../data/models/region_model.dart';
 import '../entities/suggested_place_entity.dart';
 import '../entities/branch_entity.dart';
 
@@ -17,7 +16,10 @@ abstract interface class LocationRepository {
     required double lng
   });
 
-  Future<Either<Failure, List<RegionModel>>> getRegions();
-
-  Future<Either<Failure, Unit>> addAddress();
+  Future<Either<Failure, Unit>> addAddress({
+    required String addressText,
+    required bool isDefault,
+    required double lat,
+    required double lng
+  });
 }

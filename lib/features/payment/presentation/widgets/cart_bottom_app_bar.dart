@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/constants/numerical_values.dart';
 import '../../../../core/extensions/context_l10n.dart';
 import '../../../../core/widgets/order_summary_field.dart';
 import '../../../cart/presentation/viewmodel/cart_cubit.dart';
@@ -21,8 +20,7 @@ class CartBottomAppBar extends StatelessWidget {
       spacing: 16.0,
       children: <Widget>[
         OrderSummaryField(
-          itemsTotal: state.subtotal,
-          deliveryFee: deliveryFee,
+          itemsTotal: state.subtotal
         ),
         ElevatedButton(
           onPressed: state.isEmpty ? null : _onNexPressed,

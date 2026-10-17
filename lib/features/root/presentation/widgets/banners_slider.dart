@@ -60,7 +60,7 @@ final class _BannersSliderState extends State<BannersSlider> {
         padding: const .only(bottom: 12.0),
         child: SmoothPageIndicator(
           controller: _pageController,
-          count: 3,
+          count: widget._banners.length,
           effect: ExpandingDotsEffect(
             dotWidth: 12.0,
             dotHeight: 12.0,

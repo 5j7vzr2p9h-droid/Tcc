@@ -1,7 +1,4 @@
 import 'package:dartz/dartz.dart';
-import 'package:electronic_menu/features/location/data/models/region_model.dart';
-import 'package:electronic_menu/features/location/domain/entities/suggested_place_entity.dart';
-import 'package:electronic_menu/features/location/domain/entities/branch_entity.dart';
 
 import '../../../../core/cache/prefs.dart';
 import '../../../../core/constants/cache_keys.dart';
@@ -9,6 +6,8 @@ import '../../../../core/errors/exceptions.dart';
 import '../../../../core/errors/failures.dart';
 import '../../../../core/location/location_service.dart';
 import '../../../../core/network/network_info.dart';
+import '../../domain/entities/branch_entity.dart';
+import '../../domain/entities/suggested_place_entity.dart';
 import '../../domain/repositories/location_repository.dart';
 import '../datasources/places_remote_datasource.dart';
 
@@ -104,25 +103,28 @@ final class LocationRepositoryImpl implements LocationRepository{
   }
 
   @override
-  Future<Either<Failure, List<RegionModel>>> getRegions() async{
-    if(await _networkInfo.isDeviceConnected) {
-       try{
-        final int branchId = _prefs.getInt(CacheKeys.branchId)!;
-        final List<RegionModel> regions = await _placesRemoteDatasource.getRegions(branchId);
-        return Right(regions);
-      }on ServerException catch (e) {
+  Future<Either<Failure, Unit>> addAddress({
+    required String addressText,
+    required bool isDefault,
+    required double lat,
+    required double lng
+  }) async{
+    if(await _networkInfo.isDeviceConnected)
+      try {
+        await _placesRemoteDatasource.addAddress(
+          addressText: addressText,
+          isDefault: isDefault,
+          lat: lat,
+          lng: lng
+        );
+        return const Right(unit);
+      } on ServerException catch (e) {
         return Left(ServerFailure(e.message));
       } on OfflineException {
         return const Left(OfflineFailure());
-      } on UnknownException {
+      } catch(_) {
         return const Left(UnknownFailure());
       }
-    }else return const Left(OfflineFailure());
-  }
-
-  @override
-  Future<Either<Failure, Unit>> addAddress() {
-    // TODO: implement addAddress
-    throw UnimplementedError();
+    return const Left(OfflineFailure());
   }
 }

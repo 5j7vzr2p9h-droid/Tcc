@@ -23,7 +23,7 @@ final class TermsSectionTile extends StatelessWidget {
     collapsedIconColor: Theme.of(context).colorScheme.primary,
     tilePadding: const .symmetric(horizontal: 16.0),
     childrenPadding: const .fromLTRB(16.0, 0.0, 16.0, 16.0),
-    expandedCrossAxisAlignment: .start,
+    expandedCrossAxisAlignment: .stretch,
     title: Text(
       "$_number. ${_section.title}",
       style: TextStyles.font16Weight700
@@ -32,7 +32,6 @@ final class TermsSectionTile extends StatelessWidget {
       Text(
         _section.body,
         style: TextStyles.font14Weight400.copyWith(color: Colors.grey),
-        textAlign: .start,
       )
     ],
   );

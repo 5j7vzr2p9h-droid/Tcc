@@ -373,9 +373,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get chooseAddress => 'اختر العنوان:';
 
   @override
-  String get changeAddress => 'تغيير العنوان';
-
-  @override
   String get addNewAddress => 'إضافة عنوان جديد';
 
   @override
@@ -1037,4 +1034,31 @@ class AppLocalizationsAr extends AppLocalizations {
   String minSelectionRequired(int count, String group) {
     return 'يُرجى اختيار $count على الأقل من $group';
   }
+
+  @override
+  String get wallet => 'المحفظة';
+
+  @override
+  String get walletBalance => 'رصيد المحفظة';
+
+  @override
+  String get topUpBalance => 'شحن الرصيد';
+
+  @override
+  String get recentTransactions => 'آخر العمليات';
+
+  @override
+  String get walletPaymentTransaction => 'دفع';
+
+  @override
+  String get walletTopUpTransaction => 'شحن المحفظة';
+
+  @override
+  String get walletRefundTransaction => 'استرداد مبلغ';
+
+  @override
+  String get walletTransactions => 'العمليات';
+
+  @override
+  String get notCalculatedYet => 'لم يحسب بعد';
 }

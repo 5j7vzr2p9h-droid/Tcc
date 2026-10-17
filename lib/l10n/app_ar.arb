@@ -127,7 +127,6 @@
   "pickupTime": "وقت الاستلام",
   "pickupLocation": "مكان الاستلام",
   "chooseAddress": "اختر العنوان:",
-  "changeAddress": "تغيير العنوان",
   "addNewAddress": "إضافة عنوان جديد",
   "confirmLocation": "تأكيد الموقع",
   "selectYourLocation": "اختر موقعك",
@@ -434,5 +433,14 @@
   "orderPlacedMessage": "تم إرسال طلبك بنجاح",
   "chooseUpTo": "اختر حتى {count}",
   "cannotBeCombined": "يُختار بمفرده، ولا يمكن جمعه مع اختيارات أخرى",
-  "minSelectionRequired": "يُرجى اختيار {count} على الأقل من {group}"
+  "minSelectionRequired": "يُرجى اختيار {count} على الأقل من {group}",
+  "wallet": "المحفظة",
+  "walletBalance": "رصيد المحفظة",
+  "topUpBalance": "شحن الرصيد",
+  "recentTransactions": "آخر العمليات",
+  "walletPaymentTransaction": "دفع",
+  "walletTopUpTransaction": "شحن المحفظة",
+  "walletRefundTransaction": "استرداد مبلغ",
+  "walletTransactions": "العمليات",
+  "notCalculatedYet": "لم يحسب بعد"
 }

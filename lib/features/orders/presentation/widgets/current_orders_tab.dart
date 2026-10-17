@@ -40,7 +40,10 @@ final class const CurrentOrdersTab({super.key}) extends StatelessWidget {
               description: context.l10n.noNewOrdersMessage,
             ),
           )
-          : OrdersList(orders)
+          : OrdersList(
+            orders: orders,
+            onRefresh: context.read<CurrentOrdersCubit>().init,
+          )
       }
     ),
   );

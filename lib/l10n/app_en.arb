@@ -135,7 +135,6 @@
   "pickupTime": "Pickup time",
   "pickupLocation": "Pickup location",
   "chooseAddress": "Choose address:",
-  "changeAddress": "Change address",
   "addNewAddress": "Add new address",
   "confirmLocation": "Confirm location",
   "selectYourLocation": "Select your location",
@@ -460,5 +459,14 @@
         "type": "String"
       }
     }
-  }
+  },
+  "wallet": "Wallet",
+  "walletBalance": "Wallet balance",
+  "topUpBalance": "Top up balance",
+  "recentTransactions": "Recent transactions",
+  "walletPaymentTransaction": "Payment",
+  "walletTopUpTransaction": "Wallet top-up",
+  "walletRefundTransaction": "Refund",
+  "walletTransactions": "Transactions",
+  "notCalculatedYet": "Not Calculated Yet"
 }

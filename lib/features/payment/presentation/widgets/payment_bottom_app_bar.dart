@@ -7,27 +7,30 @@ import '../../../../core/utils/text_styles.dart';
 import '../../../../core/widgets/order_summary_field.dart';
 import '../../../cart/presentation/viewmodel/cart_cubit.dart';
 
-class PaymentBottomAppBar extends StatelessWidget {
-  final VoidCallback _onNexPressed;
-  final bool _isLoading;
-
-  const new(this._onNexPressed, {super.key, this._isLoading = false});
+final class const PaymentBottomAppBar(
+  final VoidCallback _onNextPressed,
+  {
+    super.key,
+    required final double _deliveryFee,
+    final bool _isLoading = false
+  }
+) extends StatelessWidget {
 
   @override
   Column build(BuildContext context)
   => Column(
     mainAxisSize: .min,
     spacing: 12.0,
-    children: [
+    children: <Widget>[
       OrderSummaryField(
         itemsTotal: context.select<CartCubit, double>((CartCubit cubit) => cubit.state.subtotal),
-        deliveryFee: deliveryFee,
+        deliveryFee: _deliveryFee,
       ),
       Column(
         spacing: 12.0,
         children: <Widget>[
           ElevatedButton(
-            onPressed: _isLoading? null: _onNexPressed,
+            onPressed: _isLoading? null: _onNextPressed,
             child: _isLoading
               ? const SizedBox.square(
                 dimension: 18.0,

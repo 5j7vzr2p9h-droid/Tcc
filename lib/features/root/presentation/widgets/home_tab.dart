@@ -29,19 +29,17 @@ class HomeTab extends StatelessWidget {
           onRetry: context.read<HomeCubit>().init
         ),
       ),
-      HomeGetSuccessState(:final List<CategoryEntity> categories, :final List<ItemEntity> popularItems)
+      HomeGetSuccessState(
+        :final List<String> banners,
+        :final List<CategoryEntity> categories,
+        :final List<ItemEntity> popularItems
+      )
       => CustomScrollView(
         slivers: <Widget>[
           SliverPadding(
             padding: const .only(bottom: 12.0),
             sliver: DefaultAppBar(
-              background: const BannersSlider(
-                <String>[
-                  "https://ichef.bbci.co.uk/food/ic/food_16x9_1600/recipes/roastchicken_90247_16x9.jpg",
-                  "https://images.squarespace-cdn.com/content/v1/57879a6cbebafb879f256735/94b1c4ee-189a-4a42-92f3-ea988684da5c/KK050424-2_original_uxga.jpg?format=750w",
-                  "https://images.squarespace-cdn.com/content/v1/57879a6cbebafb879f256735/df556634-af33-4d87-8f45-423550cdefae/ARM050424-38_original_uxga.jpg?format=750w"
-                ]
-              ),
+              background: BannersSlider(banners),
               hasBackButton: false,
             ),
           ),

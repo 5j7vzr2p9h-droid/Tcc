@@ -7,5 +7,5 @@ enum OrderStatus {
   cancelled;
 
   static OrderStatus fromJson(String value)
-  => OrderStatus.values.byName(value.toLowerCase());
+  => OrderStatus.values.byName(value);
 }

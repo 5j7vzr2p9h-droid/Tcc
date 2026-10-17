@@ -13,7 +13,6 @@ import '../widgets/settings_tile.dart';
 final class SettingsPage extends StatelessWidget {
   const new({super.key});
 
-  static const String _version = "1.0.0";
   static const Map<String, String> _languages = <String, String>{
     AppLocales.ar: "العربية",
     AppLocales.en: "English"

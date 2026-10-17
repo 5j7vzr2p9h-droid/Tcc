@@ -12,7 +12,7 @@ final class PreviousOrdersCubit extends Cubit<PreviousOrdersState>{
 
   List<OrderEntity>? _orders;
 
-  void init() async{
+  Future<void> init() async{
     if(_orders is List<OrderEntity>)
       return emit(PreviousOrdersGetSuccessState(_orders!));
     

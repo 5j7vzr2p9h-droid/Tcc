@@ -19,7 +19,7 @@ val mapsApiKey: String = secrets.getProperty("MAPS_API_KEY")
     ?: ""
 
 android {
-    namespace = "com.example.electronic_menu"
+    namespace = "com.thecrepecompany.emenu"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -31,7 +31,7 @@ android {
     defaultConfig {
         manifestPlaceholders["mapsApiKey"] = mapsApiKey
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.electronic_menu"
+        applicationId = "com.thecrepecompany.emenu"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion

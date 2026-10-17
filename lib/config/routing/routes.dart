@@ -12,11 +12,13 @@ abstract final class Routes{
     settings = "settings",
     notificationSettings = "notification_settings",
     savedAddresses = "saved_addresses",
-    paymentMethods = "payment_methods",
     termsAndConditions = "terms_and_conditions",
     privacyPolicy = "privacy_policy",
     support = "support",
     editProfile = "edit_profile",
     editPhone = "edit_phone",
-    splash = "splash";
+    splash = "splash",
+    wallet = "wallet",
+    topup = "topup",
+    walletTransactions = "wallet_transactions";
 }

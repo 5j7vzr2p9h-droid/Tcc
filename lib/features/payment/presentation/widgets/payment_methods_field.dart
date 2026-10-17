@@ -6,13 +6,11 @@ import 'payment_method_tile.dart';
 final class PaymentMethodsField extends StatelessWidget {
   final ValueNotifier<PaymentMethodEntity?> _controller;
   final List<PaymentMethodEntity> _methods;
-  final double _walletBalance;
 
   const new({
     super.key,
     required this._controller,
-    required this._methods,
-    required this._walletBalance
+    required this._methods
   });
 
   @override
@@ -25,10 +23,9 @@ final class PaymentMethodsField extends StatelessWidget {
       children: <Widget>[
         for (final PaymentMethodEntity method in _methods)
           PaymentMethodTile(
-            method: method,
+            title: method.name,
             selected: value?.id == method.id,
-            onTap: () => _controller.value = method,
-            balance: _methods.indexOf(method) == 0? null: _walletBalance,
+            onTap: () => _controller.value = method
           )
       ],
     ),

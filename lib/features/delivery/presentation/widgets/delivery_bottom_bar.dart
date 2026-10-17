@@ -5,11 +5,15 @@ import '../../../../core/utils/text_styles.dart';
 
 final class DeliveryBottomAppBar extends StatelessWidget {
   final double _total;
-  final VoidCallback _onContinuePressed;
+
+  /// Null when picking up from the branch, so only the total is shown.
+  final double? _deliveryFee;
+  final VoidCallback? _onContinuePressed;
 
   const new({
     super.key,
     required this._total,
+    required this._deliveryFee,
     required this._onContinuePressed
   });
 
@@ -45,7 +49,9 @@ final class DeliveryBottomAppBar extends StatelessWidget {
             )
           ),
           Text(
-            "${_total.toStringAsFixed(2)} ${context.l10n.pound}",
+            _deliveryFee == null
+              ? "${_total.toStringAsFixed(2)} ${context.l10n.pound}"
+              : "${_total.toStringAsFixed(2)} + ${_deliveryFee.toStringAsFixed(2)} ${context.l10n.pound}",
             style: TextStyles.font18Weight700
           )
         ],

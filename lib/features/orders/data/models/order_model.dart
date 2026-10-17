@@ -14,7 +14,7 @@ final class const OrderModel({
   => OrderModel(
     id: json["orderId"],
     date: DateTime.parse(json["date"]) ,
-    total: json["total"],
+    total: (json["total"] as num).toDouble(),
     deliveyAddress: json["deliveryAddress"]??'',
     image: json["image"]??'',
     status: OrderStatus.fromJson(json["status"]?? "Held")

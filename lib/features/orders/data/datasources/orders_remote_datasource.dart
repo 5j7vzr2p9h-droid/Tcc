@@ -21,6 +21,7 @@ final class const OrdersRemoteDatasourceImpl(final Dio _dio) implements OrdersRe
     } on DioException catch(exception){
       ApiErrorHandler.handle(exception);
     }catch(e){
+      print("$e =============");
       throw const UnknownException();
     }
   }

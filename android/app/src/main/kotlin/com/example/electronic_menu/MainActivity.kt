@@ -1,4 +1,4 @@
-package com.example.electronic_menu
+package com.thecrepecompany.emenu
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -815,12 +815,6 @@ abstract class AppLocalizations {
   /// **'Choose address:'**
   String get chooseAddress;
 
-  /// No description provided for @changeAddress.
-  ///
-  /// In en, this message translates to:
-  /// **'Change address'**
-  String get changeAddress;
-
   /// No description provided for @addNewAddress.
   ///
   /// In en, this message translates to:
@@ -2080,6 +2074,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please choose at least {count} from {group}'**
   String minSelectionRequired(int count, String group);
+
+  /// No description provided for @wallet.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet'**
+  String get wallet;
+
+  /// No description provided for @walletBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet balance'**
+  String get walletBalance;
+
+  /// No description provided for @topUpBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Top up balance'**
+  String get topUpBalance;
+
+  /// No description provided for @recentTransactions.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent transactions'**
+  String get recentTransactions;
+
+  /// No description provided for @walletPaymentTransaction.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment'**
+  String get walletPaymentTransaction;
+
+  /// No description provided for @walletTopUpTransaction.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet top-up'**
+  String get walletTopUpTransaction;
+
+  /// No description provided for @walletRefundTransaction.
+  ///
+  /// In en, this message translates to:
+  /// **'Refund'**
+  String get walletRefundTransaction;
+
+  /// No description provided for @walletTransactions.
+  ///
+  /// In en, this message translates to:
+  /// **'Transactions'**
+  String get walletTransactions;
+
+  /// No description provided for @notCalculatedYet.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Calculated Yet'**
+  String get notCalculatedYet;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

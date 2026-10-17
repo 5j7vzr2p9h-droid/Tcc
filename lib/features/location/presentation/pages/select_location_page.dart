@@ -85,13 +85,7 @@ final class _SelectLocationPageState extends State<SelectLocationPage> {
             );
           else{
             Navigator.pop(context);
-            showModalBottomSheet(
-              context: context,
-              builder: (BuildContext context) => AddressDetailsForm(),
-               shape: const RoundedRectangleBorder(
-                borderRadius: .vertical(top: .circular(16.0))
-              ),
-            );
+            _showAddressDetailsForm();
           }
           
       },
@@ -198,17 +192,31 @@ final class _SelectLocationPageState extends State<SelectLocationPage> {
       },
     ),
     bottomNavigationBar: BottomAppBar(
-      child: Builder(
-        builder: (BuildContext context) => ElevatedButton(
-          onPressed: () => context.read<SelectLocationCubit>().confirmLocation(
-            lat: _mapPositionController.value.latitude,
-            lng: _mapPositionController.value.longitude
-          ),
-          child: Text(context.l10n.confirmLocation)
+      child: ElevatedButton(
+        onPressed: () => context.read<SelectLocationCubit>().confirmLocation(
+          lat: _mapPositionController.value.latitude,
+          lng: _mapPositionController.value.longitude
         ),
+        child: Text(context.l10n.confirmLocation)
       ),
     ),
   );
+
+  /// Goes back with true once the address is added, so the previous page reloads its addresses.
+  void _showAddressDetailsForm() async{
+    final bool? added = await showModalBottomSheet<bool>(
+      context: context,
+      builder: (BuildContext context) => AddressDetailsForm(
+        lat: _mapPositionController.value.latitude,
+        lng: _mapPositionController.value.longitude,
+      ),
+      shape: const RoundedRectangleBorder(
+        borderRadius: .vertical(top: .circular(16.0))
+      ),
+    );
+    if(added == true && mounted)
+      Navigator.pop(context, true);
+  }
 
   void _selectPlace(BuildContext context, SuggestedPlaceEntity suggestedPlace){
     _debouncer.cancel();

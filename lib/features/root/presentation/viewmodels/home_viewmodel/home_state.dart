@@ -15,6 +15,7 @@ final class HomeLoadingState extends HomeState{
 }
 
 final class const HomeGetSuccessState({
+  required final List<String> banners,
   required final List<CategoryEntity> categories,
   required final List<ItemEntity> popularItems
 }) extends HomeState;

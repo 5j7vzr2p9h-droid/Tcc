@@ -11,10 +11,7 @@ abstract class LocationService {
   Future<String?> getAddressName(double lat, double lng);
 }
 
-final class LocationServiceImpl implements LocationService{
-  final Geocoding _geocoding;
-  
-  LocationServiceImpl(this._geocoding);
+final class const LocationServiceImpl(final Geocoding _geocoding) implements LocationService{
 
   @override
   Future<bool> openSettings() => Geolocator.openAppSettings();

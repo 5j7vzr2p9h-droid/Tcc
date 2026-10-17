@@ -4,15 +4,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/errors/failures.dart';
 import '../../../domain/entities/category_entity.dart';
 import '../../../domain/entities/item_entity.dart';
+import '../../../domain/repositories/banners_repository.dart';
 import '../../../domain/repositories/categories_repository.dart';
 import '../../../domain/usecases/get_popular_products_usecase.dart';
 import 'home_state.dart';
 
 final class HomeCubit extends Cubit<HomeState> {
   final CategoriesRepository _categoriesRepository;
+  final BannersRepository _bannersRepository;
   final GetPopularProductsUsecase _getPopularProductsUsecase;
 
   HomeCubit({
+    required this._bannersRepository,
     required this._categoriesRepository,
     required this._getPopularProductsUsecase,
   }): super(const HomeInitialState());
@@ -22,24 +25,30 @@ final class HomeCubit extends Cubit<HomeState> {
     emit(const HomeLoadingState());
 
     final List<Either<Failure, dynamic>> results = await Future.wait([
+      _bannersRepository.getBanners(),
       _categoriesRepository.getCategories(),
       _getPopularProductsUsecase()
     ]);
 
-    final Either<Failure, List<CategoryEntity>> categoriesResult = results[0] as Either<Failure, List<CategoryEntity>>;
-    final Either<Failure, List<ItemEntity>> popularProductsResult = results[1] as Either<Failure, List<ItemEntity>>;
+    final Either<Failure, List<String>> bannersResult = results[0] as Either<Failure, List<String>>;
+    final Either<Failure, List<CategoryEntity>> categoriesResult = results[1] as Either<Failure, List<CategoryEntity>>;
+    final Either<Failure, List<ItemEntity>> popularProductsResult = results[2] as Either<Failure, List<ItemEntity>>;
   
     if(isClosed)
       return;
     
-    categoriesResult.fold(
+    bannersResult.fold(
       (Failure failure) => emit(HomeGetFailureState(failure)),
-      (List<CategoryEntity> categories) => popularProductsResult.fold(
+      (List<String> banners) => categoriesResult.fold(
         (Failure failure) => emit(HomeGetFailureState(failure)),
-        (List<ItemEntity> popularItems) => emit(
-          HomeGetSuccessState(
-            categories: categories,
-            popularItems: popularItems
+        (List<CategoryEntity> categories) => popularProductsResult.fold(
+          (Failure failure) => emit(HomeGetFailureState(failure)),
+          (List<ItemEntity> popularItems) => emit(
+            HomeGetSuccessState(
+              banners: banners,
+              categories: categories,
+              popularItems: popularItems
+            )
           )
         )
       )

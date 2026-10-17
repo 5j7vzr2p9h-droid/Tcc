@@ -1,11 +1,6 @@
-class AddressEntity {
-  final String area, street, details, apartment, floor;
-
-  const new({
-    required this.area,
-    required this.street,
-    required this.details,
-    required this.apartment,
-    required this.floor
-  });
-}
+class AddressEntity({
+  required final int id,
+  required final String addressText,
+  required var bool isDefault,
+  required final double deliveryFee
+});

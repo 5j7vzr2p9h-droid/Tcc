@@ -98,8 +98,8 @@ final class ProfileTab extends StatelessWidget {
                   ),
                   ProfileMenuTile(
                     icon: Icons.credit_card,
-                    title: context.l10n.paymentMethods,
-                    onTap: () => Navigator.pushNamed(context, Routes.paymentMethods),
+                    title: context.l10n.wallet,
+                    onTap: () => Navigator.pushNamed(context, Routes.wallet),
                   ),
                   ProfileMenuTile(
                     icon: Icons.discount_outlined,

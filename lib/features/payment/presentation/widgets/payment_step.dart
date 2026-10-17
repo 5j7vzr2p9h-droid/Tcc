@@ -2,29 +2,86 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/constants/numerical_values.dart';
-import '../../../../core/errors/failures.dart';
+import '../../../../core/enums/payment_method.dart';
 import '../../../../core/extensions/context_l10n.dart';
 import '../../../../core/utils/text_styles.dart';
-import '../../../../core/widgets/empty_data_placeholder.dart';
-import '../../../../core/widgets/failure_place_holder.dart';
-import '../../domain/entities/payment_method_entity.dart';
-import '../viewmodels/payment_methods_viewmodel/payment_methods_cubit.dart';
-import '../viewmodels/payment_methods_viewmodel/payment_methods_state.dart';
-import 'payment_methods_field.dart';
+import '../../../../core/widgets/icon_label.dart';
+import '../../../wallet/presentation/viewmodels/balance_viewmodel/balance_cubit.dart';
+import '../../../wallet/presentation/viewmodels/balance_viewmodel/balance_state.dart';
+import 'insta_pay_dialog.dart';
+import 'payment_method_tile.dart';
+import 'vodafone_cash_dialog.dart';
 
-final class PaymentStep extends StatefulWidget {
-  final ValueNotifier<PaymentMethodEntity?> _paymentMethodController;
+final class const PaymentStep({
+  super.key,
+  required final ValueNotifier<PaymentMethod> _paymentMethodController
+}) extends StatelessWidget {
 
-  const new({
-    super.key,
-    required this._paymentMethodController
-  });
+  /// Tops up with the same method the button was pressed under.
+  void _showTopUpDialog(BuildContext context, PaymentMethod method){
+    // TODO: Send the top-up request before refreshing the balance once the backend endpoint is available.
+    final VoidCallback onConfirm = context.read<BalanceCubit>().init;
 
-  @override
-  State<PaymentStep> createState() => _PaymentStepState();
-}
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => method == .instaPay
+        ? InstaPayDialog(onConfirm: onConfirm)
+        : VodafoneCashDialog(onConfirm: onConfirm)
+    );
+  }
 
-class _PaymentStepState extends State<PaymentStep> {
+  Widget _buildBalance(BuildContext context)
+  => BlocBuilder<BalanceCubit, BalanceState>(
+    builder: (BuildContext context, BalanceState state)
+    => switch(state){
+      BalanceInitialState() || BalanceLoadingState() => const Padding(
+        padding: .symmetric(vertical: 4.0),
+        child: SizedBox.square(
+          dimension: 14.0,
+          child: CircularProgressIndicator(strokeWidth: 2.0),
+        ),
+      ),
+      BalanceGetFailureState() => InkWell(
+        onTap: context.read<BalanceCubit>().init,
+        child: IconLabel(
+          icon: Icons.refresh,
+          color: Theme.of(context).colorScheme.error,
+          label: context.l10n.retry
+        ),
+      ),
+      BalanceGetSuccessState(:final double balance) => IconLabel(
+        icon: Icons.wallet,
+        color: Theme.of(context).colorScheme.primary,
+        label: "${context.l10n.yourCurrentBalance}: ${balance.toStringAsFixed(2)} ${context.l10n.pound}"
+      )
+    }
+  );
+
+  /// The same wallet balance from the server, shown under every method that isn't cash.
+  Column _buildBalanceWithTopUp(BuildContext context, PaymentMethod method)
+  => Column(
+    crossAxisAlignment: .start,
+    children: <Widget>[
+      _buildBalance(context),
+      TextButton.icon(
+        onPressed: () => _showTopUpDialog(context, method),
+        style: TextButton.styleFrom(
+          padding: .zero,
+          visualDensity: .compact,
+          tapTargetSize: .shrinkWrap
+        ),
+        icon: const Icon(Icons.add_circle_outline, size: 18.0),
+        label: Text(context.l10n.topUpBalance)
+      )
+    ],
+  );
+
+  static String _methodTitle(BuildContext context, PaymentMethod method)
+  => switch(method){
+    .cash => context.l10n.cashOnDelivery,
+    .instaPay => context.l10n.instapay,
+    .vodafoneCash => context.l10n.vodafoneCash
+  };
 
   @override
   SliverToBoxAdapter build(BuildContext context)
@@ -32,44 +89,25 @@ class _PaymentStepState extends State<PaymentStep> {
     child: Padding(
       padding: const .all(pageContentPadding),
       child: Column(
-        spacing: 28.0,
-        children: [
-          Column(
-            crossAxisAlignment: .start,
-            spacing: 12.0,
-            children: <Widget>[
-              Text(context.l10n.choosePaymentMethod, style: TextStyles.font18Weight700),
-              BlocBuilder<PaymentMethodsCubit, PaymentMethodsState>(
-                builder: (BuildContext context, PaymentMethodsState state)
-                => switch(state){
-                  PaymentMethodsInitialState() => const SizedBox.shrink(),
-                  PaymentMethodsLoadingState() => const Padding(
-                    padding: .symmetric(vertical: 24.0),
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  ),
-                  PaymentMethodsGetFailureState(:final Failure failure) => Center(
-                    child: FailurePlaceHolder(
-                      failure: failure,
-                      onRetry: context.read<PaymentMethodsCubit>().init,
-                    ),
-                  ),
-                  PaymentMethodsGetSuccessState(:final List<PaymentMethodEntity> methods, :final double balance) => methods.isEmpty
-                    ? Center(
-                      child: EmptyDataPlaceholder(
-                        iconData: Icons.payments_outlined,
-                        title: context.l10n.noPaymentMethods,
-                      ),
-                    )
-                    : PaymentMethodsField(
-                      controller: widget._paymentMethodController,
-                      methods: methods,
-                      walletBalance: balance,
-                    )
-                }
-              ),
-            ],
+        crossAxisAlignment: .start,
+        spacing: 12.0,
+        children: <Widget>[
+          Text(context.l10n.choosePaymentMethod, style: TextStyles.font18Weight700),
+          ValueListenableBuilder<PaymentMethod>(
+            valueListenable: _paymentMethodController,
+            builder: (BuildContext context, PaymentMethod value, Widget? child)
+            => Column(
+              spacing: 12.0,
+              children: <Widget>[
+                for (final PaymentMethod method in PaymentMethod.values)
+                  PaymentMethodTile(
+                    title: _methodTitle(context, method),
+                    selected: value == method,
+                    onTap: () => _paymentMethodController.value = method,
+                    child: method == .cash? null: _buildBalanceWithTopUp(context, method)
+                  )
+              ],
+            ),
           ),
         ],
       ),

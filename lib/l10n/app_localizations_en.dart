@@ -373,9 +373,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chooseAddress => 'Choose address:';
 
   @override
-  String get changeAddress => 'Change address';
-
-  @override
   String get addNewAddress => 'Add new address';
 
   @override
@@ -1037,4 +1034,31 @@ class AppLocalizationsEn extends AppLocalizations {
   String minSelectionRequired(int count, String group) {
     return 'Please choose at least $count from $group';
   }
+
+  @override
+  String get wallet => 'Wallet';
+
+  @override
+  String get walletBalance => 'Wallet balance';
+
+  @override
+  String get topUpBalance => 'Top up balance';
+
+  @override
+  String get recentTransactions => 'Recent transactions';
+
+  @override
+  String get walletPaymentTransaction => 'Payment';
+
+  @override
+  String get walletTopUpTransaction => 'Wallet top-up';
+
+  @override
+  String get walletRefundTransaction => 'Refund';
+
+  @override
+  String get walletTransactions => 'Transactions';
+
+  @override
+  String get notCalculatedYet => 'Not Calculated Yet';
 }

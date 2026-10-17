@@ -8,6 +8,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'config/routing/on_generate_route.dart';
 import 'config/routing/routes.dart';
 import 'config/theming/light_theme.dart';
+import 'core/cache/prefs.dart';
 import 'core/utils/app_locales.dart';
 import 'di.dart';
 import 'features/cart/presentation/viewmodel/cart_cubit.dart';
@@ -49,7 +50,9 @@ final class const MyApp({super.key}) extends StatelessWidget {
           Locale(AppLocales.ar),
           Locale(AppLocales.en)
         ],
-        initialRoute: Routes.login
+        initialRoute: getIt<Prefs>().getString("token") == null
+          ? Routes.selectLocation
+          : Routes.main
       )
     ),
   );

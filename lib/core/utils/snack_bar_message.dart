@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../config/routing/routes.dart';
-import '../../features/cart/presentation/widgets/cart_summary_bar.dart';
 import 'text_styles.dart';
 
 abstract final class SnackBarMessage {

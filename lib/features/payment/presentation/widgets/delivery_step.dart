@@ -1,20 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../config/routing/routes.dart';
 import '../../../../core/constants/numerical_values.dart';
 import '../../../../core/enums/delivery_method.dart';
+import '../../../../core/errors/failures.dart';
 import '../../../../core/extensions/context_l10n.dart';
 import '../../../../core/utils/text_styles.dart';
+import '../../../../core/widgets/failure_place_holder.dart';
 import '../../../delivery/domain/entities/address_entity.dart';
+import '../../../delivery/presentation/viewmodels/saved_address_model/saved_addresses_cubit.dart';
+import '../../../delivery/presentation/viewmodels/saved_address_model/saved_addresses_state.dart';
 import '../../../delivery/presentation/widgets/address_card.dart';
 import '../../../delivery/presentation/widgets/delivery_method_selector.dart';
 
 final class DeliveryStep extends StatefulWidget {
   final ValueNotifier<DeliveryMethod> _methodController;
+  final ValueNotifier<AddressEntity?> _addressController;
 
   const new({
     super.key,
-    required this._methodController
+    required this._methodController,
+    required this._addressController
   });
 
   @override
@@ -24,24 +31,50 @@ final class DeliveryStep extends StatefulWidget {
 class _DeliveryStepState extends State<DeliveryStep> {
 
   final ValueNotifier<int> _pickupPlaceController = ValueNotifier<int>(0);
-  final ValueNotifier<AddressEntity?> _addressController = ValueNotifier<AddressEntity?>(_addresses.first);
-
-  static const List<AddressEntity> _addresses = <AddressEntity>[
-    AddressEntity(
-      area: "قسم اول",
-      street: "شارع البحر بجوار بنك القاهرة",
-      details: "عمارة صيدلية شاهين",
-      apartment: "1",
-      floor: "12"
-    )
-  ];
 
   @override
   void dispose() {
     _pickupPlaceController.dispose();
-    _addressController.dispose();
     super.dispose();
   }
+
+  void _addNewAddress() async{
+    final bool? added = await Navigator.pushNamed<bool>(context, Routes.selectLocation, arguments: false);
+    if(added == true && mounted)
+      context.read<SavedAddressesCubit>().init();
+  }
+
+  Widget _buildAddresses()
+  => BlocBuilder<SavedAddressesCubit, SavedAddressesState>(
+    builder: (BuildContext context, SavedAddressesState state)
+    => switch(state){
+      SavedAddressesInitialState() || SavedAddressesLoadingState() => const Center(
+        child: CircularProgressIndicator()
+      ),
+      SavedAddressesGetFailureState(:final Failure failure) => Center(
+        child: FailurePlaceHolder(
+          failure: failure,
+          onRetry: context.read<SavedAddressesCubit>().init
+        ),
+      ),
+      SavedAddressesGetSuccessState(:final List<AddressEntity> addresses) ||
+      SetAsDefaultAddressSuccessState(:final List<AddressEntity> addresses) ||
+      SetAsDefaultAdressFailureState(:final List<AddressEntity> addresses) => ValueListenableBuilder<AddressEntity?>(
+        valueListenable: widget._addressController,
+        builder: (BuildContext context, AddressEntity? selected, Widget? child)
+        => RadioGroup<AddressEntity>(
+          groupValue: selected,
+          onChanged: (AddressEntity? address) => widget._addressController.value = address,
+          child: Column(
+            spacing: defaultItemsSeparator,
+            children: <Widget>[
+              for(final AddressEntity address in addresses) AddressCard(address: address)
+            ],
+          ),
+        ),
+      )
+    }
+  );
 
   @override
   SliverToBoxAdapter build(BuildContext context)
@@ -70,27 +103,14 @@ class _DeliveryStepState extends State<DeliveryStep> {
                     context.l10n.chooseAddress,
                     style: TextStyles.font16Weight700
                   ),
-                  ValueListenableBuilder<AddressEntity?>(
-                    valueListenable: _addressController,
-                    builder: (BuildContext context, AddressEntity? selected, Widget? child)
-                    => RadioGroup<AddressEntity>(
-                      groupValue: selected,
-                      onChanged: (AddressEntity? address) => _addressController.value = address,
-                      child: Column(
-                        spacing: defaultItemsSeparator,
-                        children: <Widget>[
-                          for(final AddressEntity address in _addresses) AddressCard(address: address)
-                        ],
-                      ),
-                    ),
-                  ),
+                  _buildAddresses(),
                   SizedBox(
                     width: double.infinity,
                     height: 48.0,
                     child: OutlinedButton.icon(
-                      onPressed: () => Navigator.pushNamed(context, Routes.selectLocation, arguments: false),
+                      onPressed: _addNewAddress,
                       icon: const Icon(Icons.add_circle_outline),
-                      label: Text(context.l10n.changeAddress)
+                      label: Text(context.l10n.addNewAddress)
                     ),
                   ),
                 ],

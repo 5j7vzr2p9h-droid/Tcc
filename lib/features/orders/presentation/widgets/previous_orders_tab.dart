@@ -70,7 +70,10 @@ final class _PreviousOrdersTabState extends State<PreviousOrdersTab> {
                     title: context.l10n.noPreviousOrdersTitle,
                   ),
                 )
-                : OrdersList(orders)
+                : OrdersList(
+                  orders: orders,
+                  onRefresh: context.read<PreviousOrdersCubit>().init,
+                )
             }
           ),
         ),

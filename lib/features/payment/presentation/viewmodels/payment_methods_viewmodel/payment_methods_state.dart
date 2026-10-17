@@ -7,10 +7,9 @@ final class const PaymentMethodsInitialState() extends PaymentMethodsState;
 
 final class const PaymentMethodsLoadingState() extends PaymentMethodsState;
 
-final class const PaymentMethodsGetSuccessState({
-  required final List<PaymentMethodEntity> methods,
-  required final double balance
-}) extends PaymentMethodsState;
+final class const PaymentMethodsGetSuccessState(
+  final List<PaymentMethodEntity> methods
+) extends PaymentMethodsState;
 
 final class const PaymentMethodsGetFailureState(
   final Failure failure

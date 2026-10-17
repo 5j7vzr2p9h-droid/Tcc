@@ -4,7 +4,6 @@ import '../../../../core/errors/exceptions.dart';
 import '../../../../core/utils/api_endpoints.dart';
 import '../../../../core/utils/api_error_handler.dart';
 import '../models/branch_model.dart';
-import '../models/region_model.dart';
 import '../models/suggested_place_model.dart';
 
 abstract interface class PlacesRemoteDatasource {
@@ -18,9 +17,12 @@ abstract interface class PlacesRemoteDatasource {
 
   Future<BranchModel> getBranch({required double lat, required double lng});
 
-  Future<List<RegionModel>> getRegions(int branchId);
-
-  Future<void> addAddress();
+  Future<void> addAddress({
+    required String addressText,
+    required bool isDefault,
+    required double lat,
+    required double lng
+  });
 }
 
 final class PlacesRemoteDatasourceImpl implements PlacesRemoteDatasource{
@@ -104,28 +106,24 @@ final class PlacesRemoteDatasourceImpl implements PlacesRemoteDatasource{
   }
 
   @override
-  Future<List<RegionModel>> getRegions(int branchId) async{
+  Future<void> addAddress({
+    required String addressText,
+    required bool isDefault,
+    required double lat,
+    required double lng
+  }) async{
     try{
-      final Response response = await _eMenuDio.get(
-        ApiEndpoints.regions,
-        queryParameters: <String, int>{
-          "branchId": branchId
+      await _eMenuDio.post(
+        ApiEndpoints.profileAddresses,
+        data: <String, dynamic>{
+          "addressText": addressText,
+          "isDefault": isDefault,
+          "location": <String, double>{
+            "latitude": lat,
+            "longitude": lng
+          }
         }
       );
-      final List<RegionModel> regions = (response.data["deliveryZones"] as List)
-        .map<RegionModel>((json) => RegionModel.fromJson(json)).toList();
-      return regions;
-    }on DioException catch(exception){
-      ApiErrorHandler.handle(exception);
-    }catch(e){
-      throw const UnknownException();
-    }
-  }
-
-  @override
-  Future<void> addAddress() async{
-    try{
-      await _eMenuDio.post(ApiEndpoints.profileAddresses);
     }on DioException catch(exception){
       ApiErrorHandler.handle(exception);
     }catch(e){

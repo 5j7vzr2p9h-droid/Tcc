@@ -6,6 +6,7 @@ import '../../../../core/network/network_info.dart';
 import '../../../../core/uuid_generator/uuid_generator.dart';
 import '../../domain/repositories/wallet_repository.dart';
 import '../datasources/wallet_remote_datasource.dart';
+import '../models/wallet_transaction_model.dart';
 
 final class const WalletRepositoryImpl({
   required final UuidGenerator _uuidGenerator,
@@ -29,11 +30,11 @@ final class const WalletRepositoryImpl({
   }
 
   @override
-  Future<Either<Failure, Unit>> topupThrowInstapay(String instapayUsername) async{
+  Future<Either<Failure, Unit>> topupThroughInstapay(String instapayUsername) async{
     if(await _networkInfo.isDeviceConnected){
       try{
         final String requestId = _uuidGenerator.v4();
-        await _remoteDatasource.topupThrowInstapay(
+        await _remoteDatasource.topupThroughInstapay(
           instapayUsername: instapayUsername,
           requestId: requestId
         );
@@ -49,15 +50,31 @@ final class const WalletRepositoryImpl({
   }
 
   @override
-  Future<Either<Failure, Unit>> topupThrowVodafone(String senderMobile) async{
+  Future<Either<Failure, Unit>> topupThroughVodafone(String senderMobile) async{
     if(await _networkInfo.isDeviceConnected){
       try{
         final String requestId = _uuidGenerator.v4();
-        await _remoteDatasource.topupThrowVodafone(
+        await _remoteDatasource.topupThroughVodafone(
           senderMobile: senderMobile,
           requestId: requestId
         );
         return const Right(unit);
+      } on ServerException catch(exception){
+        return Left(ServerFailure(exception.message));
+      }on OfflineException{
+        return const Left(OfflineFailure());
+      }catch(_){
+        return const Left(UnknownFailure());
+      }
+    } else return const Left(OfflineFailure());
+  }
+
+  @override
+  Future<Either<Failure, List<WalletTransactionModel>>> getWalletTransactions() async{
+    if(await _networkInfo.isDeviceConnected){
+      try{
+        final List<WalletTransactionModel> walletTransactions = await _remoteDatasource.getWalletTransactions();
+        return Right(walletTransactions);
       } on ServerException catch(exception){
         return Left(ServerFailure(exception.message));
       }on OfflineException{

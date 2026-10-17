@@ -42,6 +42,7 @@ import 'features/coupons/domain/usecases/apply_coupon_usecase.dart';
 import 'features/coupons/domain/usecases/get_coupons_usecase.dart';
 import 'features/coupons/presentation/viewmodels/apply_coupon_viewmodel/apply_coupon_cubit.dart';
 import 'features/coupons/presentation/viewmodels/coupons_viewmodel/coupons_cubit.dart';
+import 'features/delivery/domain/usecases/delete_address_usecase.dart';
 import 'features/favorites/data/datasources/favorites_remote_datasource.dart';
 import 'features/favorites/data/repositories/favorites_repository_impl.dart';
 import 'features/favorites/domain/repositories/favorites_repository.dart';
@@ -49,22 +50,20 @@ import 'features/favorites/domain/usecases/get_favorites_usecase.dart';
 import 'features/favorites/domain/usecases/toggle_favorite_usecase.dart';
 import 'features/favorites/presentation/viewmodel/favorite_toggle_viewmodel/favorite_toggle_cubit.dart';
 import 'features/favorites/presentation/viewmodel/favorites_viewmodel/favorites_cubit.dart';
-import 'features/legal/data/datasources/legal_remote_datasource.dart';
-import 'features/legal/data/repositories/legal_repository_impl.dart';
-import 'features/legal/domain/repositories/legal_repository.dart';
-import 'features/legal/domain/usecases/get_privacy_policy_usecase.dart';
-import 'features/legal/domain/usecases/get_terms_usecase.dart';
-import 'features/legal/presentation/viewmodels/privacy_policy_viewmodel/privacy_policy_cubit.dart';
-import 'features/legal/presentation/viewmodels/terms_viewmodel/terms_cubit.dart';
 import 'features/location/data/datasources/places_remote_datasource.dart';
 import 'features/location/data/repositories/location_repository_impl.dart';
 import 'features/location/domain/repositories/location_repository.dart';
+import 'features/delivery/data/datasources/saved_addresses_remote_datasource.dart';
+import 'features/delivery/data/repositories/saved_addresses_repository_impl.dart';
+import 'features/delivery/domain/repositories/saved_addresses_repository.dart';
 import 'features/delivery/domain/usecases/get_address_name_usecase.dart';
+import 'features/delivery/domain/usecases/get_saved_addresses_usecase.dart';
+import 'features/delivery/domain/usecases/set_as_default_address_usecase.dart';
+import 'features/delivery/presentation/viewmodels/saved_address_model/saved_addresses_cubit.dart';
 import 'features/location/domain/usecases/add_address_usecase.dart';
 import 'features/location/domain/usecases/get_branch_usecase.dart';
 import 'features/location/domain/usecases/get_device_location_usecase.dart';
 import 'features/location/domain/usecases/get_place_coordinates_usecase.dart';
-import 'features/location/domain/usecases/get_regions_usecase.dart';
 import 'features/location/domain/usecases/search_places_usecase.dart';
 import 'features/location/presentation/viewmodels/address_details_viewmodel/address_details_cubit.dart';
 import 'features/location/presentation/viewmodels/select_location_viewmodel/select_location_cubit.dart';
@@ -92,10 +91,13 @@ import 'features/profile/domain/usecases/update_profile_usecase.dart';
 import 'features/profile/presentation/viewmodel/edit_phone_viewmodel/edit_phone_cubit.dart';
 import 'features/profile/presentation/viewmodel/edit_profile_viewmodel/edit_profile_cubit.dart';
 import 'features/profile/presentation/viewmodel/profile_viewmodel/profile_cubit.dart';
+import 'features/root/data/datasources/banners_remote_datasource.dart';
 import 'features/root/data/datasources/categories_remote_datasource.dart';
 import 'features/root/data/datasources/items_remote_datasource.dart';
+import 'features/root/data/repositories/banners_repository_impl.dart';
 import 'features/root/data/repositories/categories_repository_impl.dart';
 import 'features/root/data/repositories/items_repository_impl.dart';
+import 'features/root/domain/repositories/banners_repository.dart';
 import 'features/root/domain/repositories/categories_repository.dart';
 import 'features/root/domain/repositories/items_repository.dart';
 import 'features/root/domain/usecases/get_category_products_usecase.dart';
@@ -108,6 +110,8 @@ import 'features/wallet/data/datasources/wallet_remote_datasource.dart';
 import 'features/wallet/data/repositories/wallet_repository_impl.dart';
 import 'features/wallet/domain/repositories/wallet_repository.dart';
 import 'features/wallet/domain/usecases/get_balance_usecase.dart';
+import 'features/wallet/domain/usecases/get_wallet_transactions.dart';
+import 'features/wallet/presentation/viewmodels/balance_viewmodel/balance_cubit.dart';
 import 'features/wallet/presentation/viewmodels/wallet_viewmodel/wallet_cubit.dart';
 import 'language_controller.dart';
 
@@ -207,7 +211,6 @@ Future<void> setupDependencyInjection() async{
     eMenuDio: getIt<Dio>(),
     googlePlacesDio: getIt<Dio>(instanceName: "google_places_dio")
   ));
-  getIt.registerLazySingleton<LegalRemoteDatasource>(() => LegalRemoteDatasourceImpl(getIt<Dio>()));
   getIt.registerLazySingleton<OrdersRemoteDatasource>(() => OrdersRemoteDatasourceImpl(getIt<Dio>()));
   getIt.registerLazySingleton<FavoritesRemoteDatasource>(() => FavoritesRemoteDatasourceImpl(getIt<Dio>()));
   getIt.registerLazySingleton<CouponsRemoteDatasource>(() => CouponsRemoteDatasourceImpl(getIt<Dio>()));
@@ -216,6 +219,8 @@ Future<void> setupDependencyInjection() async{
   getIt.registerLazySingleton<CheckoutLocalDatasource>(() => CheckoutLocalDatasourceImpl(getIt<Prefs>()));
   getIt.registerLazySingleton<WalletRemoteDatasource>(() => WalletRemoteDatasourceImpl(getIt<Dio>()));
   getIt.registerLazySingleton<ProfileRemoteDatasource>(() => ProfileRemoteDatasourceImpl(getIt<Dio>()));
+  getIt.registerLazySingleton<BannersRemoteDatasource>(() => BannersRemoteDatasourceImpl(getIt<Dio>()));
+  getIt.registerLazySingleton<SavedAddressesRemoteDatasource>(() => SavedAddressesRemoteDatasourceImpl(getIt<Dio>()));
 
   getIt.registerLazySingleton<LocationRepository>(() => LocationRepositoryImpl(
     prefs: getIt<Prefs>(),
@@ -237,7 +242,6 @@ Future<void> setupDependencyInjection() async{
       remoteDatasource: getIt<CategoriesRemoteDatasource>()
     )
   );
-
   getIt.registerLazySingleton<ItemsRepository>(
     () => ItemsRepositoryImpl(
       prefs: getIt<Prefs>(),
@@ -245,10 +249,6 @@ Future<void> setupDependencyInjection() async{
       remoteDatasource: getIt<ItemsRemoteDatasource>()
     )
   );
-  getIt.registerLazySingleton<LegalRepository>(() => LegalRepositoryImpl(
-    networkInfo: getIt<NetworkInfo>(),
-    remoteDatasource: getIt<LegalRemoteDatasource>()
-  ));
   getIt.registerLazySingleton<OrdersRepository>(() => OrdersRepositoryImpl(
     networkInfo: getIt<NetworkInfo>(),
     remoteDatasource: getIt<OrdersRemoteDatasource>()
@@ -280,6 +280,14 @@ Future<void> setupDependencyInjection() async{
     networkInfo: getIt<NetworkInfo>(),
     remoteDatasource: getIt<ProfileRemoteDatasource>()
   ));
+  getIt.registerLazySingleton<SavedAddressesRepository>(() => SavedAddressesRepositoryImpl(
+    networkInfo: getIt<NetworkInfo>(),
+    remoteDatasource: getIt<SavedAddressesRemoteDatasource>()
+  ));
+  getIt.registerLazySingleton<BannersRepository>(() => BannersRepositoryImpl(
+    networkInfo: getIt<NetworkInfo>(),
+    remoteDatasource: getIt<BannersRemoteDatasource>()
+  ));
 
   getIt.registerLazySingleton<GetAddressNameUsecase>(() => GetAddressNameUsecase(getIt<LocationRepository>()));
   getIt.registerLazySingleton<GetDeviceLocationUsecase>(() => GetDeviceLocationUsecase(getIt<LocationRepository>()));
@@ -292,9 +300,6 @@ Future<void> setupDependencyInjection() async{
   getIt.registerLazySingleton<ResendOtpUsecase>(() => ResendOtpUsecase(getIt<AuthRepository>()));
   getIt.registerLazySingleton<GetCategoryProductsUsecase>(() => GetCategoryProductsUsecase(getIt<ItemsRepository>()));
   getIt.registerLazySingleton<GetBranchUsecase>(() => GetBranchUsecase(getIt<LocationRepository>()));
-  getIt.registerLazySingleton<GetPrivacyPolicyUsecase>(() => GetPrivacyPolicyUsecase(getIt<LegalRepository>()));
-  getIt.registerLazySingleton<GetTermsUsecase>(() => GetTermsUsecase(getIt<LegalRepository>()));
-  getIt.registerLazySingleton<GetRegionsUsecase>(() => GetRegionsUsecase(getIt<LocationRepository>()));
   getIt.registerLazySingleton<GetPopularProductsUsecase>(() => GetPopularProductsUsecase(getIt<ItemsRepository>()));
   getIt.registerLazySingleton<SearchProductsUsecase>(() => SearchProductsUsecase(getIt<ItemsRepository>()));
   getIt.registerLazySingleton<GetCurrentOrdersUsecase>(() => GetCurrentOrdersUsecase(getIt<OrdersRepository>()));
@@ -312,9 +317,13 @@ Future<void> setupDependencyInjection() async{
   getIt.registerLazySingleton<GetPaymentMethodsUsecase>(() => GetPaymentMethodsUsecase(getIt<CheckoutRepository>()));
   getIt.registerLazySingleton<GetBalanceUsecase>(() => GetBalanceUsecase(getIt<WalletRepository>()));
   getIt.registerLazySingleton<AddAddressUsecase>(() => AddAddressUsecase(getIt<LocationRepository>()));
+  getIt.registerLazySingleton<GetSavedAddressesUsecase>(() => GetSavedAddressesUsecase(getIt<SavedAddressesRepository>()));
+  getIt.registerLazySingleton<SetAsDefaultAddressUsecase>(() => SetAsDefaultAddressUsecase(getIt<SavedAddressesRepository>()));
   getIt.registerLazySingleton<GetProfileUsecase>(() => GetProfileUsecase(getIt<ProfileRepository>()));
   getIt.registerLazySingleton<UpdateProfileUsecase>(() => UpdateProfileUsecase(getIt<ProfileRepository>()));
   getIt.registerLazySingleton<RequestPhoneUpdateUsecase>(() => RequestPhoneUpdateUsecase(getIt<ProfileRepository>()));
+  getIt.registerLazySingleton<GetWalletTransactionsUsecase>(() => GetWalletTransactionsUsecase(getIt<WalletRepository>()));
+  getIt.registerLazySingleton<DeleteAddressUsecase>(() => DeleteAddressUsecase(getIt<SavedAddressesRepository>()));
 
   getIt.registerFactory<ProfileCubit>(() => ProfileCubit(
     getProfileUsecase: getIt<GetProfileUsecase>(),
@@ -329,6 +338,7 @@ Future<void> setupDependencyInjection() async{
     getBranchUsecase: getIt<GetBranchUsecase>()
   ));
   getIt.registerFactory<HomeCubit>(() => HomeCubit(
+    bannersRepository: getIt<BannersRepository>(),
     categoriesRepository: getIt<CategoriesRepository>(),
     getPopularProductsUsecase: getIt<GetPopularProductsUsecase>(),
   ));
@@ -337,12 +347,7 @@ Future<void> setupDependencyInjection() async{
     resendOtpUsecase: getIt<ResendOtpUsecase>()
   ));
   getIt.registerFactory<CategoryProductsCubit>(() => CategoryProductsCubit(getIt<GetCategoryProductsUsecase>()));
-  getIt.registerFactory<PrivacyPolicyCubit>(() => PrivacyPolicyCubit(getIt<GetPrivacyPolicyUsecase>()));
-  getIt.registerFactory<TermsCubit>(() => TermsCubit(getIt<GetTermsUsecase>()));
-  getIt.registerFactory<AddressDetailsCubit>(() => AddressDetailsCubit(
-    getRegionsUsecase: getIt<GetRegionsUsecase>(),
-    addAddressUsecase: getIt<AddAddressUsecase>()
-  ));
+  getIt.registerFactory<AddressDetailsCubit>(() => AddressDetailsCubit(getIt<AddAddressUsecase>()));
   getIt.registerFactory<SearchCubit>(() => SearchCubit(getIt<SearchProductsUsecase>()));
   getIt.registerFactory<CurrentOrdersCubit>(() => CurrentOrdersCubit(getIt<GetCurrentOrdersUsecase>()));
   getIt.registerFactory<PreviousOrdersCubit>(() => PreviousOrdersCubit(getIt<GetPreviousOrdersUsecase>()));
@@ -367,11 +372,17 @@ Future<void> setupDependencyInjection() async{
     clearCartUsecase: getIt<ClearCartUsecase>()
   ));
   getIt.registerFactory<CheckoutCubit>(() => CheckoutCubit(getIt<CheckoutUsecase>()));
-  getIt.registerFactory<PaymentMethodsCubit>(() => PaymentMethodsCubit(
-    getPaymentMethodsUsecase: getIt<GetPaymentMethodsUsecase>(),
-    getBalanceUsecase: getIt<GetBalanceUsecase>()
+  getIt.registerFactory<PaymentMethodsCubit>(() => PaymentMethodsCubit(getIt<GetPaymentMethodsUsecase>()));
+  getIt.registerFactory<SavedAddressesCubit>(() => SavedAddressesCubit(
+    getSavedAddressesUsecase: getIt<GetSavedAddressesUsecase>(),
+    setAsDefaultAddressUsecase: getIt<SetAsDefaultAddressUsecase>(),
+    deleteAddressUsecase: getIt<DeleteAddressUsecase>()
   ));
-  getIt.registerFactory<WalletCubit>(() => WalletCubit(getIt<GetBalanceUsecase>()));
+  getIt.registerFactory<BalanceCubit>(() => BalanceCubit(getIt<GetBalanceUsecase>()));
+  getIt.registerFactory<WalletCubit>(() => WalletCubit(
+    getBalanceUsecase: getIt<GetBalanceUsecase>(),
+    getWalletTransactionsUsecase: getIt<GetWalletTransactionsUsecase>()
+  ));
   getIt.registerFactory<EditProfileCubit>(() => EditProfileCubit(getIt<UpdateProfileUsecase>()));
   getIt.registerFactory<EditPhoneCubit>(() => EditPhoneCubit(getIt<RequestPhoneUpdateUsecase>()));
 }
