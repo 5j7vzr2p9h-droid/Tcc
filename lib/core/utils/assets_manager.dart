@@ -9,5 +9,6 @@ abstract final class AssetsManager {
     chat = "assets/images/chat.svg",
     security = "assets/images/security.svg",
     noWifi = "assets/images/no_wifi.svg",
-    serverOff = "assets/images/server_off.svg";
+    serverOff = "assets/images/server_off.svg",
+    unavailableLocation = "assets/images/unavailable_location.svg";
 }

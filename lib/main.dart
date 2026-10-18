@@ -5,10 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+import 'auth_controller.dart';
 import 'config/routing/on_generate_route.dart';
 import 'config/routing/routes.dart';
 import 'config/theming/light_theme.dart';
-import 'core/cache/prefs.dart';
 import 'core/utils/app_locales.dart';
 import 'di.dart';
 import 'features/cart/presentation/viewmodel/cart_cubit.dart';
@@ -20,40 +20,62 @@ void main() async{
 
   await dotenv.load();
   await Hive.initFlutter();
-  await setupDependencyInjection();
+  final String? token = await setupDependencyInjection();
   await SystemChrome.setPreferredOrientations(const <DeviceOrientation>[
     .portraitUp,
     .portraitDown,
   ]);
-  
-  runApp(const MyApp());
+  runApp(
+    MyApp(
+      token is String
+        ? Routes.main
+        : Routes.login
+    )
+  );
 }
 
-final class const MyApp({super.key}) extends StatelessWidget {
+final class const MyApp(final String _initialRoute, {super.key}) extends StatelessWidget {
+  static final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
+
 
   @override
-  BlocProvider<CartCubit> build(BuildContext context)
-  => BlocProvider<CartCubit>(
-    create: (BuildContext context) => getIt<CartCubit>()..init(),
-    child: ValueListenableBuilder<String>(
-      valueListenable: getIt<LanguageController>(),
-      builder: (BuildContext context, String langCode, Widget? _)
-      => MaterialApp(
-        theme: lightTheme,
-        onGenerateRoute: AppRoutes.onGenerateRoute,
-        localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
-          AppLocalizations.delegate,
-          ...GlobalMaterialLocalizations.delegates,
-        ],
-        locale: Locale(langCode),
-        supportedLocales: const <Locale>[
-          Locale(AppLocales.ar),
-          Locale(AppLocales.en)
-        ],
-        initialRoute: getIt<Prefs>().getString("token") == null
-          ? Routes.selectLocation
-          : Routes.main
+  MultiBlocProvider build(BuildContext context)
+  => MultiBlocProvider(
+    providers: <BlocProvider>[
+      BlocProvider<CartCubit>(
+        create: (BuildContext _) => getIt<CartCubit>()..init()
+      ),
+      BlocProvider<AuthCubit>(
+        create: (BuildContext _) => getIt<AuthCubit>(),
       )
+    ],
+    child: BlocListener<AuthCubit, AuthState>(
+      listener: (BuildContext context, AuthState state){
+        if(state is UnauthenticateSuccessState)
+          _navigatorKey.currentState!.pushNamedAndRemoveUntil(
+            Routes.login,
+            (Route<dynamic> route) => false
+          );
+      },
+      child: ValueListenableBuilder<String>(
+        valueListenable: getIt<LanguageController>(),
+        builder: (BuildContext context, String langCode, Widget? _)
+        => MaterialApp(
+          navigatorKey: _navigatorKey,
+          theme: lightTheme,
+          onGenerateRoute: AppRoutes.onGenerateRoute,
+          localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
+            AppLocalizations.delegate,
+            ...GlobalMaterialLocalizations.delegates,
+          ],
+          locale: Locale(langCode),
+          supportedLocales: const <Locale>[
+            Locale(AppLocales.ar),
+            Locale(AppLocales.en)
+          ],
+          initialRoute: _initialRoute
+        )
+      ),
     ),
   );
 }

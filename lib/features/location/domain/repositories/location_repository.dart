@@ -11,10 +11,7 @@ abstract interface class LocationRepository {
   Future<Either<Failure, List<SuggestedPlaceEntity>>> searchPlace(String query);
   Future<Either<Failure, List<double>>> getPlaceCoordinates(String placeId);
   
-  Future<Either<Failure, BranchEntity>> getBranch({
-    required double lat,
-    required double lng
-  });
+  Future<Either<Failure, BranchEntity>> getBranch();
 
   Future<Either<Failure, Unit>> addAddress({
     required String addressText,

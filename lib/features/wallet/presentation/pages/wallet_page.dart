@@ -1,16 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../config/routing/routes.dart';
 import '../../../../core/constants/numerical_values.dart';
-import '../../../../core/errors/failures.dart';
 import '../../../../core/extensions/context_l10n.dart';
-import '../../../../core/utils/text_styles.dart';
-import '../../../../core/widgets/failure_place_holder.dart';
-import '../../../../di.dart';
 import '../../domain/entities/wallet_transaction_entity.dart';
-import '../viewmodels/wallet_viewmodel/wallet_cubit.dart';
-import '../viewmodels/wallet_viewmodel/wallet_state.dart';
 import '../widgets/recent_transactions_header.dart';
 import '../widgets/top_up_balance_button.dart';
 import '../widgets/wallet_balance_card.dart';

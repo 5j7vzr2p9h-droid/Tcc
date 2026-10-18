@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../auth_controller.dart';
 import '../../../../config/routing/routes.dart';
 import '../../../../core/constants/numerical_values.dart';
 import '../../../../core/errors/failures.dart';
@@ -32,19 +33,11 @@ final class ProfileTab extends StatelessWidget {
     ),
     body: BlocProvider<ProfileCubit>(
       create: (BuildContext _) => getIt<ProfileCubit>()..init(),
-      child: BlocConsumer<ProfileCubit, ProfileState>(
-        listener: (BuildContext context, ProfileState state){
-          if(state is LogoutFailureState)
-            SnackBarMessage.showErrorMessage(context, state.failure.mapFailureToMessage(context));
-          else if(state is LogoutSuccessState){
-            context.read<CartCubit>().clearCart();
-            Navigator.pushReplacementNamed(context, Routes.selectLocation);
-          }
-        },
+      child: BlocBuilder<ProfileCubit, ProfileState>(
         builder: (BuildContext context, ProfileState state)
         => switch(state){
           ProfileInitialState() => const SizedBox.shrink(),
-          ProfileLoadingState() || LogoutSuccessState() => const Center(
+          ProfileLoadingState() => const Center(
             child: CircularProgressIndicator(),
           ),
           ProfileGetFailureState(:final Failure failure) => Center(
@@ -54,8 +47,7 @@ final class ProfileTab extends StatelessWidget {
             ),
           ),
           ProfileGetSuccessState(:final ProfileEntity profile) ||
-          ProfileEditSuccessState(:final ProfileEntity profile) ||
-          LogoutFailureState(:final ProfileEntity profile) => ListView(
+          ProfileEditSuccessState(:final ProfileEntity profile) => ListView(
             padding: const .only(
               top: pageContentPadding,
               left: pageContentPadding,
@@ -141,7 +133,7 @@ final class ProfileTab extends StatelessWidget {
                     icon: Icons.logout,
                     title: context.l10n.logout,
                     color: Theme.of(context).colorScheme.error,
-                    onTap: () => context.read<ProfileCubit>().logout(),
+                    onTap: () => context.read<AuthCubit>().unauthenticate(),
                   )
                 ],
               ),

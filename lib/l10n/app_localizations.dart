@@ -2128,6 +2128,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Not Calculated Yet'**
   String get notCalculatedYet;
+
+  /// No description provided for @failedToGetLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to determine your location.\nPlease try again to continue.'**
+  String get failedToGetLocation;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

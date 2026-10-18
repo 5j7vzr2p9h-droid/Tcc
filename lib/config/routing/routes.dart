@@ -20,5 +20,6 @@ abstract final class Routes{
     splash = "splash",
     wallet = "wallet",
     topup = "topup",
-    walletTransactions = "wallet_transactions";
+    walletTransactions = "wallet_transactions",
+    requestLocationPermessionPage = "request_location_permession";
 }

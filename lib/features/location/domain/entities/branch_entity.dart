@@ -3,5 +3,4 @@ class const BranchEntity({
   required final String? name,
   required final String? address,
   required final String? phone
-}){
-}
+});

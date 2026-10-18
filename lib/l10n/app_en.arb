@@ -468,5 +468,6 @@
   "walletTopUpTransaction": "Wallet top-up",
   "walletRefundTransaction": "Refund",
   "walletTransactions": "Transactions",
-  "notCalculatedYet": "Not Calculated Yet"
+  "notCalculatedYet": "Not Calculated Yet",
+  "failedToGetLocation": "Failed to determine your location.\nPlease try again to continue."
 }

@@ -8,6 +8,8 @@ extension FailureMessage on Failure{
   => switch(runtimeType){
     ServerFailure => (this as ServerFailure).message ?? context.l10n.unknownError,
     OfflineFailure => context.l10n.noInternetMessage,
-    _ => context.l10n.unknownError
+    LocationDisabledFailure || LocationDisabledFailure || LocationTimeOutFailure ||
+    LocationUnknownFailure || PermissionAccessDeniedFailure => context.l10n.failedToGetLocation,
+    _ => context.l10n.unknownError 
   };
 }

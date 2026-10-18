@@ -86,20 +86,37 @@ final class LocationRepositoryImpl implements LocationRepository{
   }
 
   @override
-  Future<Either<Failure, BranchEntity>> getBranch({required double lat, required double lng}) async{
-    if(await _networkInfo.isDeviceConnected)
-      try {
-        final BranchEntity branch = await _placesRemoteDatasource.getBranch(lat: lat, lng: lng);
-        _prefs.setInt(key: CacheKeys.branchId, value: branch.id);
-        return Right(branch);
-      } on ServerException catch (e) {
-        return Left(ServerFailure(e.message));
-      } on OfflineException {
-        return const Left(OfflineFailure());
-      } on UnknownException {
-        return const Left(UnknownFailure());
-      }
-    else return const Left(OfflineFailure());
+  Future<Either<Failure, BranchEntity>> getBranch() async{
+    try {
+      return await (await getDeviceLocation()).fold(
+        (Failure failure) => Left(failure),
+        (List<double> coordinates) async {
+          if (await _networkInfo.isDeviceConnected) {
+            final BranchEntity branch = await _placesRemoteDatasource.getBranch(
+              // TODO: Remove this and return coordinates[0, 1]
+              lat: 30.978812,
+              lng: 31.199294
+              // lat: coordinates[0],
+              // lng: coordinates[1],
+            );
+
+            _prefs.setInt(
+              key: CacheKeys.branchId,
+              value: branch.id,
+            );
+            return Right(branch);
+          } else {
+            return const Left(OfflineFailure());
+          }
+        },
+      );
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message));
+    } on OfflineException {
+      return const Left(OfflineFailure());
+    } on UnknownException {
+      return const Left(UnknownFailure());
+    }
   }
 
   @override

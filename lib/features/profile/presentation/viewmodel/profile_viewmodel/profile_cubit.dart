@@ -9,11 +9,9 @@ import 'profile_state.dart';
 
 final class ProfileCubit extends Cubit<ProfileState>{
   final GetProfileUsecase _getProfileUsecase;
-  final LogoutUsecase  _logoutUsecase;
 
   new({
     required this._getProfileUsecase,
-    required this._logoutUsecase
   }): super(const ProfileInitialState());
 
   late ProfileEntity _profile;
@@ -31,14 +29,6 @@ final class ProfileCubit extends Cubit<ProfileState>{
       (ProfileEntity profile) => emit(ProfileGetSuccessState(_profile = profile))
     );
   }
-
-  void logout() async => (await _logoutUsecase()).fold<void>(
-    (Failure failure) => emit(LogoutFailureState(
-      profile: _profile,
-      failure: failure
-    )),
-    (Unit unit) => emit(const LogoutSuccessState())
-  );
 
   void emitNewProfileData(ProfileEntity profile) => emit(ProfileEditSuccessState(profile));
 }

@@ -24,9 +24,12 @@ final class const FailurePlaceHolder({
         backgroundColor: Theme.of(context).colorScheme.primary.withAlpha(30),
         radius: 80.0,
         child: SvgPicture.asset(
-            _failure is ServerFailure
-              ? AssetsManager.serverOff
-              : AssetsManager.noWifi,
+            switch(_failure){
+              ServerFailure() || UnknownFailure() => AssetsManager.serverOff,
+              OfflineFailure() => AssetsManager.noWifi,
+              LocationDisabledFailure() ||LocationTimeOutFailure() ||
+              LocationUnknownFailure() || PermissionAccessDeniedFailure() => AssetsManager.unavailableLocation,
+            },
             width: 100.0,
             colorFilter: .mode(
               Theme.of(context).colorScheme.primary,
@@ -45,9 +48,7 @@ final class const FailurePlaceHolder({
           const SizedBox(height: 4.0),
         ],
       Text(
-        _failure is ServerFailure
-          ? _failure.mapFailureToMessage(context)
-          : context.l10n.noInternetMessage,
+        _failure.mapFailureToMessage(context),
         style: TextStyle(
           color: AppColors.of(context).placeHolderForeground
         ),

@@ -54,7 +54,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
             if(state is VerifyPhoneSuccessState){
               Navigator.pushNamedAndRemoveUntil(
                 context,
-                Routes.main,
+                Routes.requestLocationPermessionPage,
                 (Route<dynamic> predicate) => false
               );
             }

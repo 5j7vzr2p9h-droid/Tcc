@@ -102,7 +102,7 @@ final class SelectLocationCubit extends Cubit<SelectLocationState>{
       locationEnabled: _locationEnabled,
       myLocationCoordinates: _coordinates
     ));
-    (await _getBranchUsecase(lat: lat, lng: lng)).fold(
+    (await _getBranchUsecase()).fold(
       (Failure failure) => emit(ConfirmLocationFailureState(
         locationEnabled: _locationEnabled,
         myLocationCoordinates: _coordinates,

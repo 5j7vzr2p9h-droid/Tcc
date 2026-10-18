@@ -27,7 +27,7 @@ final class SavedAddressCard extends StatelessWidget {
     padding: const .all(16.0),
     decoration: BoxDecoration(
       color: Theme.of(context).colorScheme.surface,
-      borderRadius: .circular(16.0),
+      borderRadius: const .all(.circular(16.0)),
       border: .all(
         color: _address.isDefault?
           Theme.of(context).colorScheme.primary:
@@ -62,7 +62,7 @@ final class SavedAddressCard extends StatelessWidget {
         ),
         Text(
           _address.addressText,
-          style: TextStyles.font14Weight400.copyWith(color: Colors.grey)
+          style: TextStyles.font14Weight400.copyWith(color: Colors.grey),
         ),
         PopupMenuButton<SavedAddressAction>(
           onSelected: _onActionSelected,

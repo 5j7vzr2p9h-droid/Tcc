@@ -1,4 +1,4 @@
-abstract interface class Failure {
+sealed class Failure {
   const Failure();
 }
 

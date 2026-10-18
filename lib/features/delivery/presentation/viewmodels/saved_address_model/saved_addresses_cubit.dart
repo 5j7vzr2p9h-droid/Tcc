@@ -19,7 +19,7 @@ final class SavedAddressesCubit extends Cubit<SavedAddressesState>{
     required this._deleteAddressUsecase
   }): super(const SavedAddressesInitialState());
 
-  late final List<AddressEntity> _addresses;
+  late List<AddressEntity> _addresses;
 
   void init() async{
     emit(const SavedAddressesLoadingState());
@@ -55,6 +55,25 @@ final class SavedAddressesCubit extends Cubit<SavedAddressesState>{
     );
   }
 
-  void _toggleDefaultAddress(int index)
-  => _addresses[index].isDefault = !_addresses[index].isDefault;
+  void _toggleDefaultAddress(int index) {
+    for(int i=0; i<_addresses.length; i++)
+      _addresses[i].isDefault = i == index;
+  }
+
+  void deleteAddress(int id) async{
+    final Either<Failure, List<AddressEntity>> result = await _deleteAddressUsecase(id);
+
+    if(isClosed)
+      return;
+    
+    result.fold<void>(
+      (Failure failure) => emit(DeleteAddressFailureState(
+        addresses: _addresses,
+        failure: failure
+      )),
+      (List<AddressEntity> addresses) => emit(DeleteAddressSuccessState(
+        _addresses = addresses
+      ))
+    );
+  }
 }

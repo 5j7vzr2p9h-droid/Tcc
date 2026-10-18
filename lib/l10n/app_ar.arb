@@ -442,5 +442,6 @@
   "walletTopUpTransaction": "شحن المحفظة",
   "walletRefundTransaction": "استرداد مبلغ",
   "walletTransactions": "العمليات",
-  "notCalculatedYet": "لم يحسب بعد"
+  "notCalculatedYet": "لم يحسب بعد",
+  "failedToGetLocation": "فشل تحديد موقعك.\nيُرجى إعادة المحاولة للاستمرار."
 }

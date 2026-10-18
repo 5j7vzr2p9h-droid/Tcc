@@ -8,9 +8,6 @@ final class const GetBranchUsecase(
   final LocationRepository _repository
 ){
 
-  Future<Either<Failure, BranchEntity>> call ({
-    required double lat,
-    required double lng
-  })
-  => _repository.getBranch(lat: lat, lng: lng);
+  Future<Either<Failure, BranchEntity>> call ()
+  => _repository.getBranch();
 }

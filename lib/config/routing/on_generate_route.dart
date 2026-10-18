@@ -8,6 +8,7 @@ import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/coupons/presentation/pages/coupons_and_offers_page.dart';
 import '../../features/delivery/presentation/pages/saved_addresses_page.dart';
 import '../../features/delivery/presentation/viewmodels/saved_address_model/saved_addresses_cubit.dart';
+import '../../features/location/presentation/pages/request_location_permession_page.dart';
 import '../../features/location/presentation/pages/select_location_page.dart';
 import '../../features/location/presentation/viewmodels/select_location_viewmodel/select_location_cubit.dart';
 import '../../features/favorites/presentation/pages/favorites_page.dart';
@@ -57,13 +58,10 @@ abstract final class AppRoutes{
           )
         );
       case Routes.selectLocation:
-        final bool? isInitial = route.arguments as bool?;
         return _materialPageRoute<bool>(
           BlocProvider<SelectLocationCubit>(
             create: (BuildContext context) => getIt<SelectLocationCubit>()..getDeviceLocation(),
-            child: SelectLocationPage(
-              isInitial ?? true
-            )
+            child: const SelectLocationPage()
           )
         );
       case Routes.payment:
@@ -126,6 +124,10 @@ abstract final class AppRoutes{
       case Routes.walletTransactions:
         return _materialPageRoute(
           WalletTransactionsPage(route.arguments as List<WalletTransactionEntity>)
+        );
+      case Routes.requestLocationPermessionPage:
+        return _materialPageRoute(
+          const RequestLocationPermessionPage()
         );
     }
     return _materialPageRoute(const HomePage());

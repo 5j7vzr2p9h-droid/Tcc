@@ -23,3 +23,12 @@ final class const SetAsDefaultAdressFailureState({
   required final List<AddressEntity> addresses,
   required final Failure failure
 }) extends SavedAddressesState;
+
+final class const DeleteAddressSuccessState(
+  final List<AddressEntity> addresses
+) extends SavedAddressesState;
+
+final class const DeleteAddressFailureState({
+  required final List<AddressEntity> addresses,
+  required final Failure failure
+}) extends SavedAddressesState;

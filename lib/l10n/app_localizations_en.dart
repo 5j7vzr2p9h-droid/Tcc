@@ -1061,4 +1061,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notCalculatedYet => 'Not Calculated Yet';
+
+  @override
+  String get failedToGetLocation => 'Failed to determine your location.\nPlease try again to continue.';
 }

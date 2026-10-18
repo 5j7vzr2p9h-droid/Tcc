@@ -1061,4 +1061,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get notCalculatedYet => 'لم يحسب بعد';
+
+  @override
+  String get failedToGetLocation => 'فشل تحديد موقعك.\nيُرجى إعادة المحاولة للاستمرار.';
 }

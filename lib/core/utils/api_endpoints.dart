@@ -26,5 +26,6 @@ abstract interface class ApiEndpoints {
   notifications = "emenu/v1/notifications",
   profile = "emenu/v1/profile",
   phoneChangeRequest = "emenu/v1/profile/phone/change/request",
-  themeConfig = "themeconfig"; // <==============
+  themeConfig = "themeconfig",
+  refreshToken = "emenu/v1/auth/refresh";
 }

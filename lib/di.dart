@@ -8,9 +8,11 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
+import 'auth_controller.dart';
 import 'core/cache/prefs.dart';
 import 'core/constants/cache_keys.dart';
 import 'core/location/location_service.dart';
+import 'core/network/auth_interceptor.dart';
 import 'core/network/network_info.dart';
 import 'core/utils/api_endpoints.dart';
 import 'core/utils/app_locales.dart';
@@ -66,6 +68,7 @@ import 'features/location/domain/usecases/get_device_location_usecase.dart';
 import 'features/location/domain/usecases/get_place_coordinates_usecase.dart';
 import 'features/location/domain/usecases/search_places_usecase.dart';
 import 'features/location/presentation/viewmodels/address_details_viewmodel/address_details_cubit.dart';
+import 'features/location/presentation/viewmodels/request_location_permession_viewmodel/request_location_permession_cubit.dart';
 import 'features/location/presentation/viewmodels/select_location_viewmodel/select_location_cubit.dart';
 import 'features/orders/data/datasources/orders_remote_datasource.dart';
 import 'features/orders/data/repositories/orders_repository_impl.dart';
@@ -117,10 +120,10 @@ import 'language_controller.dart';
 
 final GetIt getIt = GetIt.instance;
 
-Future<void> setupDependencyInjection() async{
+Future<String?> setupDependencyInjection() async{
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   const FlutterSecureStorage secureStorage = FlutterSecureStorage();
-  final String? token = await secureStorage.read(key: "token");
+  final String? accessToken = await secureStorage.read(key: CacheKeys.accessToken);
   final Box<Map> cartBox = await Hive.openBox<Map>("cart");
 
   getIt.registerLazySingleton<UuidGenerator>(() => const UuidGeneratorImpl(Uuid()));
@@ -132,46 +135,47 @@ Future<void> setupDependencyInjection() async{
   );
   getIt.registerLazySingleton<FlutterSecureStorage>(() => secureStorage);
   getIt.registerLazySingleton<Geocoding>(() => Geocoding());
-  getIt.registerLazySingleton<Dio>(
-    () => Dio(
-      BaseOptions(
-        baseUrl: ApiEndpoints.baseUrl,
-        receiveDataWhenStatusError: true,
-        connectTimeout: const Duration(seconds: 30),
-        sendTimeout: const Duration(seconds: 30),
-        receiveTimeout: const Duration(seconds: 30),
-        headers: <String, dynamic>{
-          "accept": "text/plain",
-          "Authorization": ?(token is String? "Bearer $token": null),
-          "Accept-Language": getIt<LanguageController>().value
-        }
-      )
-    )..interceptors.add(InterceptorsWrapper(
-      onRequest: (RequestOptions options, RequestInterceptorHandler handler){
-        print("=== REQUEST ===");
-        print("headers: ${options.headers}");
-        print("queryParams: ${options.queryParameters}");
-        print("method: ${options.method}");
-        print("data: ${options.data}");
-        print("uri: ${options.uri}");
-        print("===============");
-        handler.next(options);
-      },
-      onResponse: (Response response, ResponseInterceptorHandler handler){
-        print("=== RESPONSE ===");
-        print("data: ${response.data}");
-        print("================");
-        handler.next(response);
-      },
-      onError: (DioException exception, ErrorInterceptorHandler handler){
-        print("=== ERROR ===");
-        print(exception.type);
-        print(exception.message);
-        print("============");
-        handler.next(exception);
+
+  final Dio emenuDio = Dio(
+    BaseOptions(
+      baseUrl: ApiEndpoints.baseUrl,
+      receiveDataWhenStatusError: true,
+      connectTimeout: const Duration(seconds: 30),
+      sendTimeout: const Duration(seconds: 30),
+      receiveTimeout: const Duration(seconds: 30),
+      headers: <String, dynamic>{
+        "accept": "text/plain",
+        "Authorization": ?(accessToken is String? "Bearer $accessToken": null),
+        "Accept-Language": getIt<LanguageController>().value
       }
-    ))
+    )
   );
+  
+  emenuDio.interceptors.addAll(
+    <Interceptor>[
+      LogInterceptor(
+        requestBody: true,
+        responseBody: true,
+      ),
+      AuthInterceptor(
+        onSessionExpired: () => getIt<AuthCubit>().unauthenticate,
+        secureStorage: getIt<FlutterSecureStorage>(),
+        emenuDio: emenuDio,
+        refreshDio: Dio(
+          BaseOptions(
+            baseUrl: ApiEndpoints.baseUrl,
+            connectTimeout: const Duration(seconds: 30),
+            sendTimeout: const Duration(seconds: 30),
+            receiveTimeout: const Duration(seconds: 30),
+            transformTimeout: const Duration(seconds: 30)
+          )
+        )
+      )
+    ]
+  );
+
+  getIt.registerLazySingleton<Dio>(() => emenuDio);
+
   getIt.registerLazySingleton<Dio>(
     () => Dio(
       BaseOptions(
@@ -325,9 +329,12 @@ Future<void> setupDependencyInjection() async{
   getIt.registerLazySingleton<GetWalletTransactionsUsecase>(() => GetWalletTransactionsUsecase(getIt<WalletRepository>()));
   getIt.registerLazySingleton<DeleteAddressUsecase>(() => DeleteAddressUsecase(getIt<SavedAddressesRepository>()));
 
+  getIt.registerLazySingleton<AuthCubit>(() => AuthCubit(
+    logoutUsecase: getIt<LogoutUsecase>(),
+    clearCartUsecase: getIt<ClearCartUsecase>()
+  ));
   getIt.registerFactory<ProfileCubit>(() => ProfileCubit(
     getProfileUsecase: getIt<GetProfileUsecase>(),
-    logoutUsecase: getIt<LogoutUsecase>()
   ));
   getIt.registerFactory<RegisterCubit>(() => RegisterCubit(getIt<RegisterUsecase>()));
   getIt.registerFactory<LoginCubit>(() => LoginCubit(getIt<LoginUsecase>()));
@@ -385,4 +392,8 @@ Future<void> setupDependencyInjection() async{
   ));
   getIt.registerFactory<EditProfileCubit>(() => EditProfileCubit(getIt<UpdateProfileUsecase>()));
   getIt.registerFactory<EditPhoneCubit>(() => EditPhoneCubit(getIt<RequestPhoneUpdateUsecase>()));
+  getIt.registerFactory<RequestLocationPermessionCubit>(() => RequestLocationPermessionCubit(getIt<GetBranchUsecase>()));
+
+
+  return accessToken;
 }

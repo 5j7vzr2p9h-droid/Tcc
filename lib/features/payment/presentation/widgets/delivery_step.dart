@@ -39,7 +39,7 @@ class _DeliveryStepState extends State<DeliveryStep> {
   }
 
   void _addNewAddress() async{
-    final bool? added = await Navigator.pushNamed<bool>(context, Routes.selectLocation, arguments: false);
+    final bool? added = await Navigator.pushNamed<bool>(context, Routes.selectLocation);
     if(added == true && mounted)
       context.read<SavedAddressesCubit>().init();
   }
@@ -48,7 +48,7 @@ class _DeliveryStepState extends State<DeliveryStep> {
   => BlocBuilder<SavedAddressesCubit, SavedAddressesState>(
     builder: (BuildContext context, SavedAddressesState state)
     => switch(state){
-      SavedAddressesInitialState() || SavedAddressesLoadingState() => const Center(
+      SavedAddressesInitialState() || SavedAddressesLoadingState() || DeleteAddressFailureState() || DeleteAddressSuccessState() => const Center(
         child: CircularProgressIndicator()
       ),
       SavedAddressesGetFailureState(:final Failure failure) => Center(

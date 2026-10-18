@@ -30,9 +30,10 @@ final class const SavedAddressesPage({super.key}) extends StatelessWidget {
       create: (BuildContext context) => getIt<SavedAddressesCubit>()..init(),
       child: BlocConsumer<SavedAddressesCubit, SavedAddressesState>(
         listener: (BuildContext context, SavedAddressesState state){
-          if(state is SetAsDefaultAdressFailureState){
+          if(state is SetAsDefaultAdressFailureState)
             SnackBarMessage.showErrorMessage(context, state.failure.mapFailureToMessage(context));
-          }
+          else if(state is DeleteAddressFailureState)
+            SnackBarMessage.showErrorMessage(context, state.failure.mapFailureToMessage(context));
         },
         builder: (BuildContext context, SavedAddressesState state)
         => switch(state){
@@ -48,7 +49,9 @@ final class const SavedAddressesPage({super.key}) extends StatelessWidget {
           ),
           SavedAddressesGetSuccessState(:final List<AddressEntity> addresses) ||
           SetAsDefaultAddressSuccessState(:final List<AddressEntity> addresses) ||
-          SetAsDefaultAdressFailureState(:final List<AddressEntity> addresses) => CustomScrollView(
+          SetAsDefaultAdressFailureState(:final List<AddressEntity> addresses) ||
+          DeleteAddressSuccessState(:final List<AddressEntity> addresses) ||
+          DeleteAddressFailureState(:final List<AddressEntity> addresses) => CustomScrollView(
             slivers: <Widget>[
               SliverPadding(
                 padding: const .all(pageContentPadding),
@@ -60,8 +63,10 @@ final class const SavedAddressesPage({super.key}) extends StatelessWidget {
                   => SavedAddressCard(
                     address: addresses[i],
                     onActionSelected: (SavedAddressAction action){
-                      if(action == SavedAddressAction.delete)
+                      if(action == SavedAddressAction.setAsDefault)
                         context.read<SavedAddressesCubit>().setAsDefaultAddress(addresses[i].id);
+                      if(action == SavedAddressAction.delete)
+                        context.read<SavedAddressesCubit>().deleteAddress(addresses[i].id);
                     },
                   ),
                 ),

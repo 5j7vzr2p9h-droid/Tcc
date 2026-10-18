@@ -17,7 +17,7 @@ import '../../domain/entities/suggested_place_entity.dart';
 import '../viewmodels/select_location_viewmodel/select_location_cubit.dart';
 import '../viewmodels/select_location_viewmodel/select_location_state.dart';
 
-final class const SelectLocationPage(final bool _isInitial, {super.key}) extends StatefulWidget {
+final class const SelectLocationPage({super.key}) extends StatefulWidget {
 
   @override
   State<SelectLocationPage> createState() => _SelectLocationPageState();
@@ -42,7 +42,6 @@ final class _SelectLocationPageState extends State<SelectLocationPage> {
   @override
   Scaffold build(BuildContext context)
   => Scaffold(
-    resizeToAvoidBottomInset: false,
     appBar: AppBar(
       centerTitle: true,
       title: Text(context.l10n.selectYourLocation, style: TextStyles.font18Weight700),
@@ -76,14 +75,7 @@ final class _SelectLocationPageState extends State<SelectLocationPage> {
           _searchController.clear();
           SnackBarMessage.showErrorMessage(context, state.failure.mapFailureToMessage(context));
         }
-        else if(state is ConfirmLocationSuccessState)
-          if(widget._isInitial)
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              Routes.login,
-              (Route<dynamic> predicate) => false
-            );
-          else{
+        else if(state is ConfirmLocationSuccessState){
             Navigator.pop(context);
             _showAddressDetailsForm();
           }
@@ -206,6 +198,7 @@ final class _SelectLocationPageState extends State<SelectLocationPage> {
   void _showAddressDetailsForm() async{
     final bool? added = await showModalBottomSheet<bool>(
       context: context,
+      isScrollControlled: true,
       builder: (BuildContext context) => AddressDetailsForm(
         lat: _mapPositionController.value.latitude,
         lng: _mapPositionController.value.longitude,

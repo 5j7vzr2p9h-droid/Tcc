@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:electronic_menu/core/errors/exceptions.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import '../../../../core/constants/cache_keys.dart';
 import '../../../../core/utils/api_endpoints.dart';
 import '../../../../core/utils/api_error_handler.dart';
 
@@ -68,7 +69,9 @@ final class const AuthRemoteDatasourceImpl({
         data: <String, String>{"phone": phone, "code": code}
       );
       final String token = response.data["token"];
-      _secureStorage.write(key: "token", value: token);
+      final String refreshToken = response.data["refresh_token"];
+      await _secureStorage.write(key: CacheKeys.accessToken, value: token);
+      await _secureStorage.write(key: CacheKeys.refreshToken, value: refreshToken);
       _dio.options.headers["Authorization"] = "Bearer $token";
       return token;
     }on DioException catch(e){
@@ -90,9 +93,9 @@ final class const AuthRemoteDatasourceImpl({
       ));
     });
     try{
-      await _secureStorage.delete(key: "token");
+      await _secureStorage.deleteAll();
       _dio.options.headers.remove("Authorization");
-    }catch(e){
+    }catch(_){
       throw const UnknownException();
     }
   }

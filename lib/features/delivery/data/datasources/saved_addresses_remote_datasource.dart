@@ -45,7 +45,7 @@ final class SavedAddressesRemoteDatasourceImpl(final Dio _dio) implements SavedA
   Future<List<AddressModel>> deleteAddress(int id) async{
     try{
       final Response response = await _dio.delete(
-        "${ApiEndpoints.profileAddresses}/$id/delete",
+        "${ApiEndpoints.profileAddresses}/$id",
       );
       final List<AddressModel> addresses = (response.data as List).map<AddressModel>(
         (json) => AddressModel.fromJson(json)
