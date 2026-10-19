@@ -5,7 +5,7 @@ import 'package:electronic_menu/core/errors/failures.dart';
 import 'package:electronic_menu/features/profile/domain/entities/profile_entity.dart';
 
 import '../../../../core/errors/exceptions.dart';
-import '../../../../core/network/network_info.dart';
+import '../../../../core/services/network_info.dart';
 import '../../domain/repositories/profile_repository.dart';
 import '../datasources/profile_remote_datasource.dart';
 

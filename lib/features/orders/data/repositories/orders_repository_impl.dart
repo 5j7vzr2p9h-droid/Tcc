@@ -5,7 +5,7 @@ import 'package:electronic_menu/core/errors/failures.dart';
 import 'package:electronic_menu/features/orders/data/models/order_model.dart';
 
 import '../../../../core/errors/exceptions.dart';
-import '../../../../core/network/network_info.dart';
+import '../../../../core/services/network_info.dart';
 import '../../domain/repositories/orders_repository.dart';
 import '../datasources/orders_remote_datasource.dart';
 

@@ -27,5 +27,6 @@ abstract interface class ApiEndpoints {
   profile = "emenu/v1/profile",
   phoneChangeRequest = "emenu/v1/profile/phone/change/request",
   themeConfig = "themeconfig",
-  refreshToken = "emenu/v1/auth/refresh";
+  refreshToken = "emenu/v1/auth/refresh",
+  registerFID = "emenu/v1/devices"; // <==========
 }

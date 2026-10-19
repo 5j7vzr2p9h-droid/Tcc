@@ -69,7 +69,7 @@ final class const AuthRemoteDatasourceImpl({
         data: <String, String>{"phone": phone, "code": code}
       );
       final String token = response.data["token"];
-      final String refreshToken = response.data["refresh_token"];
+      final String refreshToken = response.data["refreshToken"];
       await _secureStorage.write(key: CacheKeys.accessToken, value: token);
       await _secureStorage.write(key: CacheKeys.refreshToken, value: refreshToken);
       _dio.options.headers["Authorization"] = "Bearer $token";
@@ -77,6 +77,7 @@ final class const AuthRemoteDatasourceImpl({
     }on DioException catch(e){
       ApiErrorHandler.handle(e);
     }catch(e){
+      print(e);
       throw const UnknownException();
     }
   }

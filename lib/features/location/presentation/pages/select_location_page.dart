@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import '../../../../config/routing/routes.dart';
 import '../../../../core/constants/numerical_values.dart';
 import '../../../../core/extensions/context_l10n.dart';
 import '../../../../core/extensions/failure_message.dart';
@@ -42,12 +41,10 @@ final class _SelectLocationPageState extends State<SelectLocationPage> {
   @override
   Scaffold build(BuildContext context)
   => Scaffold(
+    resizeToAvoidBottomInset: false,
     appBar: AppBar(
       centerTitle: true,
-      title: Text(context.l10n.selectYourLocation, style: TextStyles.font18Weight700),
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      surfaceTintColor: Colors.transparent,
-      elevation: 0.0,
+      title: Text(context.l10n.selectYourLocation, style: TextStyles.font18Weight700)
     ),
     body: BlocConsumer<SelectLocationCubit, SelectLocationState>(
       listener: (BuildContext context, SelectLocationState state){

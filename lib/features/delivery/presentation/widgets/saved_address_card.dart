@@ -38,51 +38,56 @@ final class SavedAddressCard extends StatelessWidget {
       spacing: 16.0,
       crossAxisAlignment: .start,
       children: <Widget>[
-        Column(
-          spacing: 12.0,
-          children: <Widget>[
-            if(_address.isDefault) const DefaultBadge(),
-            Container(
-              width: 48.0,
-              height: 48.0,
-              decoration: BoxDecoration(
-                shape: .circle,
-                color: _address.isDefault?
-                  Theme.of(context).colorScheme.primary.withAlpha(25):
-                  Colors.grey.shade200
-              ),
-              child: Icon(
-                Icons.location_on,
-                color: _address.isDefault?
-                  Theme.of(context).colorScheme.primary:
-                  Colors.grey
-              ),
-            ),
-          ],
+        Container(
+          width: 48.0,
+          height: 48.0,
+          decoration: BoxDecoration(
+            shape: .circle,
+            color: _address.isDefault?
+              Theme.of(context).colorScheme.primary.withAlpha(25):
+              Colors.grey.shade200
+          ),
+          child: Icon(
+            Icons.location_on,
+            color: _address.isDefault?
+              Theme.of(context).colorScheme.primary:
+              Colors.grey
+          ),
         ),
-        Text(
-          _address.addressText,
-          style: TextStyles.font14Weight400.copyWith(color: Colors.grey),
+        Expanded(
+          child: Text(
+            _address.addressText,
+            style: TextStyles.font14Weight400.copyWith(color: Colors.grey),
+          ),
         ),
-        PopupMenuButton<SavedAddressAction>(
-          onSelected: _onActionSelected,
-          iconColor: Colors.grey,
-          padding: .zero,
-          itemBuilder: (BuildContext context) => <PopupMenuEntry<SavedAddressAction>>[
-            PopupMenuItem<SavedAddressAction>(
-              value: .edit,
-              child: Text(context.l10n.edit)
-            ),
-            PopupMenuItem<SavedAddressAction>(
-              value: .setAsDefault,
-              enabled: !_address.isDefault,
-              child: Text(context.l10n.setAsDefault)
-            ),
-            PopupMenuItem<SavedAddressAction>(
-              value: .delete,
-              child: Text(context.l10n.delete)
-            )
-          ],
+        Expanded(
+          child: Column(
+            crossAxisAlignment: .end,
+            mainAxisAlignment: .spaceBetween,
+            children: <Widget>[
+              PopupMenuButton<SavedAddressAction>(
+                onSelected: _onActionSelected,
+                iconColor: Colors.grey,
+                padding: .zero,
+                itemBuilder: (BuildContext context) => <PopupMenuEntry<SavedAddressAction>>[
+                  PopupMenuItem<SavedAddressAction>(
+                    value: .edit,
+                    child: Text(context.l10n.edit)
+                  ),
+                  PopupMenuItem<SavedAddressAction>(
+                    value: .setAsDefault,
+                    enabled: !_address.isDefault,
+                    child: Text(context.l10n.setAsDefault)
+                  ),
+                  PopupMenuItem<SavedAddressAction>(
+                    value: .delete,
+                    child: Text(context.l10n.delete)
+                  )
+                ],
+              ),
+              if(_address.isDefault) const DefaultBadge(),
+            ],
+          ),
         )
       ],
     )

@@ -6,7 +6,7 @@ import '../../../../core/cache/prefs.dart';
 import '../../../../core/constants/cache_keys.dart';
 import '../../../../core/errors/exceptions.dart';
 import '../../../../core/errors/failures.dart';
-import '../../../../core/network/network_info.dart';
+import '../../../../core/services/network_info.dart';
 import '../../../../core/uuid_generator/uuid_generator.dart';
 import '../../domain/entities/checkout_entity.dart';
 import '../../domain/entities/payment_method_entity.dart';

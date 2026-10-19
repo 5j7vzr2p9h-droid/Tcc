@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/errors/failures.dart';
+import '../../../../notifications/domain/usecases/enable_notifications_usecase.dart';
 import '../../../domain/entities/category_entity.dart';
 import '../../../domain/entities/item_entity.dart';
 import '../../../domain/repositories/banners_repository.dart';
@@ -13,11 +14,13 @@ final class HomeCubit extends Cubit<HomeState> {
   final CategoriesRepository _categoriesRepository;
   final BannersRepository _bannersRepository;
   final GetPopularProductsUsecase _getPopularProductsUsecase;
+  final EnableNotificationsUsecase _enableNotificationsUsecase;
 
   HomeCubit({
     required this._bannersRepository,
     required this._categoriesRepository,
     required this._getPopularProductsUsecase,
+    required this._enableNotificationsUsecase
   }): super(const HomeInitialState());
 
   void init() async {
@@ -27,7 +30,8 @@ final class HomeCubit extends Cubit<HomeState> {
     final List<Either<Failure, dynamic>> results = await Future.wait([
       _bannersRepository.getBanners(),
       _categoriesRepository.getCategories(),
-      _getPopularProductsUsecase()
+      _getPopularProductsUsecase(),
+      _enableNotificationsUsecase()
     ]);
 
     final Either<Failure, List<String>> bannersResult = results[0] as Either<Failure, List<String>>;

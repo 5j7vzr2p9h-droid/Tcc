@@ -1,9 +1,16 @@
+import 'dart:async';
+
+import 'package:electronic_menu/core/services/local_notifications_service.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:signalr_netcore/hub_connection.dart';
+import 'package:signalr_netcore/signalr_client.dart';
 
 import 'auth_controller.dart';
 import 'config/routing/on_generate_route.dart';
@@ -12,11 +19,30 @@ import 'config/theming/light_theme.dart';
 import 'core/utils/app_locales.dart';
 import 'di.dart';
 import 'features/cart/presentation/viewmodel/cart_cubit.dart';
+import 'firebase_options.dart';
 import 'l10n/app_localizations.dart';
 import 'language_controller.dart';
 
+final LocalNotificationService _notificationService = LocalNotificationService();
+
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  await _notificationService.init();
+  await _notificationService.requestPermission();
+
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+  final StreamSubscription subscription = FirebaseMessaging.onMessage.listen((RemoteMessage message){
+    print(message.notification?.title);
+    _notificationService.show(
+      id: message.messageId.hashCode,
+      title: message.notification?.title ?? message.data['title'],
+      body: message.notification?.body ?? message.data['body']
+    );
+  });
 
   await dotenv.load();
   await Hive.initFlutter();
@@ -77,5 +103,19 @@ final class const MyApp(final String _initialRoute, {super.key}) extends Statele
         )
       ),
     ),
+  );
+}
+
+@pragma('vm:entry-point')
+Future<void> firebaseMessagingBackgroundHandler(
+  RemoteMessage message,
+) async {
+  if(message.notification != null)
+    return;
+
+  await _notificationService.show(
+    id: message.messageId.hashCode,
+    title: message.data['title'],
+    body: message.data['body']
   );
 }

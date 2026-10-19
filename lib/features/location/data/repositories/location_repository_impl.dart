@@ -5,7 +5,7 @@ import '../../../../core/constants/cache_keys.dart';
 import '../../../../core/errors/exceptions.dart';
 import '../../../../core/errors/failures.dart';
 import '../../../../core/location/location_service.dart';
-import '../../../../core/network/network_info.dart';
+import '../../../../core/services/network_info.dart';
 import '../../domain/entities/branch_entity.dart';
 import '../../domain/entities/suggested_place_entity.dart';
 import '../../domain/repositories/location_repository.dart';

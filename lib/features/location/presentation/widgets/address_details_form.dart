@@ -36,7 +36,12 @@ final class _AddressDetailsFormState extends State<AddressDetailsForm> {
   @override
   Padding build(BuildContext context)
   => Padding(
-    padding: const .all(pageContentPadding),
+    padding: .only(
+      left: pageContentPadding,
+      right: pageContentPadding,
+      top: pageContentPadding,
+      bottom: pageContentPadding + MediaQuery.viewInsetsOf(context).bottom
+    ),
     child: BlocProvider<AddressDetailsCubit>(
       create: (BuildContext _) => getIt<AddressDetailsCubit>(),
       child: Form(

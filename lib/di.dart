@@ -1,11 +1,13 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:signalr_netcore/signalr_client.dart';
 import 'package:uuid/uuid.dart';
 
 import 'auth_controller.dart';
@@ -13,7 +15,8 @@ import 'core/cache/prefs.dart';
 import 'core/constants/cache_keys.dart';
 import 'core/location/location_service.dart';
 import 'core/network/auth_interceptor.dart';
-import 'core/network/network_info.dart';
+import 'core/services/network_info.dart';
+import 'core/services/signalr_service.dart';
 import 'core/utils/api_endpoints.dart';
 import 'core/utils/app_locales.dart';
 import 'core/uuid_generator/uuid_generator.dart';
@@ -70,6 +73,11 @@ import 'features/location/domain/usecases/search_places_usecase.dart';
 import 'features/location/presentation/viewmodels/address_details_viewmodel/address_details_cubit.dart';
 import 'features/location/presentation/viewmodels/request_location_permession_viewmodel/request_location_permession_cubit.dart';
 import 'features/location/presentation/viewmodels/select_location_viewmodel/select_location_cubit.dart';
+import 'features/notifications/data/datasources/fcm_service.dart';
+import 'features/notifications/data/datasources/notifications_remote_datasource.dart';
+import 'features/notifications/data/repositories/notifications_repository_impl.dart';
+import 'features/notifications/domain/repositories/notifications_repository.dart';
+import 'features/notifications/domain/usecases/enable_notifications_usecase.dart';
 import 'features/orders/data/datasources/orders_remote_datasource.dart';
 import 'features/orders/data/repositories/orders_repository_impl.dart';
 import 'features/orders/domain/repositories/orders_repository.dart';
@@ -158,7 +166,7 @@ Future<String?> setupDependencyInjection() async{
         responseBody: true,
       ),
       AuthInterceptor(
-        onSessionExpired: () => getIt<AuthCubit>().unauthenticate,
+        onSessionExpired: () => getIt<AuthCubit>().unauthenticate(),
         secureStorage: getIt<FlutterSecureStorage>(),
         emenuDio: emenuDio,
         refreshDio: Dio(
@@ -199,6 +207,11 @@ Future<String?> setupDependencyInjection() async{
     () => NetworkInfoImpl(getIt<Connectivity>())
   );
 
+  final HubConnection hubConnection = HubConnectionBuilder().withUrl(ApiEndpoints.baseUrl).withAutomaticReconnect().build();
+  getIt.registerLazySingleton<SignalrService>(() => SignalrServiceImpl(hubConnection));
+
+  getIt.registerLazySingleton<FcmService>(() => FcmServiceImpl(FirebaseMessaging.instance));
+
   getIt.registerLazySingleton<AuthRemoteDatasource>(
     () => AuthRemoteDatasourceImpl(
       dio: getIt<Dio>(),
@@ -225,6 +238,7 @@ Future<String?> setupDependencyInjection() async{
   getIt.registerLazySingleton<ProfileRemoteDatasource>(() => ProfileRemoteDatasourceImpl(getIt<Dio>()));
   getIt.registerLazySingleton<BannersRemoteDatasource>(() => BannersRemoteDatasourceImpl(getIt<Dio>()));
   getIt.registerLazySingleton<SavedAddressesRemoteDatasource>(() => SavedAddressesRemoteDatasourceImpl(getIt<Dio>()));
+  getIt.registerLazySingleton<NotificationsRemoteDatasource>(() => NotificationsRemoteDatasourceImpl(getIt<Dio>()));
 
   getIt.registerLazySingleton<LocationRepository>(() => LocationRepositoryImpl(
     prefs: getIt<Prefs>(),
@@ -292,6 +306,11 @@ Future<String?> setupDependencyInjection() async{
     networkInfo: getIt<NetworkInfo>(),
     remoteDatasource: getIt<BannersRemoteDatasource>()
   ));
+  getIt.registerLazySingleton<NotificationsRepository>(() => NotificationsRepositoryImpl(
+    networkInfo: getIt<NetworkInfo>(),
+    fcmService: getIt<FcmService>(),
+    remoteDatasource: getIt<NotificationsRemoteDatasource>()
+  ));
 
   getIt.registerLazySingleton<GetAddressNameUsecase>(() => GetAddressNameUsecase(getIt<LocationRepository>()));
   getIt.registerLazySingleton<GetDeviceLocationUsecase>(() => GetDeviceLocationUsecase(getIt<LocationRepository>()));
@@ -328,6 +347,7 @@ Future<String?> setupDependencyInjection() async{
   getIt.registerLazySingleton<RequestPhoneUpdateUsecase>(() => RequestPhoneUpdateUsecase(getIt<ProfileRepository>()));
   getIt.registerLazySingleton<GetWalletTransactionsUsecase>(() => GetWalletTransactionsUsecase(getIt<WalletRepository>()));
   getIt.registerLazySingleton<DeleteAddressUsecase>(() => DeleteAddressUsecase(getIt<SavedAddressesRepository>()));
+  getIt.registerLazySingleton<EnableNotificationsUsecase>(() => EnableNotificationsUsecase(getIt<NotificationsRepository>()));
 
   getIt.registerLazySingleton<AuthCubit>(() => AuthCubit(
     logoutUsecase: getIt<LogoutUsecase>(),
@@ -348,6 +368,7 @@ Future<String?> setupDependencyInjection() async{
     bannersRepository: getIt<BannersRepository>(),
     categoriesRepository: getIt<CategoriesRepository>(),
     getPopularProductsUsecase: getIt<GetPopularProductsUsecase>(),
+    enableNotificationsUsecase: getIt<EnableNotificationsUsecase>()
   ));
   getIt.registerFactory<VerifyPhoneCubit>(() => VerifyPhoneCubit(
     verifyPhoneUsecase: getIt<VerifyPhoneUsecase>(),
@@ -393,7 +414,6 @@ Future<String?> setupDependencyInjection() async{
   getIt.registerFactory<EditProfileCubit>(() => EditProfileCubit(getIt<UpdateProfileUsecase>()));
   getIt.registerFactory<EditPhoneCubit>(() => EditPhoneCubit(getIt<RequestPhoneUpdateUsecase>()));
   getIt.registerFactory<RequestLocationPermessionCubit>(() => RequestLocationPermessionCubit(getIt<GetBranchUsecase>()));
-
 
   return accessToken;
 }

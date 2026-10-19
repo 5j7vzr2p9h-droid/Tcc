@@ -3,7 +3,7 @@ import 'package:dartz/dartz.dart';
 import 'package:electronic_menu/core/errors/failures.dart';
 
 import '../../../../core/errors/exceptions.dart';
-import '../../../../core/network/network_info.dart';
+import '../../../../core/services/network_info.dart';
 import '../../domain/repositories/banners_repository.dart';
 import '../datasources/banners_remote_datasource.dart';
 

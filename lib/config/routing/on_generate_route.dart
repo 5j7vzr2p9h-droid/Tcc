@@ -41,7 +41,7 @@ abstract final class AppRoutes{
   static Route<Object?> onGenerateRoute(RouteSettings route){
     switch(route.name){
       case Routes.main:
-        return _materialPageRoute(const HomePage());
+        return _materialPageRoute(const MainPage());
       case Routes.newOrder:
         return _materialPageRoute<bool>(
           NewOrderPage(route.arguments as ItemEntity)
@@ -130,7 +130,7 @@ abstract final class AppRoutes{
           const RequestLocationPermessionPage()
         );
     }
-    return _materialPageRoute(const HomePage());
+    return _materialPageRoute(const MainPage());
   }
 
   static MaterialPageRoute<T> _materialPageRoute<T>(Widget view)

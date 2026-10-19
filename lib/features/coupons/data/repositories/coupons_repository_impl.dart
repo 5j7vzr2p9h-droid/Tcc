@@ -4,7 +4,7 @@ import '../../../../core/cache/prefs.dart';
 import '../../../../core/constants/cache_keys.dart';
 import '../../../../core/errors/exceptions.dart';
 import '../../../../core/errors/failures.dart';
-import '../../../../core/network/network_info.dart';
+import '../../../../core/services/network_info.dart';
 import '../../../cart/domain/entities/cart_item_entity.dart';
 import '../../domain/entities/coupon_entity.dart';
 import '../../domain/entities/coupon_quote_entity.dart';

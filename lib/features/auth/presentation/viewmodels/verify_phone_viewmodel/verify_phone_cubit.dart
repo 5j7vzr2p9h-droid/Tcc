@@ -25,7 +25,9 @@ final class VerifyPhoneCubit extends Cubit<VerifyPhoneState>{
       code: code
     )).fold(
       (Failure failure) => emit(VerifyPhoneFailureState(failure)),
-      (Unit unit) => emit(const VerifyPhoneSuccessState())
+      (Unit unit) {
+        emit(const VerifyPhoneSuccessState());
+      }
     );
   }
 

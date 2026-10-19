@@ -5,7 +5,7 @@ import 'package:electronic_menu/core/errors/failures.dart';
 import 'package:electronic_menu/features/delivery/domain/entities/address_entity.dart';
 
 import '../../../../core/errors/exceptions.dart';
-import '../../../../core/network/network_info.dart';
+import '../../../../core/services/network_info.dart';
 import '../../domain/repositories/saved_addresses_repository.dart';
 import '../datasources/saved_addresses_remote_datasource.dart';
 

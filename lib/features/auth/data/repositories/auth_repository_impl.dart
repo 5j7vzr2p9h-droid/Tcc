@@ -4,7 +4,7 @@ import 'package:electronic_menu/core/errors/failures.dart';
 
 import '../../../../core/cache/prefs.dart';
 import '../../../../core/errors/exceptions.dart';
-import '../../../../core/network/network_info.dart';
+import '../../../../core/services/network_info.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/auth_remote_datasource.dart';
 
@@ -64,6 +64,8 @@ final class AuthRepositoryImpl implements AuthRepository{
         return Left(ServerFailure(e.message));
       }on OfflineException{
         return const Left(OfflineFailure());
+      }catch(_){
+        return const Left(UnknownFailure());
       }
     return const Left(UnknownFailure());
   }
@@ -89,7 +91,7 @@ final class AuthRepositoryImpl implements AuthRepository{
         return Left(ServerFailure(e.message));
       }on OfflineException{
         return const Left(OfflineFailure());
-      }on UnknownException{
+      }catch(_){
         return const Left(UnknownFailure());
       }
     else return const Left(OfflineFailure());

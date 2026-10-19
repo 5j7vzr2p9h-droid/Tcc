@@ -14,15 +14,15 @@ import '../../../profile/presentation/widgets/profile_tab.dart';
 import '../viewmodels/home_viewmodel/home_cubit.dart';
 import '../widgets/home_tab.dart';
 
-final class HomePage extends StatefulWidget {
+final class MainPage extends StatefulWidget {
 
   const new({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<MainPage> createState() => _MainPageState();
 }
 
-final class _HomePageState extends State<HomePage> {
+final class _MainPageState extends State<MainPage> {
   final ValueNotifier<int> _currentPageIndex = ValueNotifier<int>(0);
 
   @override

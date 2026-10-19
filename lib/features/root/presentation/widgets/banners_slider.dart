@@ -22,7 +22,6 @@ final class _BannersSliderState extends State<BannersSlider> {
     _t = Timer.periodic(
       const Duration(seconds: 3),
       (Timer t){
-        print(_pageController.page);
         _pageController.page!.toInt() == widget._banners.length -1
           ? _pageController.animateToPage(
             0,

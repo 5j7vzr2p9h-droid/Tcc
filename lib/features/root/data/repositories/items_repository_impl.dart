@@ -7,7 +7,7 @@ import 'package:electronic_menu/features/root/domain/entities/item_entity.dart';
 import '../../../../core/cache/prefs.dart';
 import '../../../../core/constants/cache_keys.dart';
 import '../../../../core/errors/exceptions.dart';
-import '../../../../core/network/network_info.dart';
+import '../../../../core/services/network_info.dart';
 import '../../domain/repositories/items_repository.dart';
 import '../datasources/items_remote_datasource.dart';
 import '../models/item_model.dart';

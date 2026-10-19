@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 
 import '../../../../core/errors/exceptions.dart';
 import '../../../../core/errors/failures.dart';
-import '../../../../core/network/network_info.dart';
+import '../../../../core/services/network_info.dart';
 import '../../../../core/uuid_generator/uuid_generator.dart';
 import '../../domain/repositories/wallet_repository.dart';
 import '../datasources/wallet_remote_datasource.dart';
