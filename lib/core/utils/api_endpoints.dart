@@ -1,6 +1,6 @@
 abstract interface class ApiEndpoints {
   static const String googlePlacesBaseUrl = "https://places.googleapis.com/v1/places",
-  baseUrl = "http://192.168.1.13:5259/api/",
+  baseUrl = "http://192.168.1.3:5259/api/",
   categories = "emenu/v1/catalog/categories",
   item = "emenu/v1/catalog/products",
   login = "emenu/v1/auth/login",
@@ -28,5 +28,5 @@ abstract interface class ApiEndpoints {
   phoneChangeRequest = "emenu/v1/profile/phone/change/request",
   themeConfig = "themeconfig",
   refreshToken = "emenu/v1/auth/refresh",
-  registerFID = "emenu/v1/devices"; // <==========
+  registerFID = "emenu/v1/devices";
 }

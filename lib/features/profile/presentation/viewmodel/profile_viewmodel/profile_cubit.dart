@@ -2,7 +2,6 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/errors/failures.dart';
-import '../../../../auth/domain/usecase/logout_usecase.dart';
 import '../../../domain/entities/profile_entity.dart';
 import '../../../domain/usecases/get_profile_usecase.dart';
 import 'profile_state.dart';
@@ -14,8 +13,6 @@ final class ProfileCubit extends Cubit<ProfileState>{
     required this._getProfileUsecase,
   }): super(const ProfileInitialState());
 
-  late ProfileEntity _profile;
-
   void init() async{
     emit(const ProfileLoadingState());
     
@@ -26,7 +23,7 @@ final class ProfileCubit extends Cubit<ProfileState>{
 
     result.fold<void>(
       (Failure failure) => emit(ProfileGetFailureState(failure)),
-      (ProfileEntity profile) => emit(ProfileGetSuccessState(_profile = profile))
+      (ProfileEntity profile) => emit(ProfileGetSuccessState(profile))
     );
   }
 

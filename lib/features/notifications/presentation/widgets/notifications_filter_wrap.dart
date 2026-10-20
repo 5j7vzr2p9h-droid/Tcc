@@ -24,7 +24,8 @@ final class NotificationsFilterWrap extends StatelessWidget {
         context.l10n.all: null,
         context.l10n.offers: .offer,
         context.l10n.orders: .order,
-        context.l10n.updates: .update
+        context.l10n.updates: .update,
+        context.l10n.notificationCoupons: .coupon
       };
       return Wrap(
         spacing: 8.0,

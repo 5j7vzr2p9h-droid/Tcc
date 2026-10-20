@@ -37,18 +37,18 @@ import '../../features/wallet/presentation/pages/wallet_transactions_page.dart';
 import '../../splash_page.dart';
 import 'routes.dart';
 
-abstract final class AppRoutes{
+abstract final class const AppRoutes(){
   static Route<Object?> onGenerateRoute(RouteSettings route){
     switch(route.name){
       case Routes.main:
-        return _materialPageRoute(const MainPage());
+        return _materialPageRoute<void>(const MainPage());
       case Routes.newOrder:
         return _materialPageRoute<bool>(
           NewOrderPage(route.arguments as ItemEntity)
         );
       case Routes.categoryProducts:
         final (List<CategoryEntity> categories, int initialCategoryIndex) = route.arguments as (List<CategoryEntity>, int);
-        return _materialPageRoute(
+        return _materialPageRoute<void>(
           BlocProvider<SearchCubit>(
             create: (BuildContext context) => getIt<SearchCubit>(),
             child: CategoryProductsPage(
@@ -65,7 +65,7 @@ abstract final class AppRoutes{
           )
         );
       case Routes.payment:
-        return _materialPageRoute(
+        return _materialPageRoute<void>(
           MultiBlocProvider(
             providers: <BlocProvider>[
               BlocProvider<CheckoutCubit>(
@@ -82,55 +82,55 @@ abstract final class AppRoutes{
           )
         );
       case Routes.login:
-        return _materialPageRoute(const LoginPage());
+        return _materialPageRoute<void>(const LoginPage());
       case Routes.register:
-        return _materialPageRoute(const RegisterPage());
+        return _materialPageRoute<void>(const RegisterPage());
       case Routes.otpVerification:
-        return _materialPageRoute(
+        return _materialPageRoute<void>(
           OtpVerificationPage(route.arguments as String)
         );
       case Routes.couponsAndOffers:
-        return _materialPageRoute(const CouponsAndOffersPage());
+        return _materialPageRoute<void>(const CouponsAndOffersPage());
       case Routes.favorites:
-        return _materialPageRoute(const FavoritesPage());
+        return _materialPageRoute<void>(const FavoritesPage());
       case Routes.settings:
-        return _materialPageRoute(const SettingsPage());
+        return _materialPageRoute<void>(const SettingsPage());
       case Routes.notificationSettings:
-        return _materialPageRoute(const NotificationSettingsPage());
+        return _materialPageRoute<void>(const NotificationSettingsPage());
       case Routes.savedAddresses:
-        return _materialPageRoute(const SavedAddressesPage());
+        return _materialPageRoute<void>(const SavedAddressesPage());
       case Routes.termsAndConditions:
-        return _materialPageRoute(const TermsAndConditionsPage());
+        return _materialPageRoute<void>(const TermsAndConditionsPage());
       case Routes.privacyPolicy:
-        return _materialPageRoute(const PrivacyPolicyPage());
+        return _materialPageRoute<void>(const PrivacyPolicyPage());
       case Routes.support:
-        return _materialPageRoute(const SupportPage());
+        return _materialPageRoute<void>(const SupportPage());
       case Routes.editProfile:
         final ProfileEntity profile = route.arguments as ProfileEntity;
         return _materialPageRoute<ProfileEntity>(EditProfilePage(profile));
       case Routes.editPhone:
-        return _materialPageRoute(const EditPhonePage());
+        return _materialPageRoute<void>(const EditPhonePage());
       case Routes.splash:
-        return _materialPageRoute(const SplashPage());
+        return _materialPageRoute<void>(const SplashPage());
       case Routes.wallet:
-        return _materialPageRoute(const WalletPage());
+        return _materialPageRoute<void>(const WalletPage());
       case Routes.topup:
-        return _materialPageRoute(
+        return _materialPageRoute<void>(
           BlocProvider<PaymentMethodsCubit>(
             create: (BuildContext context) => getIt<PaymentMethodsCubit>()..init(),
             child: const TopupPage()
           )
         );
       case Routes.walletTransactions:
-        return _materialPageRoute(
+        return _materialPageRoute<void>(
           WalletTransactionsPage(route.arguments as List<WalletTransactionEntity>)
         );
       case Routes.requestLocationPermessionPage:
-        return _materialPageRoute(
+        return _materialPageRoute<void>(
           const RequestLocationPermessionPage()
         );
     }
-    return _materialPageRoute(const MainPage());
+    return _materialPageRoute<void>(const MainPage());
   }
 
   static MaterialPageRoute<T> _materialPageRoute<T>(Widget view)

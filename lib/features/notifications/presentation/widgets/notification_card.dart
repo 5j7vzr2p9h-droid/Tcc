@@ -105,5 +105,6 @@ final class NotificationCard extends StatelessWidget {
     NotificationType.order => const MapEntry<IconData, Color>(Icons.zoom_out_outlined, Colors.green),
     NotificationType.offer => MapEntry<IconData, Color>(Icons.badge, Theme.of(context).colorScheme.primary),
     NotificationType.update => const MapEntry<IconData, Color>(Icons.system_update, Colors.blue),
+    NotificationType.coupon => const MapEntry<IconData, Color>(Icons.confirmation_number_outlined, Colors.orange),
   };
 }

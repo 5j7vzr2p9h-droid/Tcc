@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 
 import '../errors/exceptions.dart';
 
-abstract final class ApiErrorHandler {
+abstract final class const ApiErrorHandler() {
   static Never handle(DioException exception){
     switch(exception.type){
       case .badResponse:

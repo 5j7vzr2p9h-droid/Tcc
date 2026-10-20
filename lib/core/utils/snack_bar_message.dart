@@ -50,7 +50,7 @@ abstract final class SnackBarMessage {
       behavior: .floating,
       margin: const .all(16.0),
       padding: const .all(12.0),
-      backgroundColor: Theme.of(context).colorScheme.primary.withAlpha(20),
+      backgroundColor: Theme.of(context).colorScheme.primaryContainer,
       elevation: 0.0,
       shape: RoundedRectangleBorder(
         borderRadius: const .all(.circular(12.0)),

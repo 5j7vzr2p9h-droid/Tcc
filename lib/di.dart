@@ -77,7 +77,12 @@ import 'features/notifications/data/datasources/fcm_service.dart';
 import 'features/notifications/data/datasources/notifications_remote_datasource.dart';
 import 'features/notifications/data/repositories/notifications_repository_impl.dart';
 import 'features/notifications/domain/repositories/notifications_repository.dart';
+import 'features/notifications/domain/usecases/clear_notifications_counter_usecase.dart';
 import 'features/notifications/domain/usecases/enable_notifications_usecase.dart';
+import 'features/notifications/domain/usecases/get_notifications_count_usecase.dart';
+import 'features/notifications/domain/usecases/get_notifications_usecase.dart';
+import 'features/notifications/domain/usecases/listen_to_foreground_notifications_and_increment_usecase.dart';
+import 'features/notifications/presentation/viewmodels/notifications_viewmodel/notifications_cubit.dart';
 import 'features/orders/data/datasources/orders_remote_datasource.dart';
 import 'features/orders/data/repositories/orders_repository_impl.dart';
 import 'features/orders/domain/repositories/orders_repository.dart';
@@ -116,6 +121,7 @@ import 'features/root/domain/usecases/get_popular_products_usecase.dart';
 import 'features/root/domain/usecases/search_products_usecase.dart';
 import 'features/root/presentation/viewmodels/category_items_viewmodel/category_items_cubit.dart';
 import 'features/root/presentation/viewmodels/home_viewmodel/home_cubit.dart';
+import 'features/root/presentation/viewmodels/notifications_counter.dart';
 import 'features/root/presentation/viewmodels/search_viewmodel/search_cubit.dart';
 import 'features/wallet/data/datasources/wallet_remote_datasource.dart';
 import 'features/wallet/data/repositories/wallet_repository_impl.dart';
@@ -307,6 +313,7 @@ Future<String?> setupDependencyInjection() async{
     remoteDatasource: getIt<BannersRemoteDatasource>()
   ));
   getIt.registerLazySingleton<NotificationsRepository>(() => NotificationsRepositoryImpl(
+    prefs: getIt<Prefs>(),
     networkInfo: getIt<NetworkInfo>(),
     fcmService: getIt<FcmService>(),
     remoteDatasource: getIt<NotificationsRemoteDatasource>()
@@ -348,6 +355,10 @@ Future<String?> setupDependencyInjection() async{
   getIt.registerLazySingleton<GetWalletTransactionsUsecase>(() => GetWalletTransactionsUsecase(getIt<WalletRepository>()));
   getIt.registerLazySingleton<DeleteAddressUsecase>(() => DeleteAddressUsecase(getIt<SavedAddressesRepository>()));
   getIt.registerLazySingleton<EnableNotificationsUsecase>(() => EnableNotificationsUsecase(getIt<NotificationsRepository>()));
+  getIt.registerLazySingleton<GetNotificationsCountUsecase>(() => GetNotificationsCountUsecase(getIt<NotificationsRepository>()));
+  getIt.registerLazySingleton<ListenToForegroundNotificationsAndIncrementUsecase>(() => ListenToForegroundNotificationsAndIncrementUsecase(getIt<NotificationsRepository>()));
+  getIt.registerLazySingleton<ClearNotificationsCounterUsecase>(() => ClearNotificationsCounterUsecase(getIt<NotificationsRepository>()));
+  getIt.registerLazySingleton<GetNotificationsUsecase>(() => GetNotificationsUsecase(getIt<NotificationsRepository>()));
 
   getIt.registerLazySingleton<AuthCubit>(() => AuthCubit(
     logoutUsecase: getIt<LogoutUsecase>(),
@@ -368,7 +379,6 @@ Future<String?> setupDependencyInjection() async{
     bannersRepository: getIt<BannersRepository>(),
     categoriesRepository: getIt<CategoriesRepository>(),
     getPopularProductsUsecase: getIt<GetPopularProductsUsecase>(),
-    enableNotificationsUsecase: getIt<EnableNotificationsUsecase>()
   ));
   getIt.registerFactory<VerifyPhoneCubit>(() => VerifyPhoneCubit(
     verifyPhoneUsecase: getIt<VerifyPhoneUsecase>(),
@@ -413,7 +423,16 @@ Future<String?> setupDependencyInjection() async{
   ));
   getIt.registerFactory<EditProfileCubit>(() => EditProfileCubit(getIt<UpdateProfileUsecase>()));
   getIt.registerFactory<EditPhoneCubit>(() => EditPhoneCubit(getIt<RequestPhoneUpdateUsecase>()));
-  getIt.registerFactory<RequestLocationPermessionCubit>(() => RequestLocationPermessionCubit(getIt<GetBranchUsecase>()));
+  getIt.registerFactory<RequestLocationPermessionCubit>(() => RequestLocationPermessionCubit(
+    getBranchUsecase: getIt<GetBranchUsecase>(),
+    enableNotificationsUsecase: getIt<EnableNotificationsUsecase>()
+  ));
+  getIt.registerFactory<NotificationsCounter>(() => NotificationsCounter(
+    getNotificationsCountUsecase: getIt<GetNotificationsCountUsecase>(),
+    listenToForegroundNotificationsAndIncrementUsecase: getIt<ListenToForegroundNotificationsAndIncrementUsecase>(),
+    clearNotificationsCounterUsecase: getIt<ClearNotificationsCounterUsecase>()
+  ));
+  getIt.registerFactory<NotificationsCubit>(() => NotificationsCubit(getIt<GetNotificationsUsecase>()));
 
   return accessToken;
 }

@@ -25,7 +25,8 @@ final ThemeData lightTheme = ThemeData(
     error: Colors.red,
     errorContainer: Colors.red.shade100,
     onError: Colors.white,
-    outline: Colors.grey.shade300
+    outline: Colors.grey.shade300,
+    primaryContainer: Colors.green.shade100
   ),
 
   checkboxTheme: const CheckboxThemeData(

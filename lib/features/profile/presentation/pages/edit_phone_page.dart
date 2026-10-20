@@ -10,10 +10,11 @@ import '../../../../core/utils/snack_bar_message.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../di.dart';
 import '../../../auth/presentation/widgets/auth_text_field.dart';
+import '../../domain/entities/profile_entity.dart';
 import '../viewmodel/edit_phone_viewmodel/edit_phone_cubit.dart';
 import '../viewmodel/edit_phone_viewmodel/edit_phone_state.dart';
 
-final class const EditPhonePage({super.key}) extends StatefulWidget {
+final class const EditPhonePage(final ProfileEntity _profile, {super.key}) extends StatefulWidget {
 
   @override
   State<EditPhonePage> createState() => _EditPhonePageState();

@@ -490,6 +490,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get notificationOrders => 'الطلبات';
 
   @override
+  String get notificationCoupons => 'الكوبونات';
+
+  @override
   String get today => 'اليوم';
 
   @override

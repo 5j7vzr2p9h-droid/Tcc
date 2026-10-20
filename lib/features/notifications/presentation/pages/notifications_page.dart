@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../config/routing/routes.dart';
 import '../../../../core/constants/numerical_values.dart';
 import '../../../../core/enums/notification_type.dart';
+import '../../../../core/errors/failures.dart';
 import '../../../../core/extensions/context_l10n.dart';
-import '../../domain/entities/notification_entity.dart';
+import '../../../../core/extensions/failure_message.dart';
+import '../../../../core/utils/date_formatter.dart';
+import '../../../../core/utils/text_styles.dart';
+import '../../../../core/widgets/failure_place_holder.dart';
 import '../../domain/entities/notifications_group.dart';
+import '../viewmodels/notifications_viewmodel/notifications_cubit.dart';
+import '../viewmodels/notifications_viewmodel/notifications_state.dart';
 import '../widgets/no_notifications_placeholder.dart';
 import '../widgets/notifications_day_sliver.dart';
 import '../widgets/notifications_filter_wrap.dart';
@@ -24,71 +30,31 @@ final class NotificationsTab extends StatefulWidget {
 }
 
 final class _NotificationsTabState extends State<NotificationsTab> {
+  /// Distance from the end of the list at which the next page starts loading.
+  static const double _loadMoreThreshold = 300.0;
+
   final ValueNotifier<NotificationType?> _selectedFilter = ValueNotifier<NotificationType?>(null);
+  final ScrollController _scrollController = ScrollController();
 
-  static final DateTime _now = DateTime.now();
-
-  static final List<NotificationsGroupEntity> _groups = <NotificationsGroupEntity>[
-    NotificationsGroupEntity(
-      date: DateTime.now(),
-      notifications: <NotificationEntity>[
-        NotificationEntity(
-          title: "تم تأكيد طلبك",
-          description: "تم تأكيد طلبك رقم #1258 وجاري تحضيره.",
-          date: _now.subtract(const Duration(minutes: 10)),
-          type: .order,
-          isUnread: true
-        ),
-        NotificationEntity(
-          title: "طلبك في الطريق",
-          description: "طلبك رقم #1258 في الطريق إليك وسيصلك خلال 15 دقيقة.",
-          date: _now.subtract(const Duration(minutes: 25)),
-          type: .order,
-          isUnread: true
-        ),
-        NotificationEntity(
-          title: "🎉 عرض خاص",
-          description: "خصم 20% على جميع الطلبات من اليوم وحتى نهاية الأسبوع!",
-          date: _now.subtract(const Duration(hours: 1)),
-          type: .offer,
-          isUnread: true
-        )
-      ],
-    ),
-    NotificationsGroupEntity(
-      date: DateTime.now().subtract(const Duration(days: 1)),
-      notifications: <NotificationEntity>[
-        NotificationEntity(
-          title: "تم تسليم طلبك",
-          description: "تم تسليم طلبك رقم #1245 بنجاح.",
-          date: DateTime(_now.year, _now.month, _now.day - 1, 20, 30),
-          type: .order,
-        ),
-        NotificationEntity(
-          title: "تحديث التطبيق",
-          description: "تم تحديث التطبيق إلى أحدث إصدار لتحسين تجربتك.",
-          date: DateTime(_now.year, _now.month, _now.day - 1, 16, 15),
-          type: .update,
-        )
-      ],
-    ),
-    NotificationsGroupEntity(
-      date: DateTime.now().subtract(const Duration(days: 5)),
-      notifications: <NotificationEntity>[
-        NotificationEntity(
-          title: "👋 اهلاً بك في تطبيقنا",
-          description: "ابدأ التسوق الآن واكتشف أفضل العروض.",
-          date: DateTime(2024, 5, 20, 11, 0),
-          type: .update
-        )
-      ],
-    )
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _selectedFilter.addListener(_reload);
+    _scrollController.addListener(_loadMoreIfNearEnd);
+  }
 
   @override
   void dispose() {
     _selectedFilter.dispose();
+    _scrollController.dispose();
     super.dispose();
+  }
+
+  void _reload() => context.read<NotificationsCubit>().init(type: _selectedFilter.value);
+
+  void _loadMoreIfNearEnd(){
+    if(_scrollController.hasClients && _scrollController.position.extentAfter < _loadMoreThreshold)
+      context.read<NotificationsCubit>().loadMore();
   }
 
   @override
@@ -105,33 +71,57 @@ final class _NotificationsTabState extends State<NotificationsTab> {
         )
       ],
     ),
-    body: ValueListenableBuilder<NotificationType?>(
-      valueListenable: _selectedFilter,
-      builder: (BuildContext context, NotificationType? type, Widget? child) {
-        final List<NotificationsGroupEntity> groups;
-        type == null?
-          groups = _groups:
-          groups = _groups.map<NotificationsGroupEntity>(
-            (NotificationsGroupEntity group){
-              final List<NotificationEntity> groupFilteredNotifications = group.notifications.where(
-                (NotificationEntity notification) => notification.type == type
-              ).toList();
-              return NotificationsGroupEntity(
-                date: group.date,
-                notifications: groupFilteredNotifications
-              );
-            }
-          ).toList();
-        return CustomScrollView(
-          physics: const BouncingScrollPhysics(),
-          slivers: <Widget>[
-            if(groups.isNotEmpty) SliverPadding(
+    body: BlocConsumer<NotificationsCubit, NotificationsState>(
+      // A page that doesn't fill the screen can't be scrolled, so check again after every page.
+      listenWhen: (NotificationsState _, NotificationsState current)
+      => current is NotificationsGetSuccessState && !current.isLoadingMore,
+      listener: (BuildContext _, NotificationsState _)
+      => WidgetsBinding.instance.addPostFrameCallback((Duration _){
+        if(mounted)
+          _loadMoreIfNearEnd();
+      }),
+      builder: (BuildContext context, NotificationsState state)
+      => CustomScrollView(
+        controller: _scrollController,
+        physics: const BouncingScrollPhysics(),
+        slivers: <Widget>[
+          if(!(state is NotificationsGetSuccessState && state.groups.isEmpty && _selectedFilter.value == null))
+            SliverPadding(
               padding: const .all(pageContentPadding),
               sliver: SliverToBoxAdapter(
-                child: NotificationsFilterWrap(selectedFilter: _selectedFilter),
+                child: NotificationsFilterWrap(
+                  selectedFilter: _selectedFilter
+                )
+              )
+            ),
+          switch(state){
+            NotificationsInitialState() => const SliverToBoxAdapter(),
+            NotificationsLoadingState() => const SliverFillRemaining(
+              hasScrollBody: false,
+              child: Padding(
+                padding: .only(bottom: bottomNavigationBarSpace),
+                child: Center(child: CircularProgressIndicator()),
               ),
             ),
-            if(groups.isEmpty) SliverFillRemaining(
+            NotificationsGetFailureState(:final Failure failure) => SliverFillRemaining(
+              hasScrollBody: false,
+              child: Padding(
+                padding: const .fromLTRB(
+                  pageContentPadding,
+                  0.0,
+                  pageContentPadding,
+                  bottomNavigationBarSpace
+                ),
+                child: Center(
+                  child: FailurePlaceHolder(
+                    failure: failure,
+                    onRetry: _reload,
+                  ),
+                ),
+              ),
+            ),
+            NotificationsGetSuccessState(:final List<NotificationsGroupEntity> groups) when groups.isEmpty
+            => SliverFillRemaining(
               hasScrollBody: false,
               child: Padding(
                 padding: const .fromLTRB(
@@ -144,8 +134,12 @@ final class _NotificationsTabState extends State<NotificationsTab> {
                   onOrdersPressed: widget._onOrdersPressed,
                 ),
               ),
-            )
-            else SliverPadding(
+            ),
+            NotificationsGetSuccessState(
+              :final List<NotificationsGroupEntity> groups,
+              :final bool isLoadingMore,
+              :final Failure? loadMoreFailure
+            ) => SliverPadding(
               padding: const .fromLTRB(
                 pageContentPadding,
                 0.0,
@@ -153,31 +147,42 @@ final class _NotificationsTabState extends State<NotificationsTab> {
                 bottomNavigationBarSpace
               ),
               sliver: SliverMainAxisGroup(
-                slivers: <NotificationsDaySliver>[
+                slivers: <Widget>[
                   for(final NotificationsGroupEntity group in groups)
-                    if(group.notifications.isNotEmpty)
-                      NotificationsDaySliver(
-                        title: _getNotificationsGroupTitle(context, group.date),
-                        notifications: group.notifications,
-                      )
+                    NotificationsDaySliver(
+                      title: DateFormatter.formatDate(context, group.date, isShort: true),
+                      notifications: group.notifications,
+                    ),
+                  if(isLoadingMore)
+                    const SliverToBoxAdapter(
+                      child: Center(child: CircularProgressIndicator()),
+                    )
+                  else if(loadMoreFailure != null)
+                    SliverToBoxAdapter(
+                      child: Column(
+                        children: <Widget>[
+                          Text(
+                            loadMoreFailure.mapFailureToMessage(context),
+                            textAlign: .center,
+                            style: TextStyles.font12Weight400.copyWith(
+                              color: Colors.grey
+                            ),
+                          ),
+                          TextButton.icon(
+                            onPressed: () => context.read<NotificationsCubit>().loadMore(retry: true),
+                            iconAlignment: .end,
+                            icon: const Icon(Icons.refresh),
+                            label: Text(context.l10n.retry),
+                          )
+                        ],
+                      ),
+                    )
                 ],
               ),
             )
-          ],
-        );
-      },
+          }
+        ],
+      ),
     ),
   );
-
-  String _getNotificationsGroupTitle(BuildContext context, DateTime date){
-    final DateTime now = DateTime.now();
-    final int differenceInDays = now.difference(date).inDays;
-
-    switch(differenceInDays){
-      case 0: return context.l10n.today;
-      case 1: return context.l10n.yesterday;
-    }
-
-    return DateFormat.yMMMd(context.l10n.localeName).format(date);
-  }
 }

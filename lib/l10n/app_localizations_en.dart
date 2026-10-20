@@ -490,6 +490,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notificationOrders => 'Orders';
 
   @override
+  String get notificationCoupons => 'Coupons';
+
+  @override
   String get today => 'Today';
 
   @override

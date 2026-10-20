@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
+import '../../features/root/presentation/viewmodels/notifications_counter.dart';
 import '../constants/numerical_values.dart';
 import '../extensions/context_l10n.dart';
 import '../utils/app_icons.dart';
 import '../utils/text_styles.dart';
 
-final class RoundedBottomNavigationBar extends StatelessWidget {
-  final ValueNotifier<int> _indexController;
-  const new({
-    super.key,
-    required this._indexController
-  });
+final class const RoundedBottomNavigationBar({
+  super.key,
+  required final ValueNotifier<int> _indexController,
+  required final NotificationsCounter _notificationsCounter
+}) extends StatelessWidget {
 
   @override
   Padding build(BuildContext context)
@@ -56,11 +56,15 @@ final class RoundedBottomNavigationBar extends StatelessWidget {
               onPressed: () => _indexController.value = 1,
             ),
             NavigationBarItem(
+              notificationsCounter: _notificationsCounter,
               label: context.l10n.notifications,
               iconData: AppIcons.notification,
               index: 2,
               selectedIndex: currentIndex,
-              onPressed: () => _indexController.value = 2,
+              onPressed: () {
+                _indexController.value = 2;
+                _notificationsCounter.clear();
+              },
             ),
             NavigationBarItem(
               label: context.l10n.profile,
@@ -76,20 +80,16 @@ final class RoundedBottomNavigationBar extends StatelessWidget {
   );
 }
 
-final class NavigationBarItem extends StatelessWidget {
-  final String _label;
-  final IconData _iconData;
-  final int _index, _selectedIndex;
-  final VoidCallback _onPressed;
-
-  const new({
-    super.key,
-    required this._label,
-    required this._iconData,
-    required this._index,
-    required this._selectedIndex,
-    required this._onPressed
-  });
+final class const NavigationBarItem({
+  super.key,
+  final ValueNotifier<int>? _notificationsCounter,
+  required final String _label,
+  required final IconData _iconData,
+  required final int _index,
+  required final int _selectedIndex,
+  required final VoidCallback _onPressed
+}) extends StatelessWidget {
+  
 
   @override
   IconButton build(BuildContext context) {
@@ -100,10 +100,24 @@ final class NavigationBarItem extends StatelessWidget {
       icon: Column(
         mainAxisSize: .min,
         children: <Widget>[
-          Icon(
-            _iconData,
-            color: color,
-          ),
+          _notificationsCounter is ValueNotifier<int>
+            ? ValueListenableBuilder<int>(
+              valueListenable: _notificationsCounter,
+              builder: (BuildContext context, int count, Widget? child)
+              => Badge.count(
+                isLabelVisible: count>0,
+                count: count,
+                child: child,
+              ),
+              child: Icon(
+                _iconData,
+                color: color,
+              ),
+            )
+            : Icon(
+              _iconData,
+              color: color,
+            ),
           Text(
             _label,
             style: TextStyles.font12Weight400.copyWith(

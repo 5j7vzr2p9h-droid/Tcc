@@ -1049,6 +1049,12 @@ abstract class AppLocalizations {
   /// **'Orders'**
   String get notificationOrders;
 
+  /// No description provided for @notificationCoupons.
+  ///
+  /// In en, this message translates to:
+  /// **'Coupons'**
+  String get notificationCoupons;
+
   /// No description provided for @today.
   ///
   /// In en, this message translates to:

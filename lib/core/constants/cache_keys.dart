@@ -4,5 +4,6 @@ abstract final class CacheKeys {
     theme = "theme",
     pendingCheckout = "pending_checkout",
     refreshToken = "refresh_token",
-    accessToken = "access_token";
+    accessToken = "access_token",
+    notificationsCount = "notifications_count";
 }

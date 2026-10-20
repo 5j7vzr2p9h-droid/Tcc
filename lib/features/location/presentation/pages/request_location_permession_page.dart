@@ -27,7 +27,7 @@ final class const RequestLocationPermessionPage({super.key}) extends StatelessWi
           },
           builder: (BuildContext context, RequestLocationPermessionState state)
           => switch(state){
-            RequestLocationPermessionInitialState() || RequestLocationPermessionSuccessState() => const Center(child: CircularProgressIndicator()),
+            RequestLocationPermessionInitialState() || RequestLocationPermessionSuccessState() || RequestLocationPermessionLoadingState() => const Center(child: CircularProgressIndicator()),
             RequestLocationPermessionFailureState(:final Failure failure) => Center(
               child: FailurePlaceHolder(
                 failure: failure,

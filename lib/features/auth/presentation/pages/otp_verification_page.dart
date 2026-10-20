@@ -10,13 +10,20 @@ import '../../../../core/utils/assets_manager.dart';
 import '../../../../core/utils/snack_bar_message.dart';
 import '../../../../core/utils/text_styles.dart';
 import '../../../../di.dart';
+import '../../../profile/domain/entities/profile_entity.dart';
 import '../viewmodels/verify_phone_viewmodel/verify_phone_cubit.dart';
 import '../viewmodels/verify_phone_viewmodel/verify_phone_state.dart';
 import '../widgets/otp_field.dart';
 import '../widgets/otp_resend_timer.dart';
 import '../widgets/otp_target_note.dart';
 
-final class const OtpVerificationPage(final String _phoneNumber, {super.key}) extends StatefulWidget {
+final class const OtpVerificationPage(
+  final String _phoneNumber,
+  {
+    super.key,
+    final ProfileEntity? _profile
+  }
+) extends StatefulWidget {
 
   @override
   State<OtpVerificationPage> createState() => _OtpVerificationPageState();

@@ -3,6 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 abstract interface class FcmService{
   Future<String> get registerAndGetId;
   Stream<String> get onRegistered;
+  Stream<RemoteMessage> get onForeground;
 }
 
 final class const FcmServiceImpl(
@@ -11,6 +12,8 @@ final class const FcmServiceImpl(
   
   @override
   Future<String> get registerAndGetId async{
+    await _messaging.requestPermission();
+
     final Future<String> idFuture = _messaging.onRegistered.first.timeout(
       const Duration(seconds: 15),
     );
@@ -20,7 +23,9 @@ final class const FcmServiceImpl(
     return idFuture;
   }
 
-
   @override
   Stream<String> get onRegistered => _messaging.onRegistered;
+
+ @override
+ Stream<RemoteMessage> get onForeground => FirebaseMessaging.onMessage; 
 }

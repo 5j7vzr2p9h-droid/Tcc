@@ -2,8 +2,8 @@
 
 import 'package:flutter/widgets.dart';
 
-abstract final class AppIcons {
-  static const _kFontFam = 'AppIcons';
+abstract final class const AppIcons() {
+  static const String _kFontFam = 'AppIcons';
 
   static const IconData avatar = IconData(0xe800, fontFamily: _kFontFam),
     check = IconData(0xe801, fontFamily: _kFontFam),

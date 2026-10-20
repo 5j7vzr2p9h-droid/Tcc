@@ -9,21 +9,28 @@ import '../../../cart/presentation/viewmodel/cart_cubit.dart';
 import '../../../cart/presentation/viewmodel/cart_state.dart';
 import '../../../cart/presentation/widgets/cart_summary_bar.dart';
 import '../../../notifications/presentation/pages/notifications_page.dart';
+import '../../../notifications/presentation/viewmodels/notifications_viewmodel/notifications_cubit.dart';
 import '../../../orders/presentation/pages/my_orders_page.dart';
 import '../../../profile/presentation/widgets/profile_tab.dart';
 import '../viewmodels/home_viewmodel/home_cubit.dart';
+import '../viewmodels/notifications_counter.dart';
 import '../widgets/home_tab.dart';
 
-final class MainPage extends StatefulWidget {
-
-  const new({super.key});
+final class const MainPage({super.key}) extends StatefulWidget {
 
   @override
   State<MainPage> createState() => _MainPageState();
 }
 
-final class _MainPageState extends State<MainPage> {
+
+final class _MainPageState extends State<MainPage> with WidgetsBindingObserver{
   final ValueNotifier<int> _currentPageIndex = ValueNotifier<int>(0);
+
+  @override
+  void dispose(){
+    _currentPageIndex.dispose();
+    super.dispose();
+  }
 
   @override
   Scaffold build(BuildContext context)
@@ -39,8 +46,11 @@ final class _MainPageState extends State<MainPage> {
               child: const HomeTab()
             ),
             1 => const MyOrdersTab(),
-            2 => NotificationsTab(
-              onOrdersPressed: () => _currentPageIndex.value = 1,
+            2 => BlocProvider<NotificationsCubit>(
+              create: (BuildContext context) => getIt<NotificationsCubit>()..init(),
+              child: NotificationsTab(
+                onOrdersPressed: () => _currentPageIndex.value = 1,
+              ),
             ),
             3 => ProfileTab(() => _currentPageIndex.value = 1),
             _ => const SizedBox()
@@ -67,6 +77,7 @@ final class _MainPageState extends State<MainPage> {
                 ),
               ),
               RoundedBottomNavigationBar(
+                notificationsCounter: getIt<NotificationsCounter>()..init(),
                 indexController: _currentPageIndex,
               ),
             ],
